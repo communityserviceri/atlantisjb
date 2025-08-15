@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ATLANTIS STORE - Jual Beli Akun Game Terpercaya</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -23,6 +23,14 @@
     --shadow-medium: rgba(0,0,0,0.15);
     --shopee-orange: #ee4d2d;
     --shopee-orange-dark: #d04326;
+
+    /* New Accent Colors & Gradients */
+    --accent-color-1: #00b4d8; /* Bright blue */
+    --accent-color-2: #e0f2f7; /* Very light blue for backgrounds */
+    --gradient-nav-start: #002f4b;
+    --gradient-nav-end: #023e8a;
+    --gradient-button-start: #0077b6;
+    --gradient-button-end: #023e8a;
   }
 
   body {
@@ -32,25 +40,33 @@
     background: var(--light-gray);
     color: var(--text-color);
     line-height: 1.6;
+    /* Decorative wave pattern at the bottom */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23e0f2f7' fill-opacity='1' d='M0,192L48,192C96,192,192,192,288,181.3C384,171,480,149,576,160C672,171,768,213,864,213.3C960,213,1056,181,1152,170.7C1248,160,1344,171,1392,176L1440,181.3L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: 100% 250px;
+    background-attachment: fixed;
   }
 
   nav {
-    background: var(--dark-blue);
+    background: linear-gradient(to right, var(--gradient-nav-start), var(--gradient-nav-end));
     color: var(--white);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px var(--shadow-medium);
+    box-shadow: 0 5px 15px var(--shadow-medium); /* Stronger shadow */
     position: sticky;
     top: 0;
     z-index: 1000;
   }
 
   nav .logo {
-    font-size: 1.8em;
-    font-weight: 700;
-    letter-spacing: 1px;
+    font-size: 1.9em; /* Slightly larger */
+    font-weight: 800; /* Bolder */
+    letter-spacing: 1.5px; /* More spacing */
+    display: flex;
+    align-items: center;
   }
 
   nav a {
@@ -58,16 +74,17 @@
     margin: 0 15px;
     text-decoration: none;
     font-weight: 600;
-    transition: color 0.3s ease, text-decoration 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease; /* Add transform to transition */
   }
 
   nav a:hover {
-    color: var(--primary-color);
+    color: var(--accent-color-1); /* Brighter hover color */
     text-decoration: underline;
+    transform: translateY(-2px); /* Subtle lift effect */
   }
 
   .container {
-    padding: 30px 20px;
+    padding: 40px 20px; /* More padding */
     max-width: 1200px;
     margin: auto;
   }
@@ -75,84 +92,138 @@
   h2 {
     color: var(--dark-blue);
     text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.2em;
-    font-weight: 700;
+    margin-bottom: 40px; /* More margin */
+    font-size: 2.5em; /* Larger font */
+    font-weight: 800; /* Bolder */
+    position: relative;
+    padding-bottom: 10px;
+  }
+
+  h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 2px;
   }
 
   form, .info-card {
     background: var(--white);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px var(--shadow-light);
-    margin-bottom: 30px;
-    max-width: 600px;
+    padding: 40px; /* More padding */
+    border-radius: 15px; /* Larger border-radius */
+    box-shadow: 0 8px 25px var(--shadow-light); /* Stronger shadow */
+    margin-bottom: 40px; /* More margin */
+    max-width: 650px; /* Slightly wider */
     margin-left: auto;
     margin-right: auto;
+    position: relative; /* For pseudo-elements */
+    overflow: hidden; /* Ensure pseudo-elements don't overflow */
   }
 
+  /* Decorative pseudo-element for forms/cards */
+  form::before, .info-card::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    width: 80px;
+    height: 80px;
+    background: var(--accent-color-1);
+    border-radius: 20px;
+    opacity: 0.05; /* Very subtle */
+    z-index: 0;
+    transform: rotate(45deg);
+  }
+  form::after, .info-card::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: var(--secondary-color);
+    border-radius: 30px;
+    opacity: 0.03; /* Even more subtle */
+    z-index: 0;
+    transform: rotate(-30deg);
+  }
+
+
   input, select, textarea {
-    width: calc(100% - 22px); /* Account for padding and border */
-    padding: 12px;
-    margin: 8px 0 20px 0;
+    width: calc(100% - 24px); /* Account for padding and border */
+    padding: 14px; /* More padding */
+    margin: 10px 0 25px 0; /* More margin */
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 1em;
+    border-radius: 10px; /* Larger border-radius */
+    font-size: 1.05em; /* Slightly larger font */
     box-sizing: border-box;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative; /* Ensure they are above pseudo-elements */
+    z-index: 1;
   }
 
   input:focus, select:focus, textarea:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.2);
+    box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.3); /* Stronger focus shadow */
     outline: none;
   }
 
   button {
-    background: var(--primary-color);
+    background: linear-gradient(to right, var(--gradient-button-start), var(--gradient-button-end));
     color: var(--white);
-    padding: 12px 25px;
+    padding: 15px 30px; /* More padding */
     border: none;
-    border-radius: 8px;
+    border-radius: 10px; /* Larger border-radius */
     cursor: pointer;
-    font-size: 1.1em;
-    font-weight: 600;
-    transition: background 0.3s ease, transform 0.2s ease;
+    font-size: 1.15em; /* Slightly larger font */
+    font-weight: 700; /* Bolder */
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     width: 100%;
     box-sizing: border-box;
+    box-shadow: 0 4px 10px rgba(0, 119, 182, 0.2); /* Initial shadow */
+    position: relative;
+    z-index: 1;
   }
 
   button:hover {
-    background: var(--secondary-color);
-    transform: translateY(-2px);
+    background: linear-gradient(to right, var(--gradient-button-end), var(--gradient-button-start)); /* Reverse gradient on hover */
+    transform: translateY(-3px); /* More pronounced lift */
+    box-shadow: 0 6px 15px rgba(0, 119, 182, 0.3); /* Stronger shadow on hover */
   }
 
   button:active {
     transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 119, 182, 0.2);
   }
 
   p {
     text-align: center;
-    margin-top: 20px;
-    font-size: 0.95em;
+    margin-top: 25px; /* More margin */
+    font-size: 1em; /* Slightly larger */
   }
 
   p a {
     color: var(--primary-color);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700; /* Bolder */
+    transition: color 0.3s ease, text-decoration 0.3s ease;
   }
 
   p a:hover {
+    color: var(--secondary-color); /* Change color on hover */
     text-decoration: underline;
   }
 
   .account-card {
     background: var(--white);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 15px var(--shadow-light);
+    padding: 25px; /* More padding */
+    border-radius: 15px; /* Larger border-radius */
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px var(--shadow-light); /* Stronger shadow */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -161,8 +232,8 @@
   }
 
   .account-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px var(--shadow-medium);
+    transform: translateY(-8px); /* More pronounced lift */
+    box-shadow: 0 12px 35px var(--shadow-medium); /* Stronger shadow */
   }
 
   .flex {
@@ -173,14 +244,14 @@
   }
 
   .flex .account-card {
-    flex: 1 1 calc(33% - 30px); /* 3 cards per row with gap */
+    flex: 1 1 calc(33% - 30px);
     max-width: calc(33% - 30px);
     box-sizing: border-box;
   }
 
   @media (max-width: 992px) {
     .flex .account-card {
-      flex: 1 1 calc(50% - 30px); /* 2 cards per row */
+      flex: 1 1 calc(50% - 30px);
       max-width: calc(50% - 30px);
     }
   }
@@ -191,85 +262,96 @@
       padding: 15px 20px;
     }
     nav div:first-child {
-      margin-bottom: 10px;
+      margin-bottom: 15px; /* More margin */
     }
     nav a {
-      margin: 0 8px;
-      font-size: 0.9em;
+      margin: 0 10px; /* More margin */
+      font-size: 0.95em;
     }
     .flex .account-card {
-      flex: 1 1 100%; /* 1 card per row */
+      flex: 1 1 100%;
       max-width: 100%;
     }
     form, .info-card {
-      padding: 20px;
+      padding: 25px; /* Adjusted padding */
+    }
+    h2 {
+      font-size: 2em; /* Adjusted font size */
     }
   }
 
-  /* Perbaikan untuk gambar di kartu akun (landing page dan profil) */
+  /* Penyesuaian untuk gambar di profil/postinganku (img.account-img) */
   img.account-img {
     max-width: 100%;
-    height: 200px; /* Fixed height for consistency */
-    object-fit: contain; /* Ensures image fits without cropping */
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 8px var(--shadow-light);
+    height: 180px; /* Slightly taller */
+    object-fit: contain;
+    border-radius: 10px; /* Larger border-radius */
+    margin-bottom: 20px; /* More margin */
+    box-shadow: 0 4px 12px var(--shadow-light); /* Stronger shadow */
   }
 
   .account-card .image-gallery {
+    width: 100%;
+    padding-bottom: 65%; /* 4:3 Aspect Ratio */
+    position: relative;
+    overflow: hidden;
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
     justify-content: center;
-    margin-bottom: 15px;
+    align-items: center;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color); /* Clean separator */
   }
 
-  /* Perbaikan untuk thumbnail di kartu akun (landing page dan profil) */
   .account-card .image-gallery img {
-    width: 80px; /* Smaller thumbnails */
-    height: 80px;
-    object-fit: contain; /* Ensures image fits without cropping */
-    border-radius: 5px;
-    border: 1px solid var(--border-color);
-    cursor: pointer; /* Make images clickable */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Fill the area, crop if necessary */
+    object-position: center; /* Center the important content */
+    border-radius: 0; /* No border-radius here, handled by parent */
+    border: none;
   }
 
   .account-card h3 {
     color: var(--dark-blue);
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.4em;
+    margin-top: 15px; /* More margin */
+    margin-bottom: 8px;
+    font-size: 1.5em; /* Slightly larger */
+    font-weight: 700;
   }
 
   .account-card p {
     text-align: left;
     width: 100%;
-    margin-bottom: 8px;
-    font-size: 0.95em;
+    margin-bottom: 6px;
+    font-size: 0.98em; /* Slightly larger */
   }
 
   .account-card .price {
-    font-size: 1.5em;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-top: 15px;
-    margin-bottom: 10px;
+    font-size: 1.6em; /* Larger price font */
+    font-weight: 800; /* Bolder */
+    color: var(--shopee-orange);
+    margin-top: 18px; /* More margin */
+    margin-bottom: 12px;
   }
 
   .account-card .contact-info {
-    font-size: 0.9em;
+    font-size: 0.95em;
     color: #666;
-    margin-top: 10px;
+    margin-top: 12px;
   }
 
   .account-card .contact-info a {
     color: var(--primary-color);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .account-card .contact-info a:hover {
     text-decoration: underline;
+    color: var(--secondary-color);
   }
 
   .hidden {
@@ -277,26 +359,28 @@
   }
 
   .form-section {
-    margin-bottom: 25px;
-    padding: 15px;
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-    background-color: #fcfcfc;
+    margin-bottom: 30px; /* More margin */
+    padding: 20px; /* More padding */
+    border: 2px dashed var(--accent-color-1); /* Thicker, more vibrant border */
+    border-radius: 10px; /* Larger border-radius */
+    background-color: var(--accent-color-2); /* Lighter background */
   }
 
   .form-section h3 {
     color: var(--secondary-color);
     margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.3em;
+    margin-bottom: 20px; /* More margin */
+    font-size: 1.4em; /* Larger font */
+    font-weight: 700;
   }
 
   .alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 18px; /* More padding */
+    margin-bottom: 25px; /* More margin */
+    border-radius: 10px; /* Larger border-radius */
+    font-weight: 700; /* Bolder */
     text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
 
   .alert-success {
@@ -314,382 +398,444 @@
   #image-previews {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin: 15px auto;
+    gap: 15px; /* More gap */
+    margin: 20px auto; /* More margin */
     justify-content: center;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 2px 8px var(--shadow-light);
+    border: 2px solid var(--border-color); /* Thicker border */
+    border-radius: 10px; /* Larger border-radius */
+    padding: 15px; /* More padding */
+    box-shadow: 0 4px 12px var(--shadow-light); /* Stronger shadow */
   }
 
   #image-previews img {
-    max-width: 100px;
-    height: 100px;
-    object-fit: contain; /* Ensures image fits without cropping */
-    border-radius: 5px;
-    border: 1px solid #eee;
-    cursor: pointer; /* Make images clickable */
+    max-width: 110px; /* Slightly larger */
+    height: 110px; /* Slightly larger */
+    object-fit: contain;
+    border-radius: 8px; /* Larger border-radius */
+    border: 2px solid #eee; /* Thicker border */
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  #image-previews img:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-color);
   }
 
   .profile-info {
     text-align: left;
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* More margin */
+    padding: 15px;
+    background-color: var(--accent-color-2);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   }
 
   .profile-info p {
     text-align: left;
-    margin-bottom: 10px;
-    font-size: 1.1em;
+    margin-bottom: 12px; /* More margin */
+    font-size: 1.15em; /* Slightly larger */
   }
 
   .profile-info strong {
     color: var(--dark-blue);
+    font-weight: 700;
   }
 
   .add-item-btn {
     background-color: #28a745;
     color: white;
-    padding: 8px 15px;
+    padding: 10px 20px; /* More padding */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Larger border-radius */
     cursor: pointer;
-    font-size: 0.9em;
-    margin-top: 10px;
+    font-size: 0.95em; /* Slightly larger */
+    margin-top: 15px; /* More margin */
     display: inline-block;
     width: auto;
+    transition: background-color 0.3s ease, transform 0.2s ease;
   }
   .add-item-btn:hover {
     background-color: #218838;
+    transform: translateY(-2px);
   }
   .remove-item-btn {
     background-color: #dc3545;
     color: white;
-    padding: 5px 10px;
+    padding: 7px 12px; /* More padding */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Larger border-radius */
     cursor: pointer;
-    font-size: 0.8em;
-    margin-left: 10px;
+    font-size: 0.85em; /* Slightly larger */
+    margin-left: 12px; /* More margin */
+    transition: background-color 0.3s ease, transform 0.2s ease;
   }
   .remove-item-btn:hover {
     background-color: #c82333;
+    transform: translateY(-2px);
   }
   .item-group {
-    border: 1px solid #eee;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0; /* Lighter border */
+    padding: 15px; /* More padding */
+    margin-bottom: 15px; /* More margin */
+    border-radius: 8px; /* Larger border-radius */
+    background-color: #fcfcfc; /* Lighter background */
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
   }
   .item-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px; /* More margin */
     font-weight: 600;
+    color: var(--dark-blue);
   }
 
 /* Improved Buy Account UI */
 #buy-account-list {
-  display: grid; /* Use grid for better control */
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Responsive grid */
-  gap: 15px; /* Smaller gap for more items per row */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjusted min-width */
+  gap: 20px; /* More gap */
   justify-content: center;
-  padding: 10px;
+  padding: 15px; /* More padding */
 }
 #buy-account-list .account-card {
-  width: auto; /* Let grid handle width */
-  border: 1px solid #eee;
-  border-radius: 8px;
+  width: auto;
+  border: 1px solid #e0e0e0; /* Lighter border */
+  border-radius: 12px; /* Larger border-radius */
   overflow: hidden;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Stronger shadow */
   background: white;
   display: flex;
   flex-direction: column;
-  align-items: stretch; /* Stretch items to fill card */
-  text-align: left; /* Align text left within the card */
-  cursor: pointer; /* Indicate clickable */
-  transition: all 0.2s ease-in-out;
-  position: relative; /* For status badge */
+  align-items: stretch;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; /* Slower transition */
+  position: relative;
 }
 #buy-account-list .account-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-5px); /* More pronounced lift */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* Stronger shadow */
 }
 #buy-account-list .account-card .image-gallery {
   width: 100%;
-  height: 160px; /* Consistent image height */
+  padding-bottom: 65%; /* 4:3 Aspect Ratio */
+  position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 0; /* No margin below image */
-  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--border-color);
 }
-/* Perbaikan untuk gambar di kartu beli akun */
 #buy-account-list .account-card .image-gallery img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Ensures image fits without cropping */
+  object-fit: contain;
+  object-position: center;
   border-radius: 0;
   border: none;
 }
 #buy-account-list .account-card .card-content {
-  padding: 10px 12px;
-  flex-grow: 1; /* Allow content to take available space */
+  padding: 15px; /* More padding */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 #buy-account-list .account-card h3 {
-  margin: 0 0 5px 0;
-  font-size: 1.1em;
+  margin: 0 0 8px 0; /* More margin */
+  font-size: 1.2em; /* Slightly larger */
   color: var(--dark-blue);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 700;
 }
 #buy-account-list .account-card p {
-  margin: 0 0 4px 0;
-  font-size: 0.85em;
+  margin: 0 0 6px 0; /* More margin */
+  font-size: 0.9em; /* Slightly larger */
   color: #555;
   text-align: left;
-  width: auto; /* Reset width */
+  width: auto;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 #buy-account-list .account-card .price {
-  font-size: 1.3em;
-  font-weight: 700;
-  color: var(--shopee-orange); /* Shopee-like price color */
-  margin-top: 8px;
+  font-size: 1.4em; /* Larger price font */
+  font-weight: 800; /* Bolder */
+  color: var(--shopee-orange);
+  margin-top: 10px;
   margin-bottom: 0;
   text-align: left;
 }
 #buy-account-list .account-card .status-badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px; /* More space from top */
+  right: 15px; /* More space from right */
   background-color: var(--primary-color);
   color: white;
-  padding: 4px 8px;
-  border-radius: 5px;
-  font-size: 0.75em;
-  font-weight: 600;
+  padding: 6px 10px; /* More padding */
+  border-radius: 999px; /* Pill shape */
+  font-size: 0.8em; /* Slightly larger */
+  font-weight: 700;
   z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 #buy-account-list .account-card .status-badge.terjual {
-  background-color: #dc3545; /* Red for sold */
+  background-color: #dc3545;
 }
 
 /* Filter and Search styles */
 .filter-search-section {
   background: var(--white);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px var(--shadow-light);
-  margin-bottom: 30px;
-  max-width: 100%; /* Allow wider */
+  padding: 30px; /* More padding */
+  border-radius: 15px; /* Larger border-radius */
+  box-shadow: 0 8px 25px var(--shadow-light); /* Stronger shadow */
+  margin-bottom: 40px; /* More margin */
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
 
 .filter-search-section .search-bar {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 15px; /* More gap */
+  margin-bottom: 25px; /* More margin */
 }
 .filter-search-section .search-bar input {
   flex-grow: 1;
-  margin: 0; /* Override default margin */
+  margin: 0;
+  padding: 12px; /* Adjusted padding */
+  border-radius: 8px; /* Adjusted border-radius */
 }
 .filter-search-section .search-bar button {
   width: auto;
-  padding: 10px 20px;
-  margin: 0; /* Override default margin */
+  padding: 12px 25px; /* Adjusted padding */
+  margin: 0;
+  border-radius: 8px; /* Adjusted border-radius */
 }
 
 .filter-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  justify-content: flex-start; /* Align filters to start */
+  gap: 20px; /* More gap */
+  justify-content: flex-start;
   align-items: flex-end;
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  min-width: 150px;
+  min-width: 180px; /* Slightly wider min-width */
 }
 
 .filter-group label {
-  font-weight: 600;
-  margin-bottom: 5px;
+  font-weight: 700; /* Bolder */
+  margin-bottom: 8px; /* More margin */
   color: var(--dark-blue);
-  font-size: 0.9em;
+  font-size: 0.95em; /* Slightly larger */
 }
 
 .filter-group select, .filter-group input {
   width: 100%;
-  padding: 8px;
-  border-radius: 5px;
+  padding: 10px; /* More padding */
+  border-radius: 8px; /* Larger border-radius */
   border: 1px solid var(--border-color);
-  font-size: 0.9em;
-  margin: 0; /* Override default margin */
+  font-size: 0.95em; /* Slightly larger */
+  margin: 0;
 }
 
 .filter-group button {
   width: auto;
-  padding: 8px 15px;
-  margin-top: 10px;
-  font-size: 0.9em;
+  padding: 10px 20px; /* More padding */
+  margin-top: 15px; /* More margin */
+  font-size: 0.95em; /* Slightly larger */
+  border-radius: 8px; /* Larger border-radius */
 }
 
 /* Modal Styles */
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 2000; /* Sit on top */
+  display: none;
+  position: fixed;
+  z-index: 2000;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7); /* Darker overlay */
   justify-content: center;
   align-items: center;
   padding: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out; /* Slower transition */
+}
+
+.modal.show {
+  opacity: 1;
 }
 
 .modal-content {
   background-color: #fefefe;
   margin: auto;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-  max-width: 800px;
+  padding: 40px; /* More padding */
+  border-radius: 18px; /* Much larger border-radius */
+  box-shadow: 0 10px 35px rgba(0,0,0,0.4); /* Stronger shadow */
+  max-width: 850px; /* Wider modal */
   width: 100%;
   position: relative;
-  animation: fadeIn 0.3s ease-out;
-  max-height: 90vh; /* Limit height for scrollability */
-  overflow-y: auto; /* Enable scrolling within modal */
+  animation: fadeIn 0.4s ease-out; /* Slower animation */
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: translateY(-30px); /* More pronounced slide-in */
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+.modal.show .modal-content {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .modal-content h2 {
   text-align: center;
   color: var(--dark-blue);
-  margin-bottom: 20px;
-  font-size: 1.8em;
+  margin-bottom: 25px; /* More margin */
+  font-size: 2em; /* Larger font */
+  font-weight: 800;
 }
 
 .modal-close {
-  color: #aaa;
+  color: #888; /* Slightly darker */
   position: absolute;
-  top: 15px;
-  right: 25px;
-  font-size: 35px;
+  top: 20px; /* More space */
+  right: 30px; /* More space */
+  font-size: 40px; /* Larger size */
   font-weight: bold;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .modal-close:hover,
 .modal-close:focus {
-  color: #333;
+  color: #000;
   text-decoration: none;
+  transform: rotate(90deg); /* Spin effect */
 }
 
 .modal-image-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adjusted min-width for thumbnails */
+  gap: 18px; /* More gap */
+  margin-top: 25px; /* More margin */
+  margin-bottom: 25px;
   border-top: 1px solid #eee;
-  padding-top: 20px;
+  padding-top: 25px;
 }
 
-/* Perbaikan untuk thumbnail di modal detail akun */
 .modal-image-gallery img {
   width: 100%;
-  height: 100px;
-  object-fit: contain; /* Ensures image fits without cropping */
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  height: 100px; /* Adjusted height for thumbnails */
+  object-fit: cover;
+  border-radius: 10px; /* Larger border-radius */
+  border: 3px solid var(--border-color); /* Thicker border */
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15); /* Stronger shadow */
 }
 .modal-image-gallery img:hover {
-  transform: scale(1.05);
+  transform: scale(1.08); /* More pronounced zoom */
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
 
 .modal-main-image-container {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px; /* More margin */
+  max-height: 350px; /* Taller main image */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .modal-main-image {
   max-width: 100%;
-  max-height: 400px;
-  object-fit: contain; /* Use contain to show full image */
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-height: 100%; /* Ensures entire image is visible */
+  object-fit: contain; /* Ensures entire image is visible */
+  border-radius: 12px; /* Larger border-radius */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25); /* Stronger shadow */
   cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.modal-main-image:hover {
+  transform: scale(1.03); /* Slight zoom on hover */
 }
 
 .modal-detail-section {
-  margin-bottom: 15px;
-  padding: 10px;
-  background-color: var(--light-gray);
-  border-radius: 8px;
+  margin-bottom: 20px; /* More margin */
+  padding: 20px; /* More padding */
+  background-color: var(--accent-color-2); /* Lighter background */
+  border-radius: 12px; /* Larger border-radius */
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08); /* Stronger shadow */
 }
 .modal-detail-section h4 {
   color: var(--secondary-color);
   margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 1.1em;
-  border-bottom: 1px dashed #ccc;
-  padding-bottom: 5px;
+  margin-bottom: 12px; /* More margin */
+  font-size: 1.3em; /* Larger font */
+  border-bottom: 1px dashed #bbb; /* Slightly darker dashed line */
+  padding-bottom: 10px; /* More padding */
+  font-weight: 700;
 }
 .modal-detail-section p {
   text-align: left;
-  margin: 5px 0;
-  font-size: 0.9em;
+  margin: 10px 0; /* More margin */
+  font-size: 1em; /* Slightly larger */
   color: #444;
 }
 .modal-detail-section strong {
   color: var(--dark-blue);
+  font-weight: 700;
 }
 
 .modal-price {
-  font-size: 1.8em;
-  font-weight: 700;
+  font-size: 2.2em; /* Even larger price font */
+  font-weight: 800; /* Bolder */
   color: var(--shopee-orange);
   text-align: center;
-  margin: 20px 0;
+  margin: 30px 0; /* More margin */
 }
 
 .modal-contact-info {
   text-align: center;
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px dashed #eee;
+  margin-top: 30px; /* More margin */
+  padding-top: 25px; /* More padding */
+  border-top: 1px dashed #ddd; /* Slightly darker dashed line */
 }
 .modal-contact-info a {
-  background-color: #28a745; /* WhatsApp green */
+  background-color: #28a745;
   color: white;
-  padding: 12px 25px;
-  border-radius: 8px;
+  padding: 16px 35px; /* Larger button */
+  border-radius: 12px; /* Larger border-radius */
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   display: inline-block;
-  margin-top: 10px;
-  transition: background 0.3s ease;
+  margin-top: 18px; /* More margin */
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
 }
 .modal-contact-info a:hover {
   background-color: #218838;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
 }
 
 /* Image Viewer Modal */
+#imageViewerModal {
+  background-color: rgba(0,0,0,0.9); /* Even darker overlay */
+}
 #imageViewerModal .modal-content {
   background: transparent;
   box-shadow: none;
@@ -697,46 +843,56 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 95vw;
-  max-height: 95vh;
+  max-width: 98vw; /* Wider */
+  max-height: 98vh; /* Taller */
+  transform: none;
+  opacity: 1;
 }
 #imageViewerModal .modal-main-image {
-  max-width: 100%;
+  max-width: 95%;
   max-height: 90vh;
   object-fit: contain; /* Ensures image fits without cropping */
   border-radius: 0;
   box-shadow: none;
+  transition: none;
+}
+#imageViewerModal .modal-main-image:hover {
+  transform: none;
 }
 #imageViewerModal .modal-close {
   color: white;
-  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+  text-shadow: 0 0 8px rgba(0,0,0,0.8); /* Stronger shadow */
+  top: 25px; /* More space */
+  right: 35px; /* More space */
 }
 #imageViewerModal .nav-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.6); /* Darker background */
   color: white;
   border: none;
-  padding: 10px 15px;
-  font-size: 2em;
+  padding: 15px 20px; /* Larger padding */
+  font-size: 2.5em; /* Larger font */
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px; /* Larger border-radius */
   user-select: none;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 #imageViewerModal .nav-arrow:hover {
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.9); /* Even darker on hover */
+  transform: translateY(-50%) scale(1.05); /* Slight zoom */
 }
 #imageViewerModal .nav-arrow.left {
-  left: 20px;
+  left: 30px; /* More space from edge */
 }
 #imageViewerModal .nav-arrow.right {
-  right: 20px;
+  right: 30px; /* More space from edge */
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.9); } /* Start smaller */
   to { opacity: 1; transform: scale(1); }
 }
 
@@ -753,12 +909,56 @@
     width: 100%;
   }
   .modal-content {
-    padding: 20px;
+    padding: 25px;
   }
   .modal-close {
-    font-size: 30px;
-    top: 10px;
-    right: 15px;
+    font-size: 35px;
+    top: 15px;
+    right: 20px;
+  }
+  .modal-image-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Adjust for smaller screens */
+    gap: 10px;
+  }
+  .modal-image-gallery img {
+    height: 70px;
+  }
+  /* PERBAIKAN UTAMA UNTUK UKURAN GAMBAR DI HP */
+  #buy-account-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* JAUH LEBIH KECIL UNTUK HP */
+    gap: 10px; /* Kurangi gap juga */
+  }
+  #buy-account-list .account-card .image-gallery {
+    padding-bottom: 80%; /* Ubah ke rasio 1:1 untuk kartu yang lebih ringkas di HP */
+  }
+  #buy-account-list .account-card h3 {
+    font-size: 1em; /* Kecilkan judul */
+  }
+  #buy-account-list .account-card p {
+    font-size: 0.8em; /* Kecilkan teks */
+  }
+  #buy-account-list .account-card .price {
+    font-size: 1.1em; /* Kecilkan harga */
+  }
+  #buy-account-list .account-card .status-badge {
+    font-size: 0.7em; /* Kecilkan badge */
+    padding: 4px 6px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .modal-main-image-container {
+    max-height: 250px; /* Lebih kecil lagi untuk HP */
+  }
+  .modal-main-image {
+    max-height: 100%; /* Menggunakan 100% dari max-height container */
+  }
+
+  #imageViewerModal .nav-arrow {
+    padding: 10px 12px;
+    font-size: 2em;
+    left: 10px;
+    right: 10px;
   }
 }
 
@@ -767,7 +967,13 @@
 <body>
 
 <nav>
-  <div class="logo">ATLANTIS STORE</div>
+  <div class="logo">
+    <!-- SVG Icon for professional touch -->
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px; color: var(--accent-color-1);">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+    </svg>
+    ATLANTIS STORE
+  </div>
   <div>
     <a href="#" id="nav-profile">Profile</a>
     <a href="#" id="nav-post">Posting Akun</a>
@@ -1048,7 +1254,7 @@
           <input type="number" class="la-hw-muzzle-level" placeholder="Level (1-19)" min="1" max="19">
           <input type="number" class="la-hw-muzzle-grade" placeholder="Grade (1-12)" min="1" max="12">
           <select class="la-hw-muzzle-color">
-            <option value="">Pilih Warna</
+            <option value="">Pilih Warna</option>
             <option value="Green">Green</option>
             <option value="Blue">Blue</option>
             <option value="Purple">Purple</option>
@@ -1749,7 +1955,8 @@ async function fillEditForm(postId) {
       }
     };
 
-    const fillMeeleAttachmentFields = (prefix, attachments) => {
+    const fillMeeleAttachmentFields = (prefix) => {
+      const attachments = currentEditData.lifeafter.attachments.meeleWeapon;
       if (attachments) {
         document.querySelector(`.${prefix}-knob-level`).value = attachments[0]?.level || '';
         document.querySelector(`.${prefix}-knob-grade`).value = attachments[0]?.grade || '';
@@ -1765,7 +1972,8 @@ async function fillEditForm(postId) {
       }
     };
 
-    const fillArmorAttachmentFields = (prefix, attachments) => {
+    const fillArmorAttachmentFields = (prefix) => {
+      const attachments = currentEditData.lifeafter.attachments.armor;
       if (attachments) {
         document.querySelector(`.${prefix}-steel-level`).value = attachments[0]?.level || '';
         document.querySelector(`.${prefix}-steel-grade`).value = attachments[0]?.grade || '';
@@ -1783,8 +1991,8 @@ async function fillEditForm(postId) {
 
     fillAttachmentFields('la-lw', la.attachments.lightWeapon);
     fillAttachmentFields('la-hw', la.attachments.heavyWeapon);
-    fillMeeleAttachmentFields('la-mw', la.attachments.meeleWeapon);
-    fillArmorAttachmentFields('la-armor', la.attachments.armor);
+    fillMeeleAttachmentFields('la-mw');
+    fillArmorAttachmentFields('la-armor');
 
     document.getElementById('la-job-category').value = la.jobCategory || '';
     showLifeAfterJob(); // Call to populate job detail dropdown
@@ -2324,6 +2532,7 @@ async function showAccountDetailModal(accountId) {
   }
   detailsDiv.innerHTML = detailsHtml;
 
+  modal.classList.add('show'); // Add 'show' class to trigger transition
   modal.style.display = 'flex'; // Show the modal
 }
 
@@ -2622,7 +2831,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
   if (closeAccountDetailModal) {
     closeAccountDetailModal.addEventListener('click', () => {
-      accountDetailModal.style.display = 'none';
+      accountDetailModal.classList.remove('show'); // Remove 'show' class for transition
+      accountDetailModal.addEventListener('transitionend', function handler() {
+        accountDetailModal.style.display = 'none';
+        accountDetailModal.removeEventListener('transitionend', handler);
+      });
       currentAccountDetail = null; // Clear data
     });
   }
@@ -2630,7 +2843,11 @@ document.addEventListener("DOMContentLoaded", function() {
   if (accountDetailModal) {
     accountDetailModal.addEventListener('click', (e) => {
       if (e.target === accountDetailModal) { // Only close if modal background is clicked
-        accountDetailModal.style.display = 'none';
+        accountDetailModal.classList.remove('show');
+        accountDetailModal.addEventListener('transitionend', function handler() {
+          accountDetailModal.style.display = 'none';
+          accountDetailModal.removeEventListener('transitionend', handler);
+        });
         currentAccountDetail = null;
       }
     });
@@ -2663,7 +2880,10 @@ document.addEventListener("DOMContentLoaded", function() {
     if (prevImageBtn) prevImageBtn.style.display = (currentImageViewerIndex > 0) ? 'block' : 'none';
     if (nextImageBtn) nextImageBtn.style.display = (currentImageViewerIndex < currentImageViewerImages.length - 1) ? 'block' : 'none';
 
-    if (imageViewerModal) imageViewerModal.style.display = 'flex';
+    if (imageViewerModal) {
+      imageViewerModal.style.display = 'flex';
+      setTimeout(() => imageViewerModal.classList.add('show'), 10); // Small delay to ensure display is set before transition
+    }
   }
 
   if (prevImageBtn) {
@@ -2684,7 +2904,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
   if (closeImageViewerModal) {
     closeImageViewerModal.addEventListener('click', () => {
-      if (imageViewerModal) imageViewerModal.style.display = 'none';
+      if (imageViewerModal) {
+        imageViewerModal.classList.remove('show');
+        imageViewerModal.addEventListener('transitionend', function handler() {
+          imageViewerModal.style.display = 'none';
+          imageViewerModal.removeEventListener('transitionend', handler);
+        });
+      }
       currentImageViewerImages = [];
       currentImageViewerIndex = 0;
     });
@@ -2693,7 +2919,11 @@ document.addEventListener("DOMContentLoaded", function() {
   if (imageViewerModal) {
     imageViewerModal.addEventListener('click', (e) => {
       if (e.target === imageViewerModal) {
-        imageViewerModal.style.display = 'none';
+        imageViewerModal.classList.remove('show');
+        imageViewerModal.addEventListener('transitionend', function handler() {
+          imageViewerModal.style.display = 'none';
+          imageViewerModal.removeEventListener('transitionend', handler);
+        });
         currentImageViewerImages = [];
         currentImageViewerIndex = 0;
       }
@@ -2756,7 +2986,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   if (imageModalDiv) {
-    imageModalDiv.addEventListener('click', function(e) {
+    imageModalDiv.addEventListener('click', (e) => {
       if (e.target === imageModalDiv) { // Only close if modal background is clicked
         imageModalDiv.style.display = 'none';
         document.getElementById('modalImage').src = '';
