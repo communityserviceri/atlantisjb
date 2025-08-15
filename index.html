@@ -868,27 +868,34 @@
 #imageViewerModal .nav-arrow {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%); /* Memastikan posisi vertikal di tengah */
   background: rgba(0,0,0,0.6); /* Darker background */
   color: white;
   border: none;
-  padding: 15px 20px; /* Larger padding */
-  font-size: 2.5em; /* Larger font */
+  padding: 18px 25px; /* Lebih besar */
+  font-size: 3em; /* Lebih besar */
   cursor: pointer;
-  border-radius: 8px; /* Larger border-radius */
+  border-radius: 50%; /* Bentuk lingkaran */
   user-select: none;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  z-index: 2001; /* Pastikan di atas gambar */
+  display: flex; /* Untuk centering ikon */
+  align-items: center;
+  justify-content: center;
+  width: 60px; /* Ukuran tetap */
+  height: 60px; /* Ukuran tetap */
 }
 #imageViewerModal .nav-arrow:hover {
   background: rgba(0,0,0,0.9); /* Even darker on hover */
-  transform: translateY(-50%) scale(1.05); /* Slight zoom */
+  transform: translateY(-50%) scale(1.1); /* Slight zoom */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 #imageViewerModal .nav-arrow.left {
-  left: 30px; /* More space from edge */
+  left: 20px; /* Posisikan di kiri */
 }
 #imageViewerModal .nav-arrow.right {
-  right: 30px; /* More space from edge */
+  right: 20px; /* Posisikan di kanan */
 }
 
 @keyframes fadeIn {
@@ -925,11 +932,11 @@
   }
   /* PERBAIKAN UTAMA UNTUK UKURAN GAMBAR DI HP */
   #buy-account-list {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* JAUH LEBIH KECIL UNTUK HP */
-    gap: 10px; /* Kurangi gap juga */
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* JAUH LEBIH KECIL UNTUK HP */
+    gap: 15px; /* Kurangi gap juga */
   }
   #buy-account-list .account-card .image-gallery {
-    padding-bottom: 80%; /* Ubah ke rasio 1:1 untuk kartu yang lebih ringkas di HP */
+    padding-bottom: 75%; /* Ubah ke rasio 4:3 untuk kartu yang lebih ringkas di HP */
   }
   #buy-account-list .account-card h3 {
     font-size: 1em; /* Kecilkan judul */
@@ -955,8 +962,10 @@
   }
 
   #imageViewerModal .nav-arrow {
-    padding: 10px 12px;
-    font-size: 2em;
+    padding: 12px 15px;
+    font-size: 2.5em;
+    width: 50px;
+    height: 50px;
     left: 10px;
     right: 10px;
   }
