@@ -966,8 +966,15 @@
     font-size: 2.5em;
     width: 50px;
     height: 50px;
-    left: 10px;
-    right: 10px;
+    /* Hapus properti left dan right dari sini */
+  }
+  #imageViewerModal .nav-arrow.left {
+    left: 10px; /* Posisikan di kiri */
+    right: auto; /* Pastikan tidak ada konflik dengan right */
+  }
+  #imageViewerModal .nav-arrow.right {
+    right: 10px; /* Posisikan di kanan */
+    left: auto; /* Pastikan tidak ada konflik dengan left */
   }
 }
 
@@ -1263,7 +1270,7 @@
           <input type="number" class="la-hw-muzzle-level" placeholder="Level (1-19)" min="1" max="19">
           <input type="number" class="la-hw-muzzle-grade" placeholder="Grade (1-12)" min="1" max="12">
           <select class="la-hw-muzzle-color">
-            <option value="">Pilih Warna</option>
+            <option value="">Pilih Warna</
             <option value="Green">Green</option>
             <option value="Blue">Blue</option>
             <option value="Purple">Purple</option>
