@@ -21,6 +21,8 @@
     --border-color: #ddd;
     --shadow-light: rgba(0,0,0,0.08);
     --shadow-medium: rgba(0,0,0,0.15);
+    --shopee-orange: #ee4d2d;
+    --shopee-orange-dark: #d04326;
   }
 
   body {
@@ -204,10 +206,11 @@
     }
   }
 
+  /* Perbaikan untuk gambar di kartu akun (landing page dan profil) */
   img.account-img {
     max-width: 100%;
     height: 200px; /* Fixed height for consistency */
-    object-fit: cover; /* Ensures image covers the area without distortion */
+    object-fit: contain; /* Ensures image fits without cropping */
     border-radius: 8px;
     margin-bottom: 15px;
     box-shadow: 0 2px 8px var(--shadow-light);
@@ -221,10 +224,11 @@
     margin-bottom: 15px;
   }
 
+  /* Perbaikan untuk thumbnail di kartu akun (landing page dan profil) */
   .account-card .image-gallery img {
     width: 80px; /* Smaller thumbnails */
     height: 80px;
-    object-fit: cover;
+    object-fit: contain; /* Ensures image fits without cropping */
     border-radius: 5px;
     border: 1px solid var(--border-color);
     cursor: pointer; /* Make images clickable */
@@ -322,7 +326,7 @@
   #image-previews img {
     max-width: 100px;
     height: 100px;
-    object-fit: cover;
+    object-fit: contain; /* Ensures image fits without cropping */
     border-radius: 5px;
     border: 1px solid #eee;
     cursor: pointer; /* Make images clickable */
@@ -386,79 +390,129 @@
 
 /* Improved Buy Account UI */
 #buy-account-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid; /* Use grid for better control */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Responsive grid */
+  gap: 15px; /* Smaller gap for more items per row */
   justify-content: center;
+  padding: 10px;
 }
 #buy-account-list .account-card {
-  width: 300px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  width: auto; /* Let grid handle width */
+  border: 1px solid #eee;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
   background: white;
-  display: flex; /* Ensure flex properties apply */
-  flex-direction: column; /* Stack content vertically */
-  align-items: center; /* Center items horizontally */
-  text-align: center; /* Center text */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* Stretch items to fill card */
+  text-align: left; /* Align text left within the card */
+  cursor: pointer; /* Indicate clickable */
+  transition: all 0.2s ease-in-out;
+  position: relative; /* For status badge */
+}
+#buy-account-list .account-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 #buy-account-list .account-card .image-gallery {
-  width: 100%; /* Gallery takes full width of card */
-  height: 180px; /* Fixed height for consistency */
-  overflow: hidden; /* Hide overflow if image is larger */
+  width: 100%;
+  height: 160px; /* Consistent image height */
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 0; /* No margin below image */
+  border-bottom: 1px solid #eee;
 }
+/* Perbaikan untuk gambar di kartu beli akun */
 #buy-account-list .account-card .image-gallery img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Cover the area, cropping if necessary */
-  border-radius: 0; /* Remove border-radius for main image */
+  object-fit: contain; /* Ensures image fits without cropping */
+  border-radius: 0;
   border: none;
 }
+#buy-account-list .account-card .card-content {
+  padding: 10px 12px;
+  flex-grow: 1; /* Allow content to take available space */
+  display: flex;
+  flex-direction: column;
+}
 #buy-account-list .account-card h3 {
-  margin: 10px;
-  font-size: 1.2em;
+  margin: 0 0 5px 0;
+  font-size: 1.1em;
   color: var(--dark-blue);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #buy-account-list .account-card p {
-  margin: 5px 10px;
-  font-size: 0.9em;
-  text-align: left; /* Align text left within the card */
-  width: calc(100% - 20px); /* Adjust width for padding */
+  margin: 0 0 4px 0;
+  font-size: 0.85em;
+  color: #555;
+  text-align: left;
+  width: auto; /* Reset width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-#buy-account-list .buy-btn {
-  display: block;
-  margin: 10px auto 15px;
-  padding: 10px 20px;
+#buy-account-list .account-card .price {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--shopee-orange); /* Shopee-like price color */
+  margin-top: 8px;
+  margin-bottom: 0;
+  text-align: left;
+}
+#buy-account-list .account-card .status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   background-color: var(--primary-color);
-  color: #fff;
-  text-align: center;
+  color: white;
+  padding: 4px 8px;
   border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
+  font-size: 0.75em;
+  font-weight: 600;
+  z-index: 10;
 }
-#buy-account-list .buy-btn:hover {
-  background-color: var(--secondary-color);
+#buy-account-list .account-card .status-badge.terjual {
+  background-color: #dc3545; /* Red for sold */
 }
 
-/* Filter styles */
-.filter-section {
+/* Filter and Search styles */
+.filter-search-section {
   background: var(--white);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 5px 20px var(--shadow-light);
   margin-bottom: 30px;
-  max-width: 900px; /* Wider for filters */
+  max-width: 100%; /* Allow wider */
   margin-left: auto;
   margin-right: auto;
+}
+
+.filter-search-section .search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.filter-search-section .search-bar input {
+  flex-grow: 1;
+  margin: 0; /* Override default margin */
+}
+.filter-search-section .search-bar button {
+  width: auto;
+  padding: 10px 20px;
+  margin: 0; /* Override default margin */
+}
+
+.filter-options {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  justify-content: center;
+  justify-content: flex-start; /* Align filters to start */
   align-items: flex-end;
 }
 
@@ -472,6 +526,7 @@
   font-weight: 600;
   margin-bottom: 5px;
   color: var(--dark-blue);
+  font-size: 0.9em;
 }
 
 .filter-group select, .filter-group input {
@@ -487,6 +542,224 @@
   width: auto;
   padding: 8px 15px;
   margin-top: 10px;
+  font-size: 0.9em;
+}
+
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 2000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+  max-width: 800px;
+  width: 100%;
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
+  max-height: 90vh; /* Limit height for scrollability */
+  overflow-y: auto; /* Enable scrolling within modal */
+}
+
+.modal-content h2 {
+  text-align: center;
+  color: var(--dark-blue);
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+.modal-close {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+  color: #333;
+  text-decoration: none;
+}
+
+.modal-image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+/* Perbaikan untuk thumbnail di modal detail akun */
+.modal-image-gallery img {
+  width: 100%;
+  height: 100px;
+  object-fit: contain; /* Ensures image fits without cropping */
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.modal-image-gallery img:hover {
+  transform: scale(1.05);
+}
+
+.modal-main-image-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.modal-main-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain; /* Use contain to show full image */
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.modal-detail-section {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: var(--light-gray);
+  border-radius: 8px;
+}
+.modal-detail-section h4 {
+  color: var(--secondary-color);
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 5px;
+}
+.modal-detail-section p {
+  text-align: left;
+  margin: 5px 0;
+  font-size: 0.9em;
+  color: #444;
+}
+.modal-detail-section strong {
+  color: var(--dark-blue);
+}
+
+.modal-price {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--shopee-orange);
+  text-align: center;
+  margin: 20px 0;
+}
+
+.modal-contact-info {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px dashed #eee;
+}
+.modal-contact-info a {
+  background-color: #28a745; /* WhatsApp green */
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+.modal-contact-info a:hover {
+  background-color: #218838;
+}
+
+/* Image Viewer Modal */
+#imageViewerModal .modal-content {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 95vw;
+  max-height: 95vh;
+}
+#imageViewerModal .modal-main-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain; /* Ensures image fits without cropping */
+  border-radius: 0;
+  box-shadow: none;
+}
+#imageViewerModal .modal-close {
+  color: white;
+  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+#imageViewerModal .nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 2em;
+  cursor: pointer;
+  border-radius: 5px;
+  user-select: none;
+  transition: background 0.3s ease;
+}
+#imageViewerModal .nav-arrow:hover {
+  background: rgba(0,0,0,0.8);
+}
+#imageViewerModal .nav-arrow.left {
+  left: 20px;
+}
+#imageViewerModal .nav-arrow.right {
+  right: 20px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+  .filter-options {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter-group {
+    min-width: unset;
+    width: 100%;
+  }
+  .filter-group button {
+    width: 100%;
+  }
+  .modal-content {
+    padding: 20px;
+  }
+  .modal-close {
+    font-size: 30px;
+    top: 10px;
+    right: 15px;
+  }
 }
 
 </style>
@@ -775,7 +1048,7 @@
           <input type="number" class="la-hw-muzzle-level" placeholder="Level (1-19)" min="1" max="19">
           <input type="number" class="la-hw-muzzle-grade" placeholder="Grade (1-12)" min="1" max="12">
           <select class="la-hw-muzzle-color">
-            <option value="">Pilih Warna</option>
+            <option value="">Pilih Warna</
             <option value="Green">Green</option>
             <option value="Blue">Blue</option>
             <option value="Purple">Purple</option>
@@ -886,64 +1159,113 @@
   <div id="buy-account-page" class="hidden">
     <h2>Beli Akun Game</h2>
 
-    <div class="filter-section">
-      <div class="filter-group">
-        <label for="filter-category">Kategori Game:</label>
-        <select id="filter-category" onchange="toggleGameFilters()">
-          <option value="all">Semua Kategori</option>
-          <option value="ml">Mobile Legend</option>
-          <option value="toram">Toram Online</option>
-          <option value="lifeafter">Life After</option>
-        </select>
+    <div class="filter-search-section">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Cari akun (nama game, rank, server, dll.)">
+        <button type="button" onclick="applyFilters()">Cari</button>
       </div>
 
-      <!-- ML Filters -->
-      <div id="ml-filters" class="filter-group hidden">
-        <label for="filter-ml-role">Role Akun ML:</label>
-        <select id="filter-ml-role">
-          <option value="all">Semua Role</option>
-          <option value="Gold Lane">Gold Lane</option>
-          <option value="Exp Lane">Exp Lane</option>
-          <option value="Jungler">Jungler</option>
-          <option value="Mid Lane">Mid Lane</option>
-          <option value="Roamer">Roamer</option>
-        </select>
-      </div>
+      <div class="filter-options">
+        <div class="filter-group">
+          <label for="filter-category">Kategori Game:</label>
+          <select id="filter-category" onchange="toggleGameFilters()">
+            <option value="all">Semua Kategori</option>
+            <option value="ml">Mobile Legend</option>
+            <option value="toram">Toram Online</option>
+            <option value="lifeafter">Life After</option>
+          </select>
+        </div>
 
-      <!-- Toram Filters -->
-      <div id="toram-filters" class="filter-group hidden">
-        <label for="filter-toram-char-count">Jumlah Char Toram:</label>
-        <input type="number" id="filter-toram-char-count" placeholder="Min Jumlah Char" min="0">
-        <label for="filter-toram-char-level">Level Char Toram (Min):</label>
-        <input type="number" id="filter-toram-char-level" placeholder="Min Level Char" min="0">
-        <label for="filter-toram-mq">Main Quest Toram:</label>
-        <input type="text" id="filter-toram-mq" placeholder="Contoh: BAB 16">
-      </div>
+        <!-- ML Filters -->
+        <div id="ml-filters" class="filter-group hidden">
+          <label for="filter-ml-role">Role Akun ML:</label>
+          <select id="filter-ml-role">
+            <option value="all">Semua Role</option>
+            <option value="Gold Lane">Gold Lane</option>
+            <option value="Exp Lane">Exp Lane</option>
+            <option value="Jungler">Jungler</option>
+            <option value="Mid Lane">Mid Lane</option>
+            <option value="Roamer">Roamer</option>
+          </select>
+        </div>
 
-      <!-- LifeAfter Filters -->
-      <div id="lifeafter-filters" class="filter-group hidden">
-        <label for="filter-la-server">Server LA:</label>
-        <select id="filter-la-server">
-          <option value="all">Semua Server</option>
-          <option value="easy">EasyServer</option>
-          <option value="sea">SEA Server</option>
-          <option value="na">NA Server</option>
-        </select>
-        <label for="filter-la-manor">Manor Level LA (Min):</label>
-        <input type="number" id="filter-la-manor" placeholder="Min Manor Level" min="1" max="29">
-      </div>
+        <!-- Toram Filters -->
+        <div id="toram-filters" class="filter-group hidden">
+          <label for="filter-toram-char-count">Jumlah Char Toram (Min):</label>
+          <input type="number" id="filter-toram-char-count" placeholder="Min Jumlah Char" min="0">
+          <label for="filter-toram-char-level">Level Char Toram (Min):</label>
+          <input type="number" id="filter-toram-char-level" placeholder="Min Level Char" min="0">
+          <label for="filter-toram-mq">Main Quest Toram:</label>
+          <input type="text" id="filter-toram-mq" placeholder="Contoh: BAB 16">
+        </div>
 
-      <div class="filter-group">
-        <button type="button" onclick="applyFilters()">Terapkan Filter</button>
-        <button type="button" onclick="resetFilters()" style="background-color: #6c757d;">Reset Filter</button>
+        <!-- LifeAfter Filters -->
+        <div id="lifeafter-filters" class="filter-group hidden">
+          <label for="filter-la-server">Server LA:</label>
+          <select id="filter-la-server">
+            <option value="all">Semua Server</option>
+            <option value="easy">EasyServer</option>
+            <option value="sea">SEA Server</option>
+            <option value="na">NA Server</option>
+          </select>
+          <label for="filter-la-manor">Manor Level LA (Min):</label>
+          <input type="number" id="filter-la-manor" placeholder="Min Manor Level" min="1" max="29">
+        </div>
+
+        <div class="filter-group">
+          <label for="sort-by">Urutkan:</label>
+          <select id="sort-by" onchange="applyFilters()">
+            <option value="newest">Terbaru</option>
+            <option value="price-asc">Harga Terendah</option>
+            <option value="price-desc">Harga Tertinggi</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <button type="button" onclick="applyFilters()">Terapkan Filter</button>
+          <button type="button" onclick="resetFilters()" style="background-color: #6c757d;">Reset Filter</button>
+        </div>
       </div>
     </div>
 
-    <div class="flex" id="buy-account-list">
+    <div id="buy-account-list">
       <!-- Account cards for buying will be loaded here -->
     </div>
   </div>
 
+</div>
+
+<!-- Account Detail Modal -->
+<div id="accountDetailModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" id="closeAccountDetailModal">&times;</span>
+    <h2 id="modal-account-title"></h2>
+    <div class="modal-main-image-container">
+      <img id="modal-main-image" src="" alt="Main Account Image">
+    </div>
+    <div class="modal-image-gallery" id="modal-thumbnail-gallery">
+      <!-- Thumbnails will be loaded here -->
+    </div>
+    <div id="modal-account-details">
+      <!-- Account specific details will be loaded here -->
+    </div>
+    <p class="modal-price" id="modal-account-price"></p>
+    <div class="modal-contact-info">
+      <p><strong>Owner:</strong> <span id="modal-owner-name"></span></p>
+      <a href="#" id="modal-owner-whatsapp" target="_blank">Hubungi Penjual (WhatsApp)</a>
+      <p style="font-size: 0.8em; color: #888; margin-top: 10px;">Untuk transaksi aman, gunakan rekber admin: <a href="https://wa.me/6288223070064" target="_blank">+6288223070064</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Image Viewer Modal (for full screen image) -->
+<div id="imageViewerModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" id="closeImageViewerModal">&times;</span>
+    <img id="viewerImage" src="" alt="Full Screen Image" class="modal-main-image">
+    <button class="nav-arrow left" id="prevImage">&lt;</button>
+    <button class="nav-arrow right" id="nextImage">&gt;</button>
+  </div>
 </div>
 
 <script>
@@ -979,6 +1301,9 @@ const postAlert = document.getElementById('post-alert');
 const postSubmitBtn = document.getElementById('post-submit-btn'); // Get the submit button
 
 let allAccountsData = []; // Store all fetched accounts for filtering
+let currentAccountDetail = null; // To store data for the detail modal
+let currentImageViewerImages = []; // Stores image URLs for the viewer
+let currentImageViewerIndex = 0; // Current index in the image viewer
 
 // Helper function to show alerts
 function showAlert(element, message, type) {
@@ -1213,7 +1538,8 @@ async function loadMyPosts() {
         card.className = 'account-card';
         let imagesHtml = '<div class="image-gallery">';
         if (d.imageUrls && d.imageUrls.length > 0) {
-          imagesHtml += `<img src="${d.imageUrls[0]}" alt="Gambar Akun ${d.category}" style="max-width: 100%; height: 150px; object-fit: cover; border-radius: 8px;">`; // Show only first image as main
+          // Menggunakan object-fit: contain untuk gambar di profil/postinganku
+          imagesHtml += `<img src="${d.imageUrls[0]}" alt="Gambar Akun ${d.category}" style="max-width: 100%; height: 150px; object-fit: contain; border-radius: 8px;">`; // Show only first image as main
         }
         imagesHtml += '</div>';
         card.innerHTML = imagesHtml + `<h4>${d.category}</h4><p>Harga: Rp ${d.price.toLocaleString('id-ID')}</p><p>Status: <span style="color: ${d.status === 'terjual' ? 'red' : 'green'}; font-weight: bold;">${d.status === 'terjual' ? 'Terjual' : 'Tersedia'}</span></p>`;
@@ -1296,6 +1622,7 @@ async function fillEditForm(postId) {
       const img = document.createElement('img');
       img.src = url;
       img.alt = "Gambar Akun"; // Add alt text
+      img.style.objectFit = 'contain'; // Pastikan gambar preview tidak terpotong
       previews.appendChild(img);
     });
     previews.classList.remove('hidden');
@@ -1516,34 +1843,36 @@ profilePage.addEventListener('submit', async (e) => {
 
 // Helper for attachment grade calculation
 const gradeOrder = { "Green": 1, "Blue": 2, "Purple": 3 };
-function getLowestAttachmentGrade(attachments) {
+
+// Modified function to return detailed attachment string
+function getDetailedAttachmentDisplay(attachments) {
+  if (!attachments || attachments.length === 0) return 'N/A';
+
+  let detailParts = [];
   let lowestGrade = 13; // Higher than max grade 12
   let lowestColor = "";
-  let lowestGradeName = ""; // Not used in final output, but good for debugging
 
   attachments.forEach(att => {
-    const grade = parseInt(att.grade);
-    const color = att.color;
+    const level = att.level || 0;
+    const grade = att.grade || 0;
+    const color = att.color || 'N/A';
+    detailParts.push(`${att.name}: ${level}|Grade ${grade}|${color}`);
 
-    if (!isNaN(grade) && color && grade >=1 && grade <=12 && gradeOrder[color]) { // Validate inputs
+    // Calculate lowest overall grade
+    if (grade > 0 && gradeOrder[color]) { // Only consider valid attachments
       if (grade < lowestGrade) {
         lowestGrade = grade;
         lowestColor = color;
-        lowestGradeName = att.name;
       } else if (grade === lowestGrade) {
-        // If grades are equal, compare colors
         if (gradeOrder[color] < gradeOrder[lowestColor]) {
           lowestColor = color;
-          lowestGradeName = att.name;
         }
       }
     }
   });
 
-  if (lowestGrade === 13) {
-    return "N/A"; // No valid attachments found
-  }
-  return `Set Weapon Grade ${lowestGrade} ${lowestColor}`;
+  const resultPart = (lowestGrade === 13) ? '' : `(Result: Set Weapon Grade ${lowestGrade} ${lowestColor})`;
+  return `${detailParts.join(', ')}${resultPart}`;
 }
 
 
@@ -1848,7 +2177,7 @@ async function loadAccounts() {
     allAccountsData.sort((a, b) => b.postedAt - a.postedAt);
 
     displayAccounts(allAccountsData, accountListDiv, false); // For landing page (all accounts)
-    displayAccounts(allAccountsData.filter(d => d.status === 'belum'), buyAccountListDiv, true); // For buy page (only available)
+    applyFilters(); // Apply filters for buy page after loading all data
 
   } catch (err) {
     console.error("Error loading accounts:", err);
@@ -1869,79 +2198,133 @@ function displayAccounts(accountsToDisplay, targetDiv, isBuyPage = false) {
   accountsToDisplay.forEach(d => {
     const card = document.createElement('div');
     card.className = 'account-card';
+    card.dataset.id = d.id; // Store ID for detail modal
 
-    let detailsHtml = '';
     let categoryDisplay = '';
+    if (d.category === 'ml') categoryDisplay = 'Mobile Legend';
+    else if (d.category === 'toram') categoryDisplay = 'Toram Online';
+    else if (d.category === 'lifeafter') categoryDisplay = 'Life After';
 
-    if (d.category === 'ml' && d.ml) {
-      categoryDisplay = 'Mobile Legend';
-      const heroesList = Array.isArray(d.ml?.heroes) && d.ml.heroes.length > 0 ? d.ml.heroes.map(h => `${h.name} (${h.wr}%)`).join(', ') : 'N/A';
-      detailsHtml += `
-                      <p><strong>Rank:</strong> ${d.ml.rankNow || 'N/A'} (Tertinggi: ${d.ml.rankHighest || 'N/A'})</p>
-                      <p><strong>Win Rate All Season:</strong> ${d.ml.winAllMatches || 0} Pertandingan (${d.ml.winAllPercent || 0}%)</p>
-                      <p><strong>Win Rate Season Ini:</strong> ${d.ml.winSeasonMatches || 0} Pertandingan (${d.ml.winSeasonPercent || 0}%)</p>
-                      <p><strong>Role:</strong> ${d.ml.role || 'N/A'}</p>
-                      <p><strong>Hero Favorit:</strong> ${heroesList}</p>
-                      <p><strong>Emblem Maximal:</strong> Level ${d.ml.emblem || 0}</p>
-                      <p><strong>Total Skin:</strong> ${d.ml.skins || 0}</p>`;
-    } else if (d.category === 'toram' && d.toram) {
-      categoryDisplay = 'Toram Online';
-      const charactersList = Array.isArray(d.toram?.characters) && d.toram.characters.length > 0 ? d.toram.characters.map((char, index) => `Char ${index + 1}: Lv.${char.level || 'N/A'} (${char.job || 'N/A'})`).join('<br>') : 'N/A';
-      const equipsList = Array.isArray(d.toram?.equip) && d.toram.equip.length > 0 ? d.toram.equip.map(eq => `- ${eq}`).join('<br>') : 'N/A';
-      const gudangsList = Array.isArray(d.toram?.gudang) && d.toram.gudang.length > 0 ? d.toram.gudang.map(g => `${g.name} (${g.slot} slot)`).join(', ') : 'N/A';
-      detailsHtml += `
-                      <p><strong>Main Quest:</strong> ${d.toram.mainQuest || 'N/A'}</p>
-                      <p><strong>Slot Character:</strong><br>${charactersList}</p>
-                      <p><strong>Equip Untrade:</strong><br>${equipsList}</p>
-                      <p><strong>Gudang:</strong> ${gudangsList}</p>
-                      <p><strong>Total ORB:</strong> ${d.toram.orb || 0}</p>
-                      <p><strong>Total Tiket:</strong> ${d.toram.tiket || 0}</p>`;
-    } else if (d.category === 'lifeafter' && d.lifeafter) {
-      categoryDisplay = 'Life After';
-      const la = d.lifeafter;
-      const getAttachmentDisplay = (attachments) => {
-        if (!attachments || attachments.length === 0) return 'N/A';
-        const lowestGradeInfo = getLowestAttachmentGrade(attachments);
-        return lowestGradeInfo;
-      };
-
-      detailsHtml += `
-                      <p><strong>Server:</strong> ${la.serverCategory || 'N/A'} ${la.serverDetail ? `(${la.serverDetail})` : ''}</p>
-                      <p><strong>Manor Level:</strong> ${la.manor || 0}</p>
-                      <p><strong>Level Character:</strong> Gether ${la.levelGether || 0} / Craft ${la.levelCraft || 0} / Combat ${la.levelCombat || 0}</p>
-                      <h4>Attachment Grades:</h4>
-                      <p><strong>Light Weapon:</strong> ${getAttachmentDisplay(la.attachments?.lightWeapon)}</p>
-                      <p><strong>Heavy Weapon:</strong> ${getAttachmentDisplay(la.attachments?.heavyWeapon)}</p>
-                      <p><strong>Meele Weapon:</strong> ${getAttachmentDisplay(la.attachments?.meeleWeapon)}</p>
-                      <p><strong>Armor:</strong> ${getAttachmentDisplay(la.attachments?.armor)}</p>
-                      <p><strong>Job:</strong> ${la.jobCategory || 'N/A'} ${la.jobDetail ? `(${la.jobDetail})` : ''}</p>
-                      <p><strong>Gene:</strong> ${la.gene || 0}</p>
-                      <p><strong>Charisma Score:</strong> ${la.charisma || 0}</p>
-                      <p><strong>Total Outfit:</strong> Collector ${la.outfit?.collector || 0}, Gacha ${la.outfit?.gacha || 0}, Mall ${la.outfit?.mall || 0}, Common ${la.outfit?.common || 0}</p>`;
-    }
-
-    // Display multiple images
-    let imagesHtml = '<div class="image-gallery">';
-    if (d.imageUrls && d.imageUrls.length > 0) {
-      d.imageUrls.forEach(url => {
-        imagesHtml += `<img src="${url}" alt="Gambar Akun ${categoryDisplay}">`;
-      });
-    }
-    imagesHtml += '</div>';
+    const firstImage = (d.imageUrls && d.imageUrls.length > 0) ? d.imageUrls[0] : 'https://via.placeholder.com/160x160?text=No+Image';
 
     card.innerHTML = `
-      ${imagesHtml}
-      <h3>${categoryDisplay}</h3>
-      ${detailsHtml}
-      <p class="price">Harga: Rp ${d.price.toLocaleString('id-ID')}</p>
-      <p><strong>Owner:</strong> ${d.ownerName || 'Unknown'} (<a href="https://wa.me/${d.ownerWhatsapp}" target="_blank">+${d.ownerWhatsapp}</a>)</p>
-      <p><strong>Status:</strong> <span style="color: ${d.status === 'terjual' ? 'red' : 'green'}; font-weight: bold;">${d.status === 'terjual' ? 'Terjual' : 'Tersedia'}</span></p>
-      <p class="contact-info">
-        Untuk transaksi aman, gunakan rekber admin: <a href="https://wa.me/6288223070064" target="_blank">+6288223070064</a>
-      </p>
+      <div class="image-gallery">
+        <img src="${firstImage}" alt="Gambar Akun ${categoryDisplay}">
+      </div>
+      <div class="card-content">
+        <h3>${categoryDisplay}</h3>
+        <p>Status: <span style="color: ${d.status === 'terjual' ? 'red' : 'green'}; font-weight: bold;">${d.status === 'terjual' ? 'Terjual' : 'Tersedia'}</span></p>
+        <p class="price">Rp ${d.price.toLocaleString('id-ID')}</p>
+      </div>
+      <span class="status-badge ${d.status === 'terjual' ? 'terjual' : ''}">${d.status === 'terjual' ? 'Terjual' : 'Tersedia'}</span>
     `;
     targetDiv.appendChild(card);
+
+    // Add click listener for detail modal only on buy page cards
+    if (isBuyPage) {
+      card.addEventListener('click', () => showAccountDetailModal(d.id));
+    }
   });
+}
+
+// Function to show account detail modal
+async function showAccountDetailModal(accountId) {
+  const account = allAccountsData.find(acc => acc.id === accountId);
+  if (!account) {
+    console.error("Account not found for ID:", accountId);
+    return;
+  }
+
+  currentAccountDetail = account; // Store for image viewer
+
+  const modal = document.getElementById('accountDetailModal');
+  document.getElementById('modal-account-title').textContent = `Detail Akun ${account.category === 'ml' ? 'Mobile Legend' : account.category === 'toram' ? 'Toram Online' : 'Life After'}`;
+  document.getElementById('modal-account-price').textContent = `Harga: Rp ${account.price.toLocaleString('id-ID')}`;
+  document.getElementById('modal-owner-name').textContent = account.ownerName || 'N/A';
+  document.getElementById('modal-owner-whatsapp').href = `https://wa.me/${account.ownerWhatsapp}`;
+
+  const mainImage = document.getElementById('modal-main-image');
+  const thumbnailGallery = document.getElementById('modal-thumbnail-gallery');
+  const detailsDiv = document.getElementById('modal-account-details');
+
+  // Clear previous content
+  mainImage.src = '';
+  thumbnailGallery.innerHTML = '';
+  detailsDiv.innerHTML = '';
+
+  // Populate images
+  if (account.imageUrls && account.imageUrls.length > 0) {
+    mainImage.src = account.imageUrls[0];
+    mainImage.alt = `Main image of ${account.category} account`;
+    account.imageUrls.forEach((url, index) => {
+      const thumb = document.createElement('img');
+      thumb.src = url;
+      thumb.alt = `Thumbnail ${index + 1}`;
+      thumb.addEventListener('click', () => {
+        mainImage.src = url; // Change main image on thumbnail click
+      });
+      thumbnailGallery.appendChild(thumb);
+    });
+  } else {
+    mainImage.src = 'https://via.placeholder.com/400x300?text=No+Image';
+    mainImage.alt = 'No image available';
+  }
+
+  // Populate game-specific details
+  let detailsHtml = '';
+  if (account.category === 'ml' && account.ml) {
+    const ml = account.ml;
+    detailsHtml += `
+      <div class="modal-detail-section">
+        <h4>Detail Mobile Legend</h4>
+        <p><strong>Rank Saat Ini:</strong> ${ml.rankNow || 'N/A'}</p>
+        <p><strong>Rank Tertinggi:</strong> ${ml.rankHighest || 'N/A'}</p>
+        <p><strong>Win Rate All Season:</strong> ${ml.winAllMatches ? `${ml.winAllMatches} Pertandingan (${ml.winAllPercent}%)` : 'N/A'}</p>
+        <p><strong>Win Rate Season Ini:</strong> ${ml.winSeasonMatches ? `${ml.winSeasonMatches} Pertandingan (${ml.winSeasonPercent}%)` : 'N/A'}</p>
+        <p><strong>Role:</strong> ${ml.role || 'N/A'}</p>
+        <p><strong>Hero Favorit:</strong> ${ml.heroes && ml.heroes.length > 0 ? ml.heroes.map(h => `${h.name} (${h.wr}%)`).join(', ') : 'N/A'}</p>
+        <p><strong>Emblem Maximal:</strong> Level ${ml.emblem || 'N/A'}</p>
+        <p><strong>Total Skin:</strong> ${ml.skins || 'N/A'}</p>
+      </div>
+    `;
+  } else if (account.category === 'toram' && account.toram) {
+    const toram = account.toram;
+    detailsHtml += `
+      <div class="modal-detail-section">
+        <h4>Detail Toram Online</h4>
+        <p><strong>Main Quest:</strong> ${toram.mainQuest || 'N/A'}</p>
+        <p><strong>Slot Character:</strong> ${toram.characters && toram.characters.length > 0 ? toram.characters.map(c => `Lv.${c.level} (${c.job})`).join(', ') : 'N/A'}</p>
+        <p><strong>Equip Untrade:</strong> ${toram.equip && toram.equip.length > 0 ? toram.equip.join(', ') : 'N/A'}</p>
+        <p><strong>Gudang:</strong> ${toram.gudang && toram.gudang.length > 0 ? toram.gudang.map(g => `${g.name} (${g.slot} Slot)`).join(', ') : 'N/A'}</p>
+        <p><strong>Total ORB:</strong> ${toram.orb || 'N/A'}</p>
+        <p><strong>Total Tiket:</strong> ${toram.tiket || 'N/A'}</p>
+      </div>
+    `;
+  } else if (account.category === 'lifeafter' && account.lifeafter) {
+    const la = account.lifeafter;
+    detailsHtml += `
+      <div class="modal-detail-section">
+        <h4>Detail Life After</h4>
+        <p><strong>Server:</strong> ${la.serverCategory === 'easy' ? 'EasyServer' : la.serverCategory === 'sea' ? `SEA Server (${la.serverDetail || 'N/A'})` : la.serverCategory === 'na' ? `NA Server (${la.serverDetail || 'N/A'})` : 'N/A'}</p>
+        <p><strong>Level Manor:</strong> ${la.manor || 'N/A'}</p>
+        <p><strong>Level Gether:</strong> ${la.levelGether || 'N/A'}</p>
+        <p><strong>Level Craft:</strong> ${la.levelCraft || 'N/A'}</p>
+        <p><strong>Level Combat:</strong> ${la.levelCombat || 'N/A'}</p>
+        <p><strong>Light Weapon Attachment:</strong> ${getDetailedAttachmentDisplay(la.attachments?.lightWeapon)}</p>
+        <p><strong>Heavy Weapon Attachment:</strong> ${getDetailedAttachmentDisplay(la.attachments?.heavyWeapon)}</p>
+        <p><strong>Meele Weapon Attachment:</strong> ${getDetailedAttachmentDisplay(la.attachments?.meeleWeapon)}</p>
+        <p><strong>Armor Attachment:</strong> ${getDetailedAttachmentDisplay(la.attachments?.armor)}</p>
+        <p><strong>Kategori Job:</strong> ${la.jobCategory || 'N/A'}</p>
+        <p><strong>Job Detail:</strong> ${la.jobDetail || 'N/A'}</p>
+        <p><strong>Gene:</strong> ${la.gene || 'N/A'}</p>
+        <p><strong>Score Charisma:</strong> ${la.charisma || 'N/A'}</p>
+        <p><strong>Total Outfit:</strong> Collector: ${la.outfit?.collector || 0}, Gacha: ${la.outfit?.gacha || 0}, Mall: ${la.outfit?.mall || 0}, Common: ${la.outfit?.common || 0}</p>
+      </div>
+    `;
+  }
+  detailsDiv.innerHTML = detailsHtml;
+
+  modal.style.display = 'flex'; // Show the modal
 }
 
 
@@ -2079,6 +2462,7 @@ document.getElementById('account-images').addEventListener('change', function(ev
         const img = document.createElement('img');
         img.src = e.target.result;
         img.alt = `Preview Gambar ${i + 1}`; // Add alt text
+        img.style.objectFit = 'contain'; // Pastikan gambar preview tidak terpotong
         previewContainer.appendChild(img);
       }
       reader.readAsDataURL(file);
@@ -2087,23 +2471,16 @@ document.getElementById('account-images').addEventListener('change', function(ev
 });
 
 
-// Image modal viewer
+// Image modal viewer (for profile page and post page previews)
 document.addEventListener('click', function(e) {
   if (e.target.tagName === 'IMG' && (e.target.closest('.image-gallery') || e.target.closest('#image-previews'))) {
-    document.getElementById('modalImage').src = e.target.src;
-    document.getElementById('imageModal').style.display = 'flex'; // Use flex to center
-  }
-});
-
-document.getElementById('closeModal').addEventListener('click', function() {
-  document.getElementById('imageModal').style.display = 'none';
-  document.getElementById('modalImage').src = '';
-});
-
-document.getElementById('imageModal').addEventListener('click', function(e) {
-  if (e.target.id === 'imageModal') { // Only close if modal background is clicked
-    document.getElementById('imageModal').style.display = 'none';
-    document.getElementById('modalImage').src = '';
+    // This is the old image modal, keep it for profile/post page previews
+    const modalImage = document.getElementById('modalImage');
+    const imageModal = document.getElementById('imageModal');
+    if (modalImage && imageModal) {
+      modalImage.src = e.target.src;
+      imageModal.style.display = 'flex'; // Use flex to center
+    }
   }
 });
 
@@ -2133,68 +2510,85 @@ function toggleGameFilters() {
 
 function applyFilters() {
   const categoryFilter = document.getElementById('filter-category').value;
+  const searchKeyword = document.getElementById('search-input').value.toLowerCase().trim();
+  const sortBy = document.getElementById('sort-by').value;
+
   let filteredAccounts = allAccountsData.filter(d => d.status === 'belum'); // Always filter by 'belum' status
 
+  // Apply category filter
   if (categoryFilter !== 'all') {
     filteredAccounts = filteredAccounts.filter(account => account.category === categoryFilter);
-
-    if (categoryFilter === 'ml') {
-      const roleFilter = document.getElementById('filter-ml-role').value;
-      if (roleFilter !== 'all') {
-        filteredAccounts = filteredAccounts.filter(account => account.ml && account.ml.role === roleFilter);
-      }
-    } else if (categoryFilter === 'toram') {
-      const minCharCount = parseInt(document.getElementById('filter-toram-char-count').value) || 0;
-      const minCharLevel = parseInt(document.getElementById('filter-toram-char-level').value) || 0;
-      const mqFilter = document.getElementById('filter-toram-mq').value.toLowerCase().trim();
-
-      filteredAccounts = filteredAccounts.filter(account => {
-        if (!account.toram) return false;
-
-        // Filter by character count
-        if (minCharCount > 0 && (!account.toram.characters || account.toram.characters.length < minCharCount)) {
-          return false;
-        }
-
-        // Filter by minimum character level
-        if (minCharLevel > 0) {
-          const hasHighEnoughLevelChar = account.toram.characters && account.toram.characters.some(char => (char.level || 0) >= minCharLevel);
-          if (!hasHighEnoughLevelChar) {
-            return false;
-          }
-        }
-
-        // Filter by Main Quest
-        if (mqFilter && (!account.toram.mainQuest || !account.toram.mainQuest.toLowerCase().includes(mqFilter))) {
-          return false;
-        }
-        return true;
-      });
-    } else if (categoryFilter === 'lifeafter') {
-      const serverFilter = document.getElementById('filter-la-server').value;
-      const minManorLevel = parseInt(document.getElementById('filter-la-manor').value) || 0;
-
-      filteredAccounts = filteredAccounts.filter(account => {
-        if (!account.lifeafter) return false;
-
-        // Filter by server
-        if (serverFilter !== 'all' && account.lifeafter.serverCategory !== serverFilter) {
-          return false;
-        }
-
-        // Filter by minimum manor level
-        if (minManorLevel > 0 && (account.lifeafter.manor || 0) < minManorLevel) {
-          return false;
-        }
-        return true;
-      });
-    }
   }
+
+  // Apply game-specific filters
+  if (categoryFilter === 'ml') {
+    const roleFilter = document.getElementById('filter-ml-role').value;
+    if (roleFilter !== 'all') {
+      filteredAccounts = filteredAccounts.filter(account => account.ml && account.ml.role === roleFilter);
+    }
+  } else if (categoryFilter === 'toram') {
+    const minCharCount = parseInt(document.getElementById('filter-toram-char-count').value) || 0;
+    const minCharLevel = parseInt(document.getElementById('filter-toram-char-level').value) || 0;
+    const mqFilter = document.getElementById('filter-toram-mq').value.toLowerCase().trim();
+
+    filteredAccounts = filteredAccounts.filter(account => {
+      if (!account.toram) return false;
+
+      if (minCharCount > 0 && (!account.toram.characters || account.toram.characters.length < minCharCount)) {
+        return false;
+      }
+      if (minCharLevel > 0) {
+        const hasHighEnoughLevelChar = account.toram.characters && account.toram.characters.some(char => (char.level || 0) >= minCharLevel);
+        if (!hasHighEnoughLevelChar) {
+          return false;
+        }
+      }
+      if (mqFilter && (!account.toram.mainQuest || !account.toram.mainQuest.toLowerCase().includes(mqFilter))) {
+        return false;
+      }
+      return true;
+    });
+  } else if (categoryFilter === 'lifeafter') {
+    const serverFilter = document.getElementById('filter-la-server').value;
+    const minManorLevel = parseInt(document.getElementById('filter-la-manor').value) || 0;
+
+    filteredAccounts = filteredAccounts.filter(account => {
+      if (!account.lifeafter) return false;
+
+      if (serverFilter !== 'all' && account.lifeafter.serverCategory !== serverFilter) {
+        return false;
+      }
+      if (minManorLevel > 0 && (account.lifeafter.manor || 0) < minManorLevel) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  // Apply search keyword filter (general search across relevant fields)
+  if (searchKeyword) {
+    filteredAccounts = filteredAccounts.filter(account => {
+      const searchString = JSON.stringify(account).toLowerCase(); // Convert entire account object to string for broad search
+      return searchString.includes(searchKeyword);
+    });
+  }
+
+  // Apply sorting
+  if (sortBy === 'price-asc') {
+    filteredAccounts.sort((a, b) => a.price - b.price);
+  } else if (sortBy === 'price-desc') {
+    filteredAccounts.sort((a, b) => b.price - a.price);
+  } else { // 'newest' or default
+    filteredAccounts.sort((a, b) => b.postedAt - a.postedAt);
+  }
+
   displayAccounts(filteredAccounts, document.getElementById('buy-account-list'), true);
 }
 
 function resetFilters() {
   document.getElementById('filter-category').value = 'all';
+  document.getElementById('search-input').value = '';
+  document.getElementById('sort-by').value = 'newest';
   toggleGameFilters(); // This will hide all specific filters and reset their values
   applyFilters(); // Re-apply filters to show all available accounts
 }
@@ -2216,11 +2610,164 @@ auth.onAuthStateChanged(user => {
 // Initial toggle for filters on page load
 document.addEventListener("DOMContentLoaded", function() {
   toggleGameFilters(); // Ensure correct filter fields are shown/hidden initially
-});
 
+  // Event listeners for modals
+  const accountDetailModal = document.getElementById('accountDetailModal');
+  const closeAccountDetailModal = document.getElementById('closeAccountDetailModal');
+  const imageViewerModal = document.getElementById('imageViewerModal');
+  const closeImageViewerModal = document.getElementById('closeImageViewerModal');
+  const modalMainImage = document.getElementById('modal-main-image');
+  const prevImageBtn = document.getElementById('prevImage');
+  const nextImageBtn = document.getElementById('nextImage');
+
+  if (closeAccountDetailModal) {
+    closeAccountDetailModal.addEventListener('click', () => {
+      accountDetailModal.style.display = 'none';
+      currentAccountDetail = null; // Clear data
+    });
+  }
+
+  if (accountDetailModal) {
+    accountDetailModal.addEventListener('click', (e) => {
+      if (e.target === accountDetailModal) { // Only close if modal background is clicked
+        accountDetailModal.style.display = 'none';
+        currentAccountDetail = null;
+      }
+    });
+  }
+
+  // --- Image Viewer Modal Functions ---
+  if (modalMainImage) { // Check if element exists
+    modalMainImage.addEventListener('click', () => {
+      if (currentAccountDetail && currentAccountDetail.imageUrls && currentAccountDetail.imageUrls.length > 0) {
+        currentImageViewerImages = currentAccountDetail.imageUrls;
+        currentImageViewerIndex = currentImageViewerImages.indexOf(modalMainImage.src);
+        if (currentImageViewerIndex === -1) currentImageViewerIndex = 0; // Fallback if current image not found
+
+        showImageViewerModal(currentImageViewerIndex);
+      }
+    });
+  }
+
+  function showImageViewerModal(index) {
+    if (currentImageViewerImages.length === 0) {
+      if (imageViewerModal) imageViewerModal.style.display = 'none';
+      return;
+    }
+
+    currentImageViewerIndex = index;
+    if (document.getElementById('viewerImage')) {
+      document.getElementById('viewerImage').src = currentImageViewerImages[currentImageViewerIndex];
+    }
+
+    if (prevImageBtn) prevImageBtn.style.display = (currentImageViewerIndex > 0) ? 'block' : 'none';
+    if (nextImageBtn) nextImageBtn.style.display = (currentImageViewerIndex < currentImageViewerImages.length - 1) ? 'block' : 'none';
+
+    if (imageViewerModal) imageViewerModal.style.display = 'flex';
+  }
+
+  if (prevImageBtn) {
+    prevImageBtn.addEventListener('click', () => {
+      if (currentImageViewerIndex > 0) {
+        showImageViewerModal(currentImageViewerIndex - 1);
+      }
+    });
+  }
+
+  if (nextImageBtn) {
+    nextImageBtn.addEventListener('click', () => {
+      if (currentImageViewerIndex < currentImageViewerImages.length - 1) {
+        showImageViewerModal(currentImageViewerIndex + 1);
+      }
+    });
+  }
+
+  if (closeImageViewerModal) {
+    closeImageViewerModal.addEventListener('click', () => {
+      if (imageViewerModal) imageViewerModal.style.display = 'none';
+      currentImageViewerImages = [];
+      currentImageViewerIndex = 0;
+    });
+  }
+
+  if (imageViewerModal) {
+    imageViewerModal.addEventListener('click', (e) => {
+      if (e.target === imageViewerModal) {
+        imageViewerModal.style.display = 'none';
+        currentImageViewerImages = [];
+        currentImageViewerIndex = 0;
+      }
+    });
+  }
+
+  // Existing image preview listener (moved inside DOMContentLoaded)
+  const accountImagesInput = document.getElementById('account-images');
+  if (accountImagesInput) {
+    accountImagesInput.addEventListener('change', function(event) {
+      const previewContainer = document.getElementById('image-previews');
+      previewContainer.innerHTML = ''; // Clear previous previews
+      previewContainer.classList.add('hidden');
+
+      const files = event.target.files;
+      if (files.length > 0) {
+        if (files.length > 12) {
+          showAlert(postAlert, 'Maksimal 12 gambar yang dapat diunggah.', 'error');
+          event.target.value = ''; // Clear selected files
+          return;
+        }
+        previewContainer.classList.remove('hidden');
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = `Preview Gambar ${i + 1}`; // Add alt text
+            img.style.objectFit = 'contain'; // Pastikan gambar preview tidak terpotong
+            previewContainer.appendChild(img);
+          }
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+  }
+
+  // Existing image modal viewer (for profile page and post page previews)
+  document.addEventListener('click', function(e) {
+    if (e.target.tagName === 'IMG' && (e.target.closest('.image-gallery') || e.target.closest('#image-previews'))) {
+      const modalImage = document.getElementById('modalImage');
+      const imageModal = document.getElementById('imageModal');
+      if (modalImage && imageModal) {
+        modalImage.src = e.target.src;
+        imageModal.style.display = 'flex'; // Use flex to center
+      }
+    }
+  });
+
+  const closeModalBtn = document.getElementById('closeModal');
+  const imageModalDiv = document.getElementById('imageModal');
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', function() {
+      if (imageModalDiv) {
+        imageModalDiv.style.display = 'none';
+        document.getElementById('modalImage').src = '';
+      }
+    });
+  }
+
+  if (imageModalDiv) {
+    imageModalDiv.addEventListener('click', function(e) {
+      if (e.target === imageModalDiv) { // Only close if modal background is clicked
+        imageModalDiv.style.display = 'none';
+        document.getElementById('modalImage').src = '';
+      }
+    });
+  }
+
+}); // End of DOMContentLoaded
 </script>
 
-<!-- Image Modal Viewer -->
+<!-- Image Modal Viewer (old one, kept for profile/post page previews) -->
 <div id="imageModal" class="hidden" style="position:fixed;z-index:9999;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;">
   <span id="closeModal" style="position:absolute;top:20px;right:30px;color:white;font-size:40px;cursor:pointer;">&times;</span>
   <img id="modalImage" src="" style="max-width:90%;max-height:90%;border-radius:10px;box-shadow:0 0 20px rgba(0,0,0,0.5);">
