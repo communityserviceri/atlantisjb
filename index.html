@@ -1974,19 +1974,19 @@
 
     <div id="category-selection" class="flex">
       <div class="category-card" data-category="ml">
-        <img src="mobile_legend_icon.jpg" alt="Mobile Legend Icon">
+        <img id="icon-mobile-legend" src="" alt="Mobile Legend Icon">
         <h3>Mobile Legend</h3>
       </div>
       <div class="category-card" data-category="toram">
-        <img src="toram_online_icon.jpg" alt="Toram Online Icon">
+        <img id="icon-toram-online" src="" alt="Toram Online Icon">
         <h3>Toram Online</h3>
       </div>
       <div class="category-card" data-category="lifeafter">
-        <img src="life_after_icon.jpg" alt="Life After Icon">
+        <img id="icon-life-after" src="" alt="Life After Icon">
         <h3>Life After</h3>
       </div>
       <div class="category-card" data-category="all">
-        <img src="all_games_icon.png" alt="All Games Icon">
+        <img id="icon-all-games" src="" alt="All Games Icon">
         <h3>Semua Game</h3>
       </div>
     </div>
@@ -4003,6 +4003,29 @@ document.addEventListener("DOMContentLoaded", function() {
   <span id="closeModal" style="position:absolute;top:20px;right:30px;color:white;font-size:40px;cursor:pointer;">&times;</span>
   <img id="modalImage" src="" style="max-width:90%;max-height:90%;border-radius:10px;box-shadow:0 0 20px rgba(0,0,0,0.5);">
 </div>
+
+
+<script>
+function loadCategoryIcons() {
+    const storage = firebase.storage();
+    const icons = {
+        "mobile-legend": "mobile_legend_icon.jpg",
+        "toram-online": "toram_online_icon.jpg",
+        "life-after": "life_after_icon.jpg",
+        "all-games": "all_games_icon.png"
+    };
+
+    for (let id in icons) {
+        storage.ref(`category_icons/${icons[id]}`).getDownloadURL()
+            .then(url => {
+                const img = document.getElementById(`icon-${id}`);
+                if (img) img.src = url;
+            })
+            .catch(err => console.error("Gagal load icon:", err));
+    }
+}
+document.addEventListener("DOMContentLoaded", loadCategoryIcons);
+</script>
 
 </body>
 </html>
