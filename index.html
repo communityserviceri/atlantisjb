@@ -11,28 +11,30 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <style>
+  /* --- Variabel Warna dan Font --- */
   :root {
-    --primary-color: #0077b6;
-    --secondary-color: #023e8a;
-    --dark-blue: #002f4b;
-    --light-gray: #f5f7fa;
+    --primary-color: #0077b6; /* Biru Atlantis */
+    --secondary-color: #023e8a; /* Biru Tua */
+    --dark-blue: #002f4b; /* Biru Sangat Tua */
+    --light-gray: #f5f7fa; /* Abu-abu Sangat Terang */
     --white: #ffffff;
-    --text-color: #333;
-    --border-color: #ddd;
+    --text-color: #333; /* Hitam Keabu-abuan */
+    --border-color: #ddd; /* Abu-abu Border */
     --shadow-light: rgba(0,0,0,0.08);
     --shadow-medium: rgba(0,0,0,0.15);
-    --shopee-orange: #ee4d2d;
+    --shopee-orange: #ee4d2d; /* Oranye Shopee */
     --shopee-orange-dark: #d04326;
 
-    /* New Accent Colors & Gradients */
-    --accent-color-1: #00b4d8; /* Bright blue */
-    --accent-color-2: #e0f2f7; /* Very light blue for backgrounds */
+    /* Warna Aksen & Gradien Baru */
+    --accent-color-1: #00b4d8; /* Biru Cerah */
+    --accent-color-2: #e0f2f7; /* Biru Sangat Terang untuk Background */
     --gradient-nav-start: #002f4b;
     --gradient-nav-end: #023e8a;
     --gradient-button-start: #0077b6;
     --gradient-button-end: #023e8a;
   }
 
+  /* --- Gaya Dasar Body --- */
   body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -40,7 +42,7 @@
     background: var(--light-gray);
     color: var(--text-color);
     line-height: 1.6;
-    /* Decorative wave pattern at the bottom */
+    /* Pola gelombang dekoratif di bagian bawah */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23e0f2f7' fill-opacity='1' d='M0,192L48,192C96,192,192,192,288,181.3C384,171,480,149,576,160C672,171,768,213,864,213.3C960,213,1056,181,1152,170.7C1248,160,1344,171,1392,176L1440,181.3L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: bottom;
@@ -48,6 +50,7 @@
     background-attachment: fixed;
   }
 
+  /* --- Gaya Navigasi --- */
   nav {
     background: linear-gradient(to right, var(--gradient-nav-start), var(--gradient-nav-end));
     color: var(--white);
@@ -55,16 +58,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 5px 15px var(--shadow-medium); /* Stronger shadow */
+    box-shadow: 0 5px 15px var(--shadow-medium);
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
   }
 
+  /* Efek blur pada navigasi saat di-scroll (opsional, tergantung browser support) */
+  /* nav.scrolled {
+    background: rgba(0, 47, 75, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  } */
+
   nav .logo {
-    font-size: 1.9em; /* Slightly larger */
-    font-weight: 800; /* Bolder */
-    letter-spacing: 1.5px; /* More spacing */
+    font-size: 1.9em;
+    font-weight: 800;
+    letter-spacing: 1.5px;
     display: flex;
     align-items: center;
   }
@@ -74,27 +85,29 @@
     margin: 0 15px;
     text-decoration: none;
     font-weight: 600;
-    transition: color 0.3s ease, transform 0.3s ease; /* Add transform to transition */
+    transition: color 0.3s ease, transform 0.3s ease;
   }
 
   nav a:hover {
-    color: var(--accent-color-1); /* Brighter hover color */
+    color: var(--accent-color-1);
     text-decoration: underline;
-    transform: translateY(-2px); /* Subtle lift effect */
+    transform: translateY(-2px);
   }
 
+  /* --- Gaya Kontainer Utama --- */
   .container {
-    padding: 40px 20px; /* More padding */
+    padding: 40px 20px;
     max-width: 1200px;
     margin: auto;
   }
 
+  /* --- Gaya Judul H2 --- */
   h2 {
     color: var(--dark-blue);
     text-align: center;
-    margin-bottom: 40px; /* More margin */
-    font-size: 2.5em; /* Larger font */
-    font-weight: 800; /* Bolder */
+    margin-bottom: 40px;
+    font-size: 2.5em;
+    font-weight: 800;
     position: relative;
     padding-bottom: 10px;
   }
@@ -111,20 +124,22 @@
     border-radius: 2px;
   }
 
+  /* --- Gaya Formulir dan Kartu Info --- */
   form, .info-card {
     background: var(--white);
-    padding: 40px; /* More padding */
-    border-radius: 15px; /* Larger border-radius */
-    box-shadow: 0 8px 25px var(--shadow-light); /* Stronger shadow */
-    margin-bottom: 40px; /* More margin */
-    max-width: 650px; /* Slightly wider */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px var(--shadow-light);
+    margin-bottom: 40px;
+    max-width: 650px;
     margin-left: auto;
     margin-right: auto;
-    position: relative; /* For pseudo-elements */
-    overflow: hidden; /* Ensure pseudo-elements don't overflow */
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* Pastikan konten di atas pseudo-elements */
   }
 
-  /* Decorative pseudo-element for forms/cards */
+  /* Elemen dekoratif pseudo untuk formulir/kartu */
   form::before, .info-card::before {
     content: '';
     position: absolute;
@@ -134,7 +149,7 @@
     height: 80px;
     background: var(--accent-color-1);
     border-radius: 20px;
-    opacity: 0.05; /* Very subtle */
+    opacity: 0.05;
     z-index: 0;
     transform: rotate(45deg);
   }
@@ -147,52 +162,53 @@
     height: 100px;
     background: var(--secondary-color);
     border-radius: 30px;
-    opacity: 0.03; /* Even more subtle */
+    opacity: 0.03;
     z-index: 0;
     transform: rotate(-30deg);
   }
 
-
+  /* --- Gaya Input, Select, Textarea --- */
   input, select, textarea {
-    width: calc(100% - 24px); /* Account for padding and border */
-    padding: 14px; /* More padding */
-    margin: 10px 0 25px 0; /* More margin */
+    width: calc(100% - 24px);
+    padding: 14px;
+    margin: 10px 0 25px 0;
     border: 1px solid var(--border-color);
-    border-radius: 10px; /* Larger border-radius */
-    font-size: 1.05em; /* Slightly larger font */
+    border-radius: 10px;
+    font-size: 1.05em;
     box-sizing: border-box;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    position: relative; /* Ensure they are above pseudo-elements */
+    position: relative;
     z-index: 1;
   }
 
   input:focus, select:focus, textarea:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.3); /* Stronger focus shadow */
+    box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.3);
     outline: none;
   }
 
+  /* --- Gaya Tombol Umum --- */
   button {
     background: linear-gradient(to right, var(--gradient-button-start), var(--gradient-button-end));
     color: var(--white);
-    padding: 15px 30px; /* More padding */
+    padding: 15px 30px;
     border: none;
-    border-radius: 10px; /* Larger border-radius */
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1.15em; /* Slightly larger font */
-    font-weight: 700; /* Bolder */
+    font-size: 1.15em;
+    font-weight: 700;
     transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     width: 100%;
     box-sizing: border-box;
-    box-shadow: 0 4px 10px rgba(0, 119, 182, 0.2); /* Initial shadow */
+    box-shadow: 0 4px 10px rgba(0, 119, 182, 0.2);
     position: relative;
     z-index: 1;
   }
 
   button:hover {
-    background: linear-gradient(to right, var(--gradient-button-end), var(--gradient-button-start)); /* Reverse gradient on hover */
-    transform: translateY(-3px); /* More pronounced lift */
-    box-shadow: 0 6px 15px rgba(0, 119, 182, 0.3); /* Stronger shadow on hover */
+    background: linear-gradient(to right, var(--gradient-button-end), var(--gradient-button-start));
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 119, 182, 0.3);
   }
 
   button:active {
@@ -200,30 +216,32 @@
     box-shadow: 0 2px 5px rgba(0, 119, 182, 0.2);
   }
 
+  /* --- Gaya Paragraf dan Link --- */
   p {
     text-align: center;
-    margin-top: 25px; /* More margin */
-    font-size: 1em; /* Slightly larger */
+    margin-top: 25px;
+    font-size: 1em;
   }
 
   p a {
     color: var(--primary-color);
     text-decoration: none;
-    font-weight: 700; /* Bolder */
+    font-weight: 700;
     transition: color 0.3s ease, text-decoration 0.3s ease;
   }
 
   p a:hover {
-    color: var(--secondary-color); /* Change color on hover */
+    color: var(--secondary-color);
     text-decoration: underline;
   }
 
+  /* --- Gaya Kartu Akun (Umum) --- */
   .account-card {
     background: var(--white);
-    padding: 25px; /* More padding */
-    border-radius: 15px; /* Larger border-radius */
+    padding: 25px;
+    border-radius: 15px;
     margin-bottom: 25px;
-    box-shadow: 0 5px 20px var(--shadow-light); /* Stronger shadow */
+    box-shadow: 0 5px 20px var(--shadow-light);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -232,8 +250,8 @@
   }
 
   .account-card:hover {
-    transform: translateY(-8px); /* More pronounced lift */
-    box-shadow: 0 12px 35px var(--shadow-medium); /* Stronger shadow */
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px var(--shadow-medium);
   }
 
   .flex {
@@ -249,6 +267,7 @@
     box-sizing: border-box;
   }
 
+  /* --- Responsif Kartu Akun --- */
   @media (max-width: 992px) {
     .flex .account-card {
       flex: 1 1 calc(50% - 30px);
@@ -262,10 +281,10 @@
       padding: 15px 20px;
     }
     nav div:first-child {
-      margin-bottom: 15px; /* More margin */
+      margin-bottom: 15px;
     }
     nav a {
-      margin: 0 10px; /* More margin */
+      margin: 0 10px;
       font-size: 0.95em;
     }
     .flex .account-card {
@@ -273,33 +292,33 @@
       max-width: 100%;
     }
     form, .info-card {
-      padding: 25px; /* Adjusted padding */
+      padding: 25px;
     }
     h2 {
-      font-size: 2em; /* Adjusted font size */
+      font-size: 2em;
     }
   }
 
-  /* Penyesuaian untuk gambar di profil/postinganku (img.account-img) */
+  /* --- Penyesuaian Gambar di Profil/Postingan --- */
   img.account-img {
     max-width: 100%;
-    height: 180px; /* Slightly taller */
+    height: 180px;
     object-fit: contain;
-    border-radius: 10px; /* Larger border-radius */
-    margin-bottom: 20px; /* More margin */
-    box-shadow: 0 4px 12px var(--shadow-light); /* Stronger shadow */
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px var(--shadow-light);
   }
 
   .account-card .image-gallery {
     width: 100%;
-    padding-bottom: 65%; /* 4:3 Aspect Ratio */
+    padding-bottom: 65%; /* Rasio Aspek 4:3 */
     position: relative;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 0;
-    border-bottom: 1px solid var(--border-color); /* Clean separator */
+    border-bottom: 1px solid var(--border-color);
   }
 
   .account-card .image-gallery img {
@@ -308,17 +327,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Fill the area, crop if necessary */
-    object-position: center; /* Center the important content */
-    border-radius: 0; /* No border-radius here, handled by parent */
+    object-fit: contain;
+    object-position: center;
+    border-radius: 0;
     border: none;
   }
 
   .account-card h3 {
     color: var(--dark-blue);
-    margin-top: 15px; /* More margin */
+    margin-top: 15px;
     margin-bottom: 8px;
-    font-size: 1.5em; /* Slightly larger */
+    font-size: 1.5em;
     font-weight: 700;
   }
 
@@ -326,14 +345,14 @@
     text-align: left;
     width: 100%;
     margin-bottom: 6px;
-    font-size: 0.98em; /* Slightly larger */
+    font-size: 0.98em;
   }
 
   .account-card .price {
-    font-size: 1.6em; /* Larger price font */
-    font-weight: 800; /* Bolder */
+    font-size: 1.6em;
+    font-weight: 800;
     color: var(--shopee-orange);
-    margin-top: 18px; /* More margin */
+    margin-top: 18px;
     margin-bottom: 12px;
   }
 
@@ -358,27 +377,29 @@
     display: none !important;
   }
 
+  /* --- Gaya Bagian Formulir --- */
   .form-section {
-    margin-bottom: 30px; /* More margin */
-    padding: 20px; /* More padding */
-    border: 2px dashed var(--accent-color-1); /* Thicker, more vibrant border */
-    border-radius: 10px; /* Larger border-radius */
-    background-color: var(--accent-color-2); /* Lighter background */
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 2px dashed var(--accent-color-1);
+    border-radius: 10px;
+    background-color: var(--accent-color-2);
   }
 
   .form-section h3 {
     color: var(--secondary-color);
     margin-top: 0;
-    margin-bottom: 20px; /* More margin */
-    font-size: 1.4em; /* Larger font */
+    margin-bottom: 20px;
+    font-size: 1.4em;
     font-weight: 700;
   }
 
+  /* --- Gaya Alert --- */
   .alert {
-    padding: 18px; /* More padding */
-    margin-bottom: 25px; /* More margin */
-    border-radius: 10px; /* Larger border-radius */
-    font-weight: 700; /* Bolder */
+    padding: 18px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    font-weight: 700;
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
@@ -395,24 +416,25 @@
     border-color: #f5c6cb;
   }
 
+  /* --- Gaya Pratinjau Gambar --- */
   #image-previews {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px; /* More gap */
-    margin: 20px auto; /* More margin */
+    gap: 15px;
+    margin: 20px auto;
     justify-content: center;
-    border: 2px solid var(--border-color); /* Thicker border */
-    border-radius: 10px; /* Larger border-radius */
-    padding: 15px; /* More padding */
-    box-shadow: 0 4px 12px var(--shadow-light); /* Stronger shadow */
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 12px var(--shadow-light);
   }
 
   #image-previews img {
-    max-width: 110px; /* Slightly larger */
-    height: 110px; /* Slightly larger */
+    max-width: 110px;
+    height: 110px;
     object-fit: contain;
-    border-radius: 8px; /* Larger border-radius */
-    border: 2px solid #eee; /* Thicker border */
+    border-radius: 8px;
+    border: 2px solid #eee;
     cursor: pointer;
     transition: transform 0.2s ease, border-color 0.2s ease;
   }
@@ -421,10 +443,10 @@
     border-color: var(--primary-color);
   }
 
-  /* PROFESSIONAL PROFILE PAGE STYLES */
+  /* --- Gaya Halaman Profil Profesional --- */
   #profile-page {
-    max-width: 800px; /* Make profile page wider */
-    padding: 50px; /* More padding */
+    max-width: 800px;
+    padding: 50px;
   }
 
   #profile-page h2 {
@@ -442,7 +464,7 @@
 
   .profile-pic-container {
     position: relative;
-    width: 180px; /* Larger profile picture */
+    width: 180px;
     height: 180px;
     margin-bottom: 20px;
   }
@@ -452,8 +474,8 @@
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 5px solid var(--primary-color); /* Thicker, vibrant border */
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* Stronger shadow */
+    border: 5px solid var(--primary-color);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     transition: transform 0.3s ease;
   }
 
@@ -551,15 +573,16 @@
     border-radius: 2px;
   }
 
+  /* --- Gaya Tombol Tambah/Hapus Item --- */
   .add-item-btn {
     background-color: #28a745;
     color: white;
-    padding: 10px 20px; /* More padding */
+    padding: 10px 20px;
     border: none;
-    border-radius: 8px; /* Larger border-radius */
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.95em; /* Slightly larger */
-    margin-top: 15px; /* More margin */
+    font-size: 0.95em;
+    margin-top: 15px;
     display: inline-block;
     width: auto;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -571,12 +594,12 @@
   .remove-item-btn {
     background-color: #dc3545;
     color: white;
-    padding: 7px 12px; /* More padding */
+    padding: 7px 12px;
     border: none;
-    border-radius: 8px; /* Larger border-radius */
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.85em; /* Slightly larger */
-    margin-left: 12px; /* More margin */
+    font-size: 0.85em;
+    margin-left: 12px;
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   .remove-item-btn:hover {
@@ -584,926 +607,926 @@
     transform: translateY(-2px);
   }
   .item-group {
-    border: 1px solid #e0e0e0; /* Lighter border */
-    padding: 15px; /* More padding */
-    margin-bottom: 15px; /* More margin */
-    border-radius: 8px; /* Larger border-radius */
-    background-color: #fcfcfc; /* Lighter background */
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #fcfcfc;
     box-shadow: 0 1px 5px rgba(0,0,0,0.05);
   }
   .item-group label {
     display: block;
-    margin-bottom: 8px; /* More margin */
+    margin-bottom: 8px;
     font-weight: 600;
     color: var(--dark-blue);
   }
 
-/* Improved Buy Account UI */
-#buy-account-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjusted min-width */
-  gap: 20px; /* More gap */
-  justify-content: center;
-  padding: 15px; /* More padding */
-}
-#buy-account-list .account-card {
-  width: auto;
-  border: 1px solid #e0e0e0; /* Lighter border */
-  border-radius: 12px; /* Larger border-radius */
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Stronger shadow */
-  background: white;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out; /* Slower transition */
-  position: relative;
-}
-#buy-account-list .account-card:hover {
-  transform: translateY(-5px); /* More pronounced lift */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* Stronger shadow */
-}
-#buy-account-list .account-card .image-gallery {
-  width: 100%;
-  padding-bottom: 65%; /* 4:3 Aspect Ratio */
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 0;
-  border-bottom: 1px solid var(--border-color);
-}
-#buy-account-list .account-card .image-gallery img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  border-radius: 0;
-  border: none;
-}
-#buy-account-list .account-card .card-content {
-  padding: 15px; /* More padding */
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-#buy-account-list .account-card h3 {
-  margin: 0 0 8px 0; /* More margin */
-  font-size: 1.2em; /* Slightly larger */
-  color: var(--dark-blue);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 700;
-}
-#buy-account-list .account-card p {
-  margin: 0 0 6px 0; /* More margin */
-  font-size: 0.9em; /* Slightly larger */
-  color: #555;
-  text-align: left;
-  width: auto;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-#buy-account-list .account-card .price {
-  font-size: 1.4em; /* Larger price font */
-  font-weight: 800; /* Bolder */
-  color: var(--shopee-orange);
-  margin-top: 10px;
-  margin-bottom: 0;
-  text-align: left;
-}
-#buy-account-list .account-card .status-badge {
-  position: absolute;
-  top: 15px; /* More space from top */
-  right: 15px; /* More space from right */
-  background-color: var(--primary-color);
-  color: white;
-  padding: 6px 10px; /* More padding */
-  border-radius: 999px; /* Pill shape */
-  font-size: 0.8em; /* Slightly larger */
-  font-weight: 700;
-  z-index: 10;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-#buy-account-list .account-card .status-badge.terjual {
-  background-color: #dc3545;
-}
-
-/* Filter and Search styles */
-.filter-search-section {
-  background: var(--white);
-  padding: 30px; /* More padding */
-  border-radius: 15px; /* Larger border-radius */
-  box-shadow: 0 8px 25px var(--shadow-light); /* Stronger shadow */
-  margin-bottom: 40px; /* More margin */
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.filter-search-section .search-bar {
-  display: flex;
-  gap: 15px; /* More gap */
-  margin-bottom: 25px; /* More margin */
-}
-.filter-search-section .search-bar input {
-  flex-grow: 1;
-  margin: 0;
-  padding: 12px; /* Adjusted padding */
-  border-radius: 8px; /* Adjusted border-radius */
-}
-.filter-search-section .search-bar button {
-  width: auto;
-  padding: 12px 25px; /* Adjusted padding */
-  margin: 0;
-  border-radius: 8px; /* Adjusted border-radius */
-}
-
-.filter-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* More gap */
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  min-width: 180px; /* Slightly wider min-width */
-}
-
-.filter-group label {
-  font-weight: 700; /* Bolder */
-  margin-bottom: 8px; /* More margin */
-  color: var(--dark-blue);
-  font-size: 0.95em; /* Slightly larger */
-}
-
-.filter-group select, .filter-group input {
-  width: 100%;
-  padding: 10px; /* More padding */
-  border-radius: 8px; /* Larger border-radius */
-  border: 1px solid var(--border-color);
-  font-size: 0.95em; /* Slightly larger */
-  margin: 0;
-}
-
-.filter-group button {
-  width: auto;
-  padding: 10px 20px; /* More padding */
-  margin-top: 15px; /* More margin */
-  font-size: 0.95em; /* Slightly larger */
-  border-radius: 8px; /* Larger border-radius */
-}
-
-/* Modal Styles */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.7); /* Darker overlay */
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  opacity: 0;
-  transition: opacity 0.4s ease-in-out; /* Slower transition */
-}
-
-.modal.show {
-  opacity: 1;
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 40px; /* More padding */
-  border-radius: 18px; /* Much larger border-radius */
-  box-shadow: 0 10px 35px rgba(0,0,0,0.4); /* Stronger shadow */
-  max-width: 850px; /* Wider modal */
-  width: 100%;
-  position: relative;
-  animation: fadeIn 0.4s ease-out; /* Slower animation */
-  max-height: 90vh;
-  overflow-y: auto;
-  transform: translateY(-30px); /* More pronounced slide-in */
-  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-}
-
-.modal.show .modal-content {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.modal-content h2 {
-  text-align: center;
-  color: var(--dark-blue);
-  margin-bottom: 25px; /* More margin */
-  font-size: 2em; /* Larger font */
-  font-weight: 800;
-}
-
-.modal-close {
-  color: #888; /* Slightly darker */
-  position: absolute;
-  top: 20px; /* More space */
-  right: 30px; /* More space */
-  font-size: 40px; /* Larger size */
-  font-weight: bold;
-  cursor: pointer;
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-
-.modal-close:hover,
-.modal-close:focus {
-  color: #000;
-  text-decoration: none;
-  transform: rotate(90deg); /* Spin effect */
-}
-
-.modal-image-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adjusted min-width for thumbnails */
-  gap: 18px; /* More gap */
-  margin-top: 25px; /* More margin */
-  margin-bottom: 25px;
-  border-top: 1px solid #eee;
-  padding-top: 25px;
-}
-
-.modal-image-gallery img {
-  width: 100%;
-  height: 100px; /* Adjusted height for thumbnails */
-  object-fit: cover;
-  border-radius: 10px; /* Larger border-radius */
-  border: 3px solid var(--border-color); /* Thicker border */
-  cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15); /* Stronger shadow */
-}
-.modal-image-gallery img:hover {
-  transform: scale(1.08); /* More pronounced zoom */
-  border-color: var(--primary-color);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-
-.modal-main-image-container {
-  text-align: center;
-  margin-bottom: 25px; /* More margin */
-  max-height: 350px; /* Taller main image */
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.modal-main-image {
-  max-width: 100%;
-  max-height: 100%; /* Ensures entire image is visible */
-  object-fit: contain; /* Ensures entire image is visible */
-  border-radius: 12px; /* Larger border-radius */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25); /* Stronger shadow */
-  cursor: pointer;
-  transition: transform 0.3s ease-in-out;
-}
-
-.modal-main-image:hover {
-  transform: scale(1.03); /* Slight zoom on hover */
-}
-
-.modal-detail-section {
-  margin-bottom: 20px; /* More margin */
-  padding: 20px; /* More padding */
-  background-color: var(--accent-color-2); /* Lighter background */
-  border-radius: 12px; /* Larger border-radius */
-  box-shadow: 0 3px 12px rgba(0,0,0,0.08); /* Stronger shadow */
-}
-.modal-detail-section h4 {
-  color: var(--secondary-color);
-  margin-top: 0;
-  margin-bottom: 12px; /* More margin */
-  font-size: 1.3em; /* Larger font */
-  border-bottom: 1px dashed #bbb; /* Slightly darker dashed line */
-  padding-bottom: 10px; /* More padding */
-  font-weight: 700;
-}
-.modal-detail-section p {
-  text-align: left;
-  margin: 10px 0; /* More margin */
-  font-size: 1em; /* Slightly larger */
-  color: #444;
-}
-.modal-detail-section strong {
-  color: var(--dark-blue);
-  font-weight: 700;
-}
-
-.modal-price {
-  font-size: 2.2em; /* Even larger price font */
-  font-weight: 800; /* Bolder */
-  color: var(--shopee-orange);
-  text-align: center;
-  margin: 30px 0; /* More margin */
-}
-
-.modal-contact-info {
-  text-align: center;
-  margin-top: 30px; /* More margin */
-  padding-top: 25px; /* More padding */
-  border-top: 1px dashed #ddd; /* Slightly darker dashed line */
-}
-.modal-contact-info a {
-  background-color: #28a745;
-  color: white;
-  padding: 16px 35px; /* Larger button */
-  border-radius: 12px; /* Larger border-radius */
-  text-decoration: none;
-  font-weight: 700;
-  display: inline-block;
-  margin-top: 18px; /* More margin */
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
-}
-.modal-contact-info a:hover {
-  background-color: #218838;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
-}
-
-/* Image Viewer Modal */
-#imageViewerModal {
-  background-color: rgba(0,0,0,0.9); /* Even darker overlay */
-}
-#imageViewerModal .modal-content {
-  background: transparent;
-  box-shadow: none;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 98vw; /* Wider */
-  max-height: 98vh; /* Taller */
-  transform: none;
-  opacity: 1;
-}
-#imageViewerModal .modal-main-image {
-  max-width: 95%;
-  max-height: 90vh;
-  object-fit: contain; /* Ensures image fits without cropping */
-  border-radius: 0;
-  box-shadow: none;
-  transition: none;
-}
-#imageViewerModal .modal-main-image:hover {
-  transform: none;
-}
-#imageViewerModal .modal-close {
-  color: white;
-  text-shadow: 0 0 8px rgba(0,0,0,0.8); /* Stronger shadow */
-  top: 25px; /* More space */
-  right: 35px; /* More space */
-}
-#imageViewerModal .nav-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%); /* Memastikan posisi vertikal di tengah */
-  background: rgba(0,0,0,0.6); /* Darker background */
-  color: white;
-  border: none;
-  padding: 18px 25px; /* Lebih besar */
-  font-size: 3em; /* Lebih besar */
-  cursor: pointer;
-  border-radius: 50%; /* Bentuk lingkaran */
-  user-select: none;
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  z-index: 2001; /* Pastikan di atas gambar */
-  display: flex; /* Untuk centering ikon */
-  align-items: center;
-  justify-content: center;
-  width: 60px; /* Ukuran tetap */
-  height: 60px; /* Ukuran tetap */
-}
-#imageViewerModal .nav-arrow:hover {
-  background: rgba(0,0,0,0.9); /* Even darker on hover */
-  transform: translateY(-50%) scale(1.1); /* Slight zoom */
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-}
-#imageViewerModal .nav-arrow.left {
-  left: 20px; /* Posisikan di kiri */
-}
-#imageViewerModal .nav-arrow.right {
-  right: 20px; /* Posisikan di kanan */
-}
-
-/* PROMO BANNER STYLES */
-.promo-banner {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-  color: var(--white);
-  padding: 60px 30px;
-  border-radius: 15px;
-  text-align: center;
-  margin-bottom: 40px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  animation: slideIn 0.8s ease-out;
-}
-
-.promo-banner h2 {
-  color: var(--white);
-  font-size: 3em;
-  margin-bottom: 15px;
-  position: relative;
-  padding-bottom: 0;
-}
-
-.promo-banner h2::after {
-  content: none; /* Hapus underline dari h2 default */
-}
-
-.promo-banner p {
-  font-size: 1.3em;
-  margin-bottom: 30px;
-  color: rgba(255,255,255,0.9);
-}
-
-.promo-banner button {
-  background: var(--shopee-orange);
-  color: var(--white);
-  padding: 18px 40px;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.2em;
-  font-weight: 700;
-  cursor: pointer;
-  width: auto; /* Override 100% width */
-}
-
-.promo-banner button:hover {
-  background-color: var(--shopee-orange-dark);
-  transform: translateY(-3px);
-}
-
-/* CATEGORY CARDS STYLES */
-#category-selection {
-  margin-bottom: 40px;
-}
-
-.category-card {
-  background: var(--white);
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px var(--shadow-light);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  flex: 1 1 calc(25% - 30px); /* 4 kolom */
-  max-width: calc(25% - 30px);
-  box-sizing: border-box;
-}
-
-.category-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 35px var(--shadow-medium);
-}
-
-.category-card img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin-bottom: 15px;
-  border-radius: 50%;
-  border: 3px solid var(--accent-color-1);
-}
-
-.category-card h3 {
-  color: var(--dark-blue);
-  font-size: 1.3em;
-  margin: 0;
-}
-
-/* CHAT PAGE STYLES */
-#chat-page {
-  max-width: 800px;
-  margin: auto;
-  padding: 30px;
-  background: var(--white);
-  border-radius: 15px;
-  box-shadow: 0 8px 25px var(--shadow-light);
-}
-
-#chat-messages {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Increased gap for better spacing */
-  height: 450px; /* Slightly taller chat window */
-  overflow-y: auto;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 20px;
-  background-color: var(--accent-color-2);
-  box-shadow: inset 0 1px 5px rgba(0,0,0,0.05); /* Subtle inner shadow */
-}
-
-.chat-message {
-  display: flex;
-  align-items: flex-start; /* Align items to the top */
-  gap: 10px; /* Space between avatar and message bubble */
-  padding: 12px 18px; /* Adjusted padding */
-  border-radius: 20px; /* More rounded corners */
-  max-width: 85%; /* Slightly wider messages */
-  word-wrap: break-word;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Stronger shadow */
-  position: relative; /* For the triangle bubble effect */
-}
-
-.chat-message.sent {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); /* Gradient for sent messages */
-  color: white;
-  align-self: flex-end;
-  border-bottom-right-radius: 5px; /* Pointy corner */
-}
-
-.chat-message.received {
-  background-color: var(--white);
-  color: var(--text-color);
-  align-self: flex-start;
-  border: 1px solid var(--border-color);
-  border-bottom-left-radius: 5px; /* Pointy corner */
-}
-
-.chat-message .avatar {
-  width: 40px; /* Larger avatar */
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--accent-color-1); /* Accent border */
-  flex-shrink: 0; /* Prevent shrinking */
-}
-
-.chat-message.sent .avatar {
-  order: 2; /* Move avatar to the right for sent messages */
-  border-color: var(--white); /* White border for sent avatar */
-}
-
-.chat-message .message-content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.chat-message .sender-name {
-  font-weight: 700; /* Bolder name */
-  font-size: 0.9em;
-  margin-bottom: 2px;
-  color: inherit; /* Inherit color from message bubble */
-}
-
-.chat-message.received .sender-name {
-  color: var(--dark-blue); /* Darker name for received messages */
-}
-
-.chat-message .message-text {
-  font-size: 1em;
-  margin-bottom: 5px;
-}
-
-.chat-message .timestamp {
-  font-size: 0.7em; /* Smaller timestamp */
-  opacity: 0.8; /* Slightly transparent */
-  margin-top: 5px;
-}
-
-.chat-message.sent .timestamp {
-  color: rgba(255,255,255,0.7);
-  text-align: right;
-}
-
-.chat-message.received .timestamp {
-  color: #666;
-  text-align: left;
-}
-
-/* Chat input area */
-#chat-input {
-  width: calc(100% - 24px); /* Account for padding and border */
-  padding: 14px;
-  margin-bottom: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  font-size: 1.05em;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  resize: vertical; /* Allow vertical resizing */
-  min-height: 60px; /* Minimum height */
-}
-
-#send-chat-btn {
-  padding: 12px 25px; /* Adjusted padding */
-  font-size: 1em; /* Adjusted font size */
-  border-radius: 8px; /* Adjusted border-radius */
-}
-
-/* DROPDOWN NAV STYLES */
-.nav-links {
-  display: flex;
-  align-items: center;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-  margin-left: 15px; /* Sesuaikan margin */
-}
-
-.dropbtn {
-  background-color: transparent;
-  color: white;
-  padding: 10px 15px;
-  font-size: 1.1em;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.dropbtn:hover {
-  color: var(--accent-color-1);
-  transform: translateY(-2px);
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: var(--dark-blue); /* Warna latar belakang dropdown */
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  border-radius: 8px;
-  overflow: hidden;
-  right: 0; /* Posisikan di kanan */
-  top: 100%; /* Tepat di bawah tombol */
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.dropdown-content a {
-  color: var(--white);
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  margin: 0; /* Hapus margin default dari nav a */
-}
-
-.dropdown-content a:hover {
-  background-color: var(--primary-color); /* Warna hover untuk item dropdown */
-  color: var(--white);
-  text-decoration: none;
-  transform: none; /* Hapus transform dari nav a */
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); } /* Start smaller */
-  to { opacity: 1; transform: scale(1); }
-}
-
-@media (max-width: 768px) {
-  .filter-options {
+  /* --- Gaya Daftar Akun Beli (Buy Account List) --- */
+  #buy-account-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    padding: 15px;
+  }
+  #buy-account-list .account-card {
+    width: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: white;
+    display: flex;
     flex-direction: column;
     align-items: stretch;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    position: relative;
   }
-  .filter-group {
-    min-width: unset;
-    width: 100%;
-  }
-  .filter-group button {
-    width: 100%;
-  }
-  .modal-content {
-    padding: 25px;
-  }
-  .modal-close {
-    font-size: 35px;
-    top: 15px;
-    right: 20px;
-  }
-  .modal-image-gallery {
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Adjust for smaller screens */
-    gap: 10px;
-  }
-  .modal-image-gallery img {
-    height: 70px;
-  }
-  /* PERBAIKAN UTAMA UNTUK UKURAN GAMBAR DI HP */
-  #buy-account-list {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* JAUH LEBIH KECIL UNTUK HP */
-    gap: 15px; /* Kurangi gap juga */
+  #buy-account-list .account-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
   }
   #buy-account-list .account-card .image-gallery {
-    padding-bottom: 75%; /* Ubah ke rasio 4:3 untuk kartu yang lebih ringkas di HP */
+    width: 100%;
+    padding-bottom: 65%; /* Rasio Aspek 4:3 */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  #buy-account-list .account-card .image-gallery img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 0;
+    border: none;
+  }
+  #buy-account-list .account-card .card-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
   }
   #buy-account-list .account-card h3 {
-    font-size: 1em; /* Kecilkan judul */
+    margin: 0 0 8px 0;
+    font-size: 1.2em;
+    color: var(--dark-blue);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 700;
   }
   #buy-account-list .account-card p {
-    font-size: 0.8em; /* Kecilkan teks */
+    margin: 0 0 6px 0;
+    font-size: 0.9em;
+    color: #555;
+    text-align: left;
+    width: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   #buy-account-list .account-card .price {
-    font-size: 1.1em; /* Kecilkan harga */
+    font-size: 1.4em;
+    font-weight: 800;
+    color: var(--shopee-orange);
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: left;
   }
   #buy-account-list .account-card .status-badge {
-    font-size: 0.7em; /* Kecilkan badge */
-    padding: 4px 6px;
-    top: 8px;
-    right: 8px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.8em;
+    font-weight: 700;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  #buy-account-list .account-card .status-badge.terjual {
+    background-color: #dc3545;
+  }
+
+  /* --- Gaya Filter dan Pencarian --- */
+  .filter-search-section {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px var(--shadow-light);
+    margin-bottom: 40px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .filter-search-section .search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  .filter-search-section .search-bar input {
+    flex-grow: 1;
+    margin: 0;
+    padding: 12px;
+    border-radius: 8px;
+  }
+  .filter-search-section .search-bar button {
+    width: auto;
+    padding: 12px 25px;
+    margin: 0;
+    border-radius: 8px;
+  }
+
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+  }
+
+  .filter-group label {
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--dark-blue);
+    font-size: 0.95em;
+  }
+
+  .filter-group select, .filter-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 0.95em;
+    margin: 0;
+  }
+
+  .filter-group button {
+    width: auto;
+    padding: 10px 20px;
+    margin-top: 15px;
+    font-size: 0.95em;
+    border-radius: 8px;
+  }
+
+  /* --- Gaya Modal Umum --- */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+  }
+
+  .modal.show {
+    opacity: 1;
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+    max-width: 850px;
+    width: 100%;
+    position: relative;
+    animation: fadeIn 0.4s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(-30px);
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+  }
+
+  .modal.show .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .modal-content h2 {
+    text-align: center;
+    color: var(--dark-blue);
+    margin-bottom: 25px;
+    font-size: 2em;
+    font-weight: 800;
+  }
+
+  .modal-close {
+    color: #888;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+  }
+
+  .modal-close:hover,
+  .modal-close:focus {
+    color: #000;
+    text-decoration: none;
+    transform: rotate(90deg);
+  }
+
+  .modal-image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 18px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border-top: 1px solid #eee;
+    padding-top: 25px;
+  }
+
+  .modal-image-gallery img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 3px solid var(--border-color);
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  }
+  .modal-image-gallery img:hover {
+    transform: scale(1.08);
+    border-color: var(--primary-color);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   }
 
   .modal-main-image-container {
-    max-height: 250px; /* Lebih kecil lagi untuk HP */
-  }
-  .modal-main-image {
-    max-height: 100%; /* Menggunakan 100% dari max-height container */
-  }
-
-  #imageViewerModal .nav-arrow {
-    padding: 12px 15px;
-    font-size: 2.5em;
-    width: 50px;
-    height: 50px;
-    /* Hapus properti left dan right dari sini */
-  }
-  #imageViewerModal .nav-arrow.left {
-    left: 10px; /* Posisikan di kiri */
-    right: auto; /* Pastikan tidak ada konflik dengan right */
-  }
-  #imageViewerModal .nav-arrow.right {
-    right: 10px; /* Posisikan di kanan */
-    left: auto; /* Pastikan tidak ada konflik dengan left */
-  }
-
-  /* Responsive adjustments for profile page */
-  #profile-page {
-    padding: 25px;
-  }
-  .profile-details-grid {
-    grid-template-columns: 1fr; /* Single column on mobile */
-  }
-  .profile-pic-container {
-    width: 120px;
-    height: 120px;
-  }
-  .profile-pic-upload-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 0.8em;
-  }
-
-  /* Responsive for category cards */
-  .category-card {
-    flex: 1 1 100%; /* 1 kolom di mobile */
-    max-width: 100%;
-  }
-
-  /* Responsive for dropdown nav */
-  .nav-links {
-    flex-direction: column;
-    width: 100%;
+    text-align: center;
+    margin-bottom: 25px;
+    max-height: 350px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
     align-items: center;
   }
-  .nav-links a, .dropdown {
-    margin: 10px 0;
-  }
-  .dropdown-content {
-    position: static; /* Agar dropdown muncul di bawah item menu di mobile */
-    width: 100%;
-    box-shadow: none;
-    border-radius: 0;
-    background-color: var(--secondary-color); /* Sesuaikan warna di mobile */
+  .modal-main-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
   }
 
-  /* Responsive for chat page */
-  #chat-page {
+  .modal-main-image:hover {
+    transform: scale(1.03);
+  }
+
+  .modal-detail-section {
+    margin-bottom: 20px;
     padding: 20px;
+    background-color: var(--accent-color-2);
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
   }
+  .modal-detail-section h4 {
+    color: var(--secondary-color);
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.3em;
+    border-bottom: 1px dashed #bbb;
+    padding-bottom: 10px;
+    font-weight: 700;
+  }
+  .modal-detail-section p {
+    text-align: left;
+    margin: 10px 0;
+    font-size: 1em;
+    color: #444;
+  }
+  .modal-detail-section strong {
+    color: var(--dark-blue);
+    font-weight: 700;
+  }
+
+  .modal-price {
+    font-size: 2.2em;
+    font-weight: 800;
+    color: var(--shopee-orange);
+    text-align: center;
+    margin: 30px 0;
+  }
+
+  .modal-contact-info {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px dashed #ddd;
+  }
+  .modal-contact-info a {
+    background-color: #28a745;
+    color: white;
+    padding: 16px 35px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-block;
+    margin-top: 18px;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+  }
+  .modal-contact-info a:hover {
+    background-color: #218838;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  /* --- Gaya Modal Penampil Gambar (Full Screen) --- */
+  #imageViewerModal {
+    background-color: rgba(0,0,0,0.9);
+  }
+  #imageViewerModal .modal-content {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 98vw;
+    max-height: 98vh;
+    transform: none;
+    opacity: 1;
+  }
+  #imageViewerModal .modal-main-image {
+    max-width: 95%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 0;
+    box-shadow: none;
+    transition: none;
+  }
+  #imageViewerModal .modal-main-image:hover {
+    transform: none;
+  }
+  #imageViewerModal .modal-close {
+    color: white;
+    text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    top: 25px;
+    right: 35px;
+  }
+  #imageViewerModal .nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    padding: 18px 25px;
+    font-size: 3em;
+    cursor: pointer;
+    border-radius: 50%;
+    user-select: none;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 2001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+  }
+  #imageViewerModal .nav-arrow:hover {
+    background: rgba(0,0,0,0.9);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+  #imageViewerModal .nav-arrow.left {
+    left: 20px;
+  }
+  #imageViewerModal .nav-arrow.right {
+    right: 20px;
+  }
+
+  /* --- Gaya Banner Promo --- */
+  .promo-banner {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    padding: 60px 30px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: slideIn 0.8s ease-out;
+  }
+
+  .promo-banner h2 {
+    color: var(--white);
+    font-size: 3em;
+    margin-bottom: 15px;
+    position: relative;
+    padding-bottom: 0;
+  }
+
+  .promo-banner h2::after {
+    content: none;
+  }
+
+  .promo-banner p {
+    font-size: 1.3em;
+    margin-bottom: 30px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .promo-banner button {
+    background: var(--shopee-orange);
+    color: var(--white);
+    padding: 18px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+    width: auto;
+  }
+
+  .promo-banner button:hover {
+    background-color: var(--shopee-orange-dark);
+    transform: translateY(-3px);
+  }
+
+  /* --- Gaya Kartu Kategori --- */
+  #category-selection {
+    margin-bottom: 40px;
+  }
+
+  .category-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px var(--shadow-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 1 1 calc(25% - 30px); /* 4 kolom */
+    max-width: calc(25% - 30px);
+    box-sizing: border-box;
+  }
+
+  .category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px var(--shadow-medium);
+  }
+
+  .category-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-color-1);
+  }
+
+  .category-card h3 {
+    color: var(--dark-blue);
+    font-size: 1.3em;
+    margin: 0;
+  }
+
+  /* --- Gaya Halaman Chat --- */
+  #chat-page {
+    max-width: 800px;
+    margin: auto;
+    padding: 30px;
+    background: var(--white);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px var(--shadow-light);
+  }
+
+  #chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 450px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: var(--accent-color-2);
+    box-shadow: inset 0 1px 5px rgba(0,0,0,0.05);
+  }
+
   .chat-message {
-    max-width: 95%; /* Adjust max-width for smaller screens */
-    padding: 10px 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 20px;
+    max-width: 85%;
+    word-wrap: break-word;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
   }
+
+  .chat-message.sent {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+  }
+
+  .chat-message.received {
+    background-color: var(--white);
+    color: var(--text-color);
+    align-self: flex-start;
+    border: 1px solid var(--border-color);
+    border-bottom-left-radius: 5px;
+  }
+
   .chat-message .avatar {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-color-1);
+    flex-shrink: 0;
   }
+
+  .chat-message.sent .avatar {
+    order: 2;
+    border-color: var(--white);
+  }
+
+  .chat-message .message-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
   .chat-message .sender-name {
-    font-size: 0.85em;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-bottom: 2px;
+    color: inherit;
   }
+
+  .chat-message.received .sender-name {
+    color: var(--dark-blue);
+  }
+
   .chat-message .message-text {
-    font-size: 0.9em;
+    font-size: 1em;
+    margin-bottom: 5px;
   }
+
   .chat-message .timestamp {
-    font-size: 0.65em;
+    font-size: 0.7em;
+    opacity: 0.8;
+    margin-top: 5px;
   }
+
+  .chat-message.sent .timestamp {
+    color: rgba(255,255,255,0.7);
+    text-align: right;
+  }
+
+  .chat-message.received .timestamp {
+    color: #666;
+    text-align: left;
+  }
+
+  /* --- Area Input Chat --- */
   #chat-input {
-    padding: 10px;
-    min-height: 50px;
+    width: calc(100% - 24px);
+    padding: 14px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1.05em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    resize: vertical;
+    min-height: 60px;
   }
+
   #send-chat-btn {
-    padding: 10px 20px;
-    font-size: 0.9em;
+    padding: 12px 25px;
+    font-size: 1em;
+    border-radius: 8px;
   }
-}
 
-/* New styles for chat community */
-.chat-tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-color);
-}
+  /* --- Gaya Navigasi Dropdown --- */
+  .nav-links {
+    display: flex;
+    align-items: center;
+  }
 
-.chat-tab-button {
-  background-color: transparent;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 1.1em;
-  font-weight: 600;
-  color: #666;
-  transition: color 0.3s ease, border-bottom 0.3s ease;
-  border-bottom: 3px solid transparent;
-}
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: 15px;
+  }
 
-.chat-tab-button.active {
-  color: var(--primary-color);
-  border-bottom: 3px solid var(--primary-color);
-}
+  .dropbtn {
+    background-color: transparent;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1.1em;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
 
-.chat-tab-button:hover {
-  color: var(--dark-blue);
-}
+  .dropbtn:hover {
+    color: var(--accent-color-1);
+    transform: translateY(-2px);
+  }
 
-#private-chat-selection {
-  margin-bottom: 20px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background-color: var(--accent-color-2);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--dark-blue);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    right: 0;
+    top: 100%;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
 
-#private-chat-selection label {
-  font-weight: 600;
-  color: var(--dark-blue);
-  white-space: nowrap;
-}
+  .dropdown-content a {
+    color: var(--white);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0;
+  }
 
-#private-chat-selection select {
-  flex-grow: 1;
-  margin: 0;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  font-size: 0.95em;
-  background-color: var(--white);
-}
+  .dropdown-content a:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    transform: none;
+  }
 
-#private-chat-selection button {
-  width: auto;
-  padding: 10px 15px;
-  margin: 0;
-  font-size: 0.95em;
-  border-radius: 8px;
-}
+  .dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* --- Keyframes Animasi --- */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* --- Responsif Umum --- */
+  @media (max-width: 768px) {
+    .filter-options {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .filter-group {
+      min-width: unset;
+      width: 100%;
+    }
+    .filter-group button {
+      width: 100%;
+    }
+    .modal-content {
+      padding: 25px;
+    }
+    .modal-close {
+      font-size: 35px;
+      top: 15px;
+      right: 20px;
+    }
+    .modal-image-gallery {
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      gap: 10px;
+    }
+    .modal-image-gallery img {
+      height: 70px;
+    }
+    /* Perbaikan utama untuk ukuran gambar di HP */
+    #buy-account-list {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+    }
+    #buy-account-list .account-card .image-gallery {
+      padding-bottom: 75%;
+    }
+    #buy-account-list .account-card h3 {
+      font-size: 1em;
+    }
+    #buy-account-list .account-card p {
+      font-size: 0.8em;
+    }
+    #buy-account-list .account-card .price {
+      font-size: 1.1em;
+    }
+    #buy-account-list .account-card .status-badge {
+      font-size: 0.7em;
+      padding: 4px 6px;
+      top: 8px;
+      right: 8px;
+    }
+
+    .modal-main-image-container {
+      max-height: 250px;
+    }
+    .modal-main-image {
+      max-height: 100%;
+    }
+
+    #imageViewerModal .nav-arrow {
+      padding: 12px 15px;
+      font-size: 2.5em;
+      width: 50px;
+      height: 50px;
+    }
+    #imageViewerModal .nav-arrow.left {
+      left: 10px;
+      right: auto;
+    }
+    #imageViewerModal .nav-arrow.right {
+      right: 10px;
+      left: auto;
+    }
+
+    /* Penyesuaian responsif untuk halaman profil */
+    #profile-page {
+      padding: 25px;
+    }
+    .profile-details-grid {
+      grid-template-columns: 1fr;
+    }
+    .profile-pic-container {
+      width: 120px;
+      height: 120px;
+    }
+    .profile-pic-upload-btn {
+      width: 30px;
+      height: 30px;
+      font-size: 0.8em;
+    }
+
+    /* Responsif untuk kartu kategori */
+    .category-card {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+
+    /* Responsif untuk navigasi dropdown */
+    .nav-links {
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
+    }
+    .nav-links a, .dropdown {
+      margin: 10px 0;
+    }
+    .dropdown-content {
+      position: static;
+      width: 100%;
+      box-shadow: none;
+      border-radius: 0;
+      background-color: var(--secondary-color);
+    }
+
+    /* Responsif untuk halaman chat */
+    #chat-page {
+      padding: 20px;
+    }
+    .chat-message {
+      max-width: 95%;
+      padding: 10px 15px;
+    }
+    .chat-message .avatar {
+      width: 35px;
+      height: 35px;
+    }
+    .chat-message .sender-name {
+      font-size: 0.85em;
+    }
+    .chat-message .message-text {
+      font-size: 0.9em;
+    }
+    .chat-message .timestamp {
+      font-size: 0.65em;
+    }
+    #chat-input {
+      padding: 10px;
+      min-height: 50px;
+    }
+    #send-chat-btn {
+      padding: 10px 20px;
+      font-size: 0.9em;
+    }
+  }
+
+  /* --- Gaya Baru untuk Komunitas Chat --- */
+  .chat-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .chat-tab-button {
+    background-color: transparent;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #666;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    border-bottom: 3px solid var(--primary-color); /* Default active color */
+  }
+
+  .chat-tab-button.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+  }
+
+  .chat-tab-button:hover {
+    color: var(--dark-blue);
+  }
+
+  #private-chat-selection {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--accent-color-2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  #private-chat-selection label {
+    font-weight: 600;
+    color: var(--dark-blue);
+    white-space: nowrap;
+  }
+
+  #private-chat-selection select {
+    flex-grow: 1;
+    margin: 0;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 0.95em;
+    background-color: var(--white);
+  }
+
+  #private-chat-selection button {
+    width: auto;
+    padding: 10px 15px;
+    margin: 0;
+    font-size: 0.95em;
+    border-radius: 8px;
+  }
 
 </style>
 </head>
@@ -1512,7 +1535,7 @@
 <nav>
   <div class="logo">
     <a href="#" id="nav-home" style="color: inherit; text-decoration: none;">
-      <!-- SVG Icon for professional touch -->
+      <!-- SVG Icon untuk sentuhan profesional -->
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px; color: var(--accent-color-1);">
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
       </svg>
@@ -1525,7 +1548,7 @@
     <a href="https://wa.me/6288223070064" target="_blank" id="nav-chat-admin">Chat Admin (WA)</a>
     <a href="#" id="nav-chat-community">Chat Komunitas</a>
     
-    <!-- Dropdown untuk Profile/Logout -->
+    <!-- Dropdown untuk Profil/Logout -->
     <div class="dropdown">
       <a href="#" class="dropbtn" id="nav-user-menu">
         <img id="nav-profile-pic-small" src="https://via.placeholder.com/30" alt="Profile" style="width: 30px; height: 30px; border-radius: 50%; vertical-align: middle; margin-right: 5px; border: 2px solid var(--accent-color-1);">
@@ -1541,7 +1564,7 @@
 
 <div class="container" id="main-container">
 
-  <!-- LOGIN FORM -->
+  <!-- FORM LOGIN -->
   <form id="login-form">
     <h2>Login ke ATLANTIS STORE</h2>
     <div id="login-alert" class="alert hidden"></div>
@@ -1551,7 +1574,7 @@
     <p>Belum punya akun? <a href="#" id="show-register">Daftar Sekarang</a></p>
   </form>
 
-  <!-- REGISTER FORM -->
+  <!-- FORM REGISTRASI -->
   <form id="register-form" class="hidden">
     <h2>Daftar Akun Baru</h2>
     <div id="register-alert" class="alert hidden"></div>
@@ -1565,7 +1588,7 @@
         <option value="+44">🇬🇧 +44</option>
         <option value="+60">🇲🇾 +60</option>
         <option value="+65">🇸🇬 +65</option>
-        <!-- Add more country codes as needed -->
+        <!-- Tambahkan kode negara lain sesuai kebutuhan -->
       </select>
       <input type="text" id="reg-whatsapp" placeholder="Nomor WhatsApp (contoh: 81234567890)" required style="flex-grow: 1; margin: 0;">
     </div>
@@ -1575,7 +1598,7 @@
     <p>Sudah punya akun? <a href="#" id="show-login">Login</a></p>
   </form>
 
-  <!-- LANDING PAGE (Promo Banner) -->
+  <!-- HALAMAN LANDING (Banner Promo) -->
   <div id="landing-page" class="hidden">
     <div class="promo-banner">
       <h2>Selamat Datang di ATLANTIS STORE!</h2>
@@ -1584,7 +1607,7 @@
     </div>
   </div>
 
-  <!-- PROFILE PAGE -->
+  <!-- HALAMAN PROFIL -->
   <form id="profile-page" class="hidden">
     <h2>Profil Pengguna</h2>
     <div id="profile-alert" class="alert hidden"></div>
@@ -1625,7 +1648,7 @@
           <option value="+44">🇬🇧 +44</option>
           <option value="+60">🇲🇾 +60</option>
           <option value="+65">🇸🇬 +65</option>
-          <!-- Add more country codes as needed -->
+          <!-- Tambahkan kode negara lain sesuai kebutuhan -->
         </select>
         <input type="text" id="profile-whatsapp" placeholder="Nomor WhatsApp (contoh: 81234567890)" required style="flex-grow: 1; margin: 0;">
       </div>
@@ -1637,12 +1660,12 @@
     <div id="my-posts-container">
       <h3>Postingan Saya</h3>
       <div class="flex" id="my-posts-list">
-        <!-- User's posted accounts will be loaded here -->
+        <!-- Akun yang diposting pengguna akan dimuat di sini -->
       </div>
     </div>
   </form>
 
-  <!-- POSTING AKUN PAGE -->
+  <!-- HALAMAN POSTING AKUN -->
   <form id="post-account-page" class="hidden">
     <h2>Posting Akun Game Anda</h2>
     <div id="post-alert" class="alert hidden"></div>
@@ -1665,7 +1688,7 @@
       <div id="image-previews" class="hidden"></div>
     </div>
     
-    <!-- ML FIELDS -->
+    <!-- FIELD MOBILE LEGEND -->
     <div id="ml-fields" class="form-section hidden">
       <h3>Detail Mobile Legend</h3>
       <select id="ml-rank-now">
@@ -1723,7 +1746,7 @@
       <input type="number" id="ml-skins" placeholder="Total Skin" min="0">
     </div>
 
-    <!-- Toram FIELDS -->
+    <!-- FIELD TORAM ONLINE -->
     <div id="toram-fields" class="form-section hidden">
       <h3>Detail Toram Online</h3>
       <input type="text" id="toram-mainquest" placeholder="Main Quest (contoh: BAB 1 - 16 (tamat))">
@@ -1757,7 +1780,7 @@
       <input type="number" id="toram-tiket" placeholder="Total Tiket" min="0">
     </div>
 
-    <!-- LifeAfter FIELDS -->
+    <!-- FIELD LIFEAFTER -->
     <div id="lifeafter-fields" class="form-section hidden">
       <h3>Detail Life After</h3>
       <select id="lifeafter-server" onchange="showLifeAfterServer()">
@@ -1794,7 +1817,7 @@
 
       <h4>Level Attachment</h4>
       <!-- Light Weapon -->
-      <div class="form-section">
+      <div class="form-section" id="normal-lw-attachments">
         <h5>Light Weapon Attachment</h5>
         <div class="item-group">
           <label>Stock</label>
@@ -1832,7 +1855,7 @@
       </div>
 
       <!-- Heavy Weapon -->
-      <div class="form-section">
+      <div class="form-section" id="normal-hw-attachments">
         <h5>Heavy Weapon Attachment</h5>
         <div class="item-group">
           <label>Stock</label>
@@ -1870,7 +1893,7 @@
       </div>
 
       <!-- Meele Weapon -->
-      <div class="form-section">
+      <div class="form-section" id="normal-mw-attachments">
         <h5>Meele Weapon Attachment</h5>
         <div class="item-group">
           <label>Knob</label>
@@ -1899,7 +1922,7 @@
           <input type="number" class="la-mw-sculpture-level" placeholder="Level (1-19)" min="1" max="19">
           <input type="number" class="la-mw-sculpture-grade" placeholder="Grade (1-12)" min="1" max="12">
           <select class="la-mw-sculpture-color">
-            <option value="">Pilih Warna</option>
+            <option value="">Pilih Warna</
             <option value="Green">Green</option>
             <option value="Blue">Blue</option>
             <option value="Purple">Purple</option>
@@ -1908,7 +1931,7 @@
       </div>
 
       <!-- Armor -->
-      <div class="form-section">
+      <div class="form-section" id="normal-armor-attachments">
         <h5>Armor Attachment</h5>
         <div class="item-group">
           <label>Steel Layer</label>
@@ -1937,13 +1960,95 @@
           <input type="number" class="la-armor-cotton-level" placeholder="Level (1-19)" min="1" max="19">
           <input type="number" class="la-armor-cotton-grade" placeholder="Grade (1-12)" min="1" max="12">
           <select class="la-armor-cotton-color">
-            <option value="">Pilih Warna</option>
+            <option value="">Pilih Warna</
             <option value="Green">Green</option>
             <option value="Blue">Blue</option>
             <option value="Purple">Purple</option>
           </select>
         </div>
       </div>
+
+      <!-- EasyServer Attachments -->
+      <div id="easy-server-attachments" class="form-section hidden">
+        <h4>Level Attachment (EasyServer)</h4>
+
+        <!-- Weapon Attachment (EasyServer) - SATU SAJA -->
+        <div class="form-section">
+          <h5>Weapon Attachment (EasyServer)</h5>
+          <div class="item-group">
+            <label>Grip</label>
+            <input type="number" class="la-easy-weapon-grip-level" placeholder="Level (1-17)" min="1" max="17">
+            <input type="number" class="la-easy-weapon-grip-grade" placeholder="Grade (1-4)" min="1" max="4">
+            <select class="la-easy-weapon-grip-color">
+              <option value="">Pilih Warna</option>
+              <option value="Green">Green</option>
+              <option value="Blue">Blue</option>
+              <option value="Purple">Purple</option>
+            </select>
+          </div>
+          <div class="item-group">
+            <label>Pendant</label>
+            <input type="number" class="la-easy-weapon-pendant-level" placeholder="Level (1-17)" min="1" max="17">
+            <input type="number" class="la-easy-weapon-pendant-grade" placeholder="Grade (1-4)" min="1" max="4">
+            <select class="la-easy-weapon-pendant-color">
+              <option value="">Pilih Warna</option>
+              <option value="Green">Green</option>
+              <option value="Blue">Blue</option>
+              <option value="Purple">Purple</option>
+            </select>
+          </div>
+          <div class="item-group">
+            <label>Coating</label>
+            <input type="number" class="la-easy-weapon-coating-level" placeholder="Level (1-17)" min="1" max="17">
+            <input type="number" class="la-easy-weapon-coating-grade" placeholder="Grade (1-4)" min="1" max="4">
+            <select class="la-easy-weapon-coating-color">
+              <option value="">Pilih Warna</
+              <option value="Green">Green</option>
+              <option value="Blue">Blue</option>
+              <option value="Purple">Purple</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Armor Attachment (EasyServer) - TETAP SAMA -->
+        <div class="form-section">
+          <h5>Armor Attachment (EasyServer)</h5>
+          <div class="item-group">
+            <label>Steel Layer</label>
+            <input type="number" class="la-easy-armor-steel-level" placeholder="Level (1-17)" min="1" max="17">
+            <input type="number" class="la-easy-armor-steel-grade" placeholder="Grade (1-4)" min="1" max="4">
+            <select class="la-easy-armor-steel-color">
+              <option value="">Pilih Warna</option>
+              <option value="Green">Green</option>
+              <option value="Blue">Blue</option>
+              <option value="Purple">Purple</option>
+            </select>
+          </div>
+          <div class="item-group">
+            <label>Chain Layer</label>
+            <input type="number" class="la-easy-armor-chain-level" placeholder="Level (1-17)" min="1" max="17">
+            <input type="number" class="la-easy-armor-chain-grade" placeholder="Grade (1-4)" min="1" max="4">
+            <select class="la-easy-armor-chain-color">
+              <option value="">Pilih Warna</option>
+              <option value="Green">Green</option>
+              <option value="Blue">Blue</option>
+              <option value="Purple">Purple</option>
+            </select>
+          </div>
+          <div class="item-group">
+            <label>Cotton Layer</label>
+            <input type="number" class="la-easy-armor-cotton-level" placeholder="Level (1-17)" min="1" max="17">
+            <input type="number" class="la-easy-armor-cotton-grade" placeholder="Grade (1-4)" min="1" max="4">
+            <select class="la-easy-armor-cotton-color">
+              <option value="">Pilih Warna</
+              <option value="Green">Green</option>
+              <option value="Blue">Blue</option>
+              <option value="Purple">Purple</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- End EasyServer Attachments -->
 
       <label for="la-job-category">Kategori Job</label>
       <select id="la-job-category" onchange="showLifeAfterJob()">
@@ -1956,7 +2061,7 @@
         <option value="">Pilih Job</option>
       </select>
 
-      <input type="number" id="la-gene" placeholder="Gene" min="0">
+      <input type="number" id="la-gene" placeholder="Gene" min="0" max="20000">
       <input type="number" id="la-charisma" placeholder="Score Charisma" min="0">
       <label>Total Outfit</label>
       <input type="number" id="la-outfit-collector" placeholder="Collector" min="0">
@@ -1968,7 +2073,7 @@
     <button type="submit" id="post-submit-btn">Post Akun</button>
   </form>
 
-  <!-- BELI AKUN PAGE -->
+  <!-- HALAMAN BELI AKUN -->
   <div id="buy-account-page" class="hidden">
     <h2>Beli Akun Game</h2>
 
@@ -2010,7 +2115,7 @@
             </select>
           </div>
 
-          <!-- ML Filters -->
+          <!-- Filter ML -->
           <div id="ml-filters" class="filter-group hidden">
             <label for="filter-ml-role">Role Akun ML:</label>
             <select id="filter-ml-role">
@@ -2023,7 +2128,7 @@
             </select>
           </div>
 
-          <!-- Toram Filters -->
+          <!-- Filter Toram -->
           <div id="toram-filters" class="filter-group hidden">
             <label for="filter-toram-char-count">Jumlah Char Toram (Min):</label>
             <input type="number" id="filter-toram-char-count" placeholder="Min Jumlah Char" min="0">
@@ -2033,7 +2138,7 @@
             <input type="text" id="filter-toram-mq" placeholder="Contoh: BAB 16">
           </div>
 
-          <!-- LifeAfter Filters -->
+          <!-- Filter LifeAfter -->
           <div id="lifeafter-filters" class="filter-group hidden">
             <label for="filter-la-server">Server LA:</label>
             <select id="filter-la-server">
@@ -2063,12 +2168,12 @@
       </div>
 
       <div id="buy-account-list">
-        <!-- Account cards for buying will be loaded here -->
+        <!-- Kartu akun untuk pembelian akan dimuat di sini -->
       </div>
     </div>
   </div>
 
-  <!-- CHAT PAGE -->
+  <!-- HALAMAN CHAT -->
   <div id="chat-page" class="hidden">
     <h2>Chat Komunitas</h2>
     <div class="chat-tabs">
@@ -2081,13 +2186,13 @@
       <label for="private-chat-user">Chat dengan:</label>
       <select id="private-chat-user">
         <option value="">Pilih Pengguna</option>
-        <!-- Users will be loaded here -->
+        <!-- Pengguna akan dimuat di sini -->
       </select>
       <button id="start-private-chat-btn">Mulai Chat</button>
     </div>
 
     <div id="chat-messages">
-      <!-- Messages will be loaded here -->
+      <!-- Pesan akan dimuat di sini -->
     </div>
     <div id="chat-alert" class="alert hidden"></div>
     <textarea id="chat-input" placeholder="Ketik pesan Anda..." rows="4"></textarea>
@@ -2096,7 +2201,7 @@
 
 </div>
 
-<!-- Account Detail Modal -->
+<!-- Modal Detail Akun -->
 <div id="accountDetailModal" class="modal">
   <div class="modal-content">
     <span class="modal-close" id="closeAccountDetailModal">&times;</span>
@@ -2105,10 +2210,10 @@
       <img id="modal-main-image" src="" alt="Main Account Image">
     </div>
     <div class="modal-image-gallery" id="modal-thumbnail-gallery">
-      <!-- Thumbnails will be loaded here -->
+      <!-- Thumbnail akan dimuat di sini -->
     </div>
     <div id="modal-account-details">
-      <!-- Account specific details will be loaded here -->
+      <!-- Detail spesifik akun akan dimuat di sini -->
     </div>
     <p class="modal-price" id="modal-account-price"></p>
     <div class="modal-contact-info">
@@ -2119,7 +2224,7 @@
   </div>
 </div>
 
-<!-- Image Viewer Modal (for full screen image) -->
+<!-- Modal Penampil Gambar (untuk gambar layar penuh) -->
 <div id="imageViewerModal" class="modal">
   <div class="modal-content">
     <span class="modal-close" id="closeImageViewerModal">&times;</span>
@@ -2130,6 +2235,7 @@
 </div>
 
 <script>
+// --- Konfigurasi Firebase ---
 const firebaseConfig = {
   apiKey: "AIzaSyBdKELW2FNsL7H1zB8R765czcDPaSYybdg", // Pastikan ini adalah API Key yang benar dari Firebase Console Anda
   authDomain: "atlantis-store.firebaseapp.com",
@@ -2147,22 +2253,22 @@ let currentEditData = null;
 const db = firebase.database();
 const storage = firebase.storage();
 
-// DOM Elements
+// --- Elemen DOM ---
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 const landingPage = document.getElementById('landing-page');
 const profilePage = document.getElementById('profile-page');
 const postAccountPage = document.getElementById('post-account-page');
 const buyAccountPage = document.getElementById('buy-account-page');
-const chatPage = document.getElementById('chat-page'); // New chat page element
+const chatPage = document.getElementById('chat-page');
 
 const loginAlert = document.getElementById('login-alert');
 const registerAlert = document.getElementById('register-alert');
 const profileAlert = document.getElementById('profile-alert');
 const postAlert = document.getElementById('post-alert');
-const postSubmitBtn = document.getElementById('post-submit-btn'); // Get the submit button
+const postSubmitBtn = document.getElementById('post-submit-btn');
 
-const chatMessagesDiv = document.getElementById('chat-messages'); // Chat elements
+const chatMessagesDiv = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const sendChatBtn = document.getElementById('send-chat-btn');
 const chatAlert = document.getElementById('chat-alert');
@@ -2171,21 +2277,21 @@ const privateChatSelection = document.getElementById('private-chat-selection');
 const privateChatUserSelect = document.getElementById('private-chat-user');
 const startPrivateChatBtn = document.getElementById('start-private-chat-btn');
 
-const categorySelection = document.getElementById('category-selection'); // Buy page category elements
+const categorySelection = document.getElementById('category-selection');
 const accountListingSection = document.getElementById('account-listing-section');
 const backToCategoriesBtn = document.getElementById('back-to-categories');
 const filterCategorySelect = document.getElementById('filter-category');
 
-let allAccountsData = []; // Store all fetched accounts for filtering
-let currentAccountDetail = null; // To store data for the detail modal
-let currentImageViewerImages = []; // Stores image URLs for the viewer
-let currentImageViewerIndex = 0; // Current index in the image viewer
-let userProfilePicUrl = ''; // Global variable for user profile picture URL
+let allAccountsData = [];
+let currentAccountDetail = null;
+let currentImageViewerImages = [];
+let currentImageViewerIndex = 0;
+let userProfilePicUrl = '';
 
-let currentChatCategory = 'global'; // Default chat category
-let currentPrivateChatPartnerId = null; // For private chat
+let currentChatCategory = 'global';
+let currentPrivateChatPartnerId = null;
 
-// Helper function to show alerts
+// --- Fungsi Pembantu: Menampilkan Alert ---
 function showAlert(element, message, type) {
   element.textContent = message;
   element.className = `alert alert-${type}`;
@@ -2195,7 +2301,7 @@ function showAlert(element, message, type) {
   }, 5000);
 }
 
-// Function to hide all main content pages
+// --- Fungsi Pembantu: Menyembunyikan Semua Halaman Utama ---
 function hideAllPages() {
   loginForm.classList.add('hidden');
   registerForm.classList.add('hidden');
@@ -2203,24 +2309,26 @@ function hideAllPages() {
   profilePage.classList.add('hidden');
   postAccountPage.classList.add('hidden');
   buyAccountPage.classList.add('hidden');
-  chatPage.classList.add('hidden'); // Hide chat page
+  chatPage.classList.add('hidden');
 }
 
-// Show/Hide forms (Login/Register)
+// --- Event Listener: Tampilkan Form Registrasi ---
 document.getElementById('show-register').addEventListener('click', (e) => {
   e.preventDefault();
   hideAllPages();
   registerForm.classList.remove('hidden');
-  registerAlert.classList.add('hidden'); // Clear previous alerts
+  registerAlert.classList.add('hidden');
 });
+
+// --- Event Listener: Tampilkan Form Login ---
 document.getElementById('show-login').addEventListener('click', (e) => {
   e.preventDefault();
   hideAllPages();
   loginForm.classList.remove('hidden');
-  loginAlert.classList.add('hidden'); // Clear previous alerts
+  loginAlert.classList.add('hidden');
 });
 
-// Register User
+// --- Event Listener: Registrasi Pengguna ---
 registerForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = document.getElementById('reg-name').value;
@@ -2228,7 +2336,7 @@ registerForm.addEventListener('submit', async (e) => {
   const email = document.getElementById('reg-email').value;
   const countryCode = document.getElementById('reg-whatsapp-country-code').value;
   const whatsappNumber = document.getElementById('reg-whatsapp').value;
-  const whatsapp = countryCode + whatsappNumber; // Combine code and number
+  const whatsapp = countryCode + whatsappNumber;
   const password = document.getElementById('reg-password').value;
   const confirmPassword = document.getElementById('reg-confirm-password').value;
 
@@ -2261,14 +2369,14 @@ registerForm.addEventListener('submit', async (e) => {
       age,
       email,
       whatsapp,
-      profilePicUrl: 'https://via.placeholder.com/150', // Default profile picture
+      profilePicUrl: 'https://via.placeholder.com/150',
       createdAt: firebase.database.ServerValue.TIMESTAMP
     });
     showAlert(registerAlert, 'Registrasi berhasil! Anda akan diarahkan ke halaman utama.', 'success');
     registerForm.reset();
     setTimeout(() => {
       hideAllPages();
-      landingPage.classList.remove('hidden'); // Arahkan ke promo banner
+      landingPage.classList.remove('hidden');
     }, 1500);
   } catch (err) {
     console.error("Registration error:", err);
@@ -2276,7 +2384,7 @@ registerForm.addEventListener('submit', async (e) => {
   }
 });
 
-// Login User
+// --- Event Listener: Login Pengguna ---
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('login-email').value;
@@ -2287,7 +2395,7 @@ loginForm.addEventListener('submit', async (e) => {
     showAlert(loginAlert, 'Login berhasil! Memuat akun...', 'success');
     setTimeout(() => {
       hideAllPages();
-      landingPage.classList.remove('hidden'); // Arahkan ke promo banner
+      landingPage.classList.remove('hidden');
     }, 1500);
   } catch (err) {
     console.error("Login error:", err);
@@ -2295,64 +2403,58 @@ loginForm.addEventListener('submit', async (e) => {
   }
 });
 
-// Logout User (via dropdown)
+// --- Event Listener: Logout Pengguna ---
 document.getElementById('nav-logout-dropdown').addEventListener('click', (e) => {
   e.preventDefault();
   auth.signOut();
-  location.reload(); // Reload page to show login form
+  location.reload();
 });
 
-// Authentication State Change Listener
+// --- Listener Perubahan Status Autentikasi ---
 auth.onAuthStateChanged(user => {
   const navLinksDiv = document.querySelector('.nav-links');
   if (user) {
-    // User is signed in
-    navLinksDiv.style.display = 'flex'; // Show nav items
-    // Load user data for profile pic and name in nav
+    navLinksDiv.style.display = 'flex';
     db.ref('users/' + user.uid).once('value').then(snapshot => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        document.getElementById('nav-username').textContent = data.name.split(' ')[0]; // Display first name
+        document.getElementById('nav-username').textContent = data.name.split(' ')[0];
         userProfilePicUrl = data.profilePicUrl || 'https://via.placeholder.com/30';
         document.getElementById('nav-profile-pic-small').src = userProfilePicUrl;
       }
     }).catch(error => {
       console.error("Error loading user data for nav:", error);
-      // Fallback to default if user data cannot be loaded
       document.getElementById('nav-profile-pic-small').src = 'https://via.placeholder.com/30';
       document.getElementById('nav-username').textContent = 'User';
     });
     hideAllPages();
-    landingPage.classList.remove('hidden'); // Default to promo banner
-    loadAccounts(); // Load all accounts data for filtering later
+    landingPage.classList.remove('hidden');
+    loadAccounts();
   } else {
-    // User is signed out
     hideAllPages();
     loginForm.classList.remove('hidden');
-    navLinksDiv.style.display = 'none'; // Hide nav items
-    document.getElementById('nav-profile-pic-small').src = 'https://via.placeholder.com/30'; // Reset to default
-    document.getElementById('nav-username').textContent = 'User'; // Reset username
+    navLinksDiv.style.display = 'none';
+    document.getElementById('nav-profile-pic-small').src = 'https://via.placeholder.com/30';
+    document.getElementById('nav-username').textContent = 'User';
   }
 });
 
-// Navigation Handlers
+// --- Handler Navigasi ---
 document.getElementById('nav-home').addEventListener('click', (e) => {
   e.preventDefault();
   hideAllPages();
-  landingPage.classList.remove('hidden'); // Tampilkan promo banner
+  landingPage.classList.remove('hidden');
 });
 
 document.getElementById('nav-profile-dropdown').addEventListener('click', async (e) => {
   e.preventDefault();
   hideAllPages();
   profilePage.classList.remove('hidden');
-  // Clear previous my posts display
   const myPostsContainer = profilePage.querySelector('#my-posts-container');
   if (myPostsContainer) {
-    myPostsContainer.remove(); // Remove and re-add to ensure clean state
-    profilePage.appendChild(myPostsContainer); // Re-add the container
+    myPostsContainer.remove();
+    profilePage.appendChild(myPostsContainer);
   } else {
-    // If it doesn't exist, create it
     const newMyPostsContainer = document.createElement('div');
     newMyPostsContainer.id = 'my-posts-container';
     newMyPostsContainer.innerHTML = '<h3>Postingan Saya</h3><div class="flex" id="my-posts-list"></div>';
@@ -2366,24 +2468,31 @@ document.getElementById('nav-post').addEventListener('click', (e) => {
   e.preventDefault();
   hideAllPages();
   postAccountPage.classList.remove('hidden');
-  postAccountPage.reset(); // Clear form on navigation
-  editPostId = null; // Reset edit mode
-  currentEditData = null; // Reset edit data
-  postSubmitBtn.textContent = 'Post Akun'; // Reset button text
+  postAccountPage.reset();
+  editPostId = null;
+  currentEditData = null;
+  postSubmitBtn.textContent = 'Post Akun';
 
-  document.getElementById('image-previews').innerHTML = ''; // Clear image previews
+  document.getElementById('image-previews').innerHTML = '';
   document.getElementById('image-previews').classList.add('hidden');
-  document.getElementById('account-images').required = true; // Make image upload required for new posts
+  document.getElementById('account-images').required = true;
 
-  // Hide all game-specific fields
+  // Sembunyikan semua field game spesifik
   document.getElementById('ml-fields').classList.add('hidden');
   document.getElementById('toram-fields').classList.add('hidden');
   document.getElementById('lifeafter-fields').classList.add('hidden');
   document.getElementById('sea-server-fields').classList.add('hidden');
   document.getElementById('na-server-fields').classList.add('hidden');
-  document.getElementById('la-job-detail').classList.add('hidden'); // Hide job detail dropdown
+  document.getElementById('la-job-detail').classList.add('hidden');
+  document.getElementById('easy-server-attachments').classList.add('hidden'); // Sembunyikan EasyServer attachments
 
-  // Clear dynamic fields and add initial empty ones
+  // Tampilkan attachment normal secara default (jika ada)
+  document.getElementById('normal-lw-attachments').classList.remove('hidden');
+  document.getElementById('normal-hw-attachments').classList.remove('hidden');
+  document.getElementById('normal-mw-attachments').classList.remove('hidden');
+  document.getElementById('normal-armor-attachments').classList.remove('hidden');
+
+
   document.getElementById('ml-heroes-container').innerHTML = '<label>Hero Favorit (Minimal 1, Maksimal 3)</label><div class="item-group"><input type="text" class="ml-hero-name" placeholder="Nama Hero"><input type="number" class="ml-hero-wr" placeholder="Win Rate Hero (%)" min="0" max="100"><button type="button" class="remove-item-btn" onclick="this.parentElement.remove()">Hapus</button></div>';
   document.getElementById('toram-characters-container').innerHTML = '<label>Slot Character</label><div class="item-group"><input type="number" class="toram-char-level" placeholder="Level Character" min="1"><input type="text" class="toram-char-job" placeholder="Deskripsi Job Character (contoh: Tank)"><button type="button" class="remove-item-btn" onclick="this.parentElement.remove()">Hapus</button></div>';
   document.getElementById('toram-equip-container').innerHTML = '<label>Equip Untrade</label><div class="item-group"><input type="text" class="toram-equip-desc" placeholder="Deskripsi Item Equip (contoh: Pedang A)"><button type="button" class="remove-item-btn" onclick="this.parentElement.remove()">Hapus</button></div>';
@@ -2394,20 +2503,19 @@ document.getElementById('nav-buy').addEventListener('click', (e) => {
   e.preventDefault();
   hideAllPages();
   buyAccountPage.classList.remove('hidden');
-  categorySelection.classList.remove('hidden'); // Tampilkan pilihan kategori
-  accountListingSection.classList.add('hidden'); // Sembunyikan daftar akun
-  resetFilters(); // Reset filter saat kembali ke halaman beli akun
+  categorySelection.classList.remove('hidden');
+  accountListingSection.classList.add('hidden');
+  resetFilters();
 });
 
 document.getElementById('nav-chat-community').addEventListener('click', (e) => {
   e.preventDefault();
   hideAllPages();
   chatPage.classList.remove('hidden');
-  // Default to global chat when opening community chat
   switchChatCategory('global');
 });
 
-// Load Profile Data
+// --- Fungsi: Muat Data Profil ---
 async function loadProfile() {
   const user = auth.currentUser;
   if (user) {
@@ -2419,11 +2527,10 @@ async function loadProfile() {
         document.getElementById('profile-age-display').textContent = data.age;
         document.getElementById('profile-email-display').textContent = data.email;
         
-        // Split WhatsApp number into country code and actual number
         const whatsappFull = data.whatsapp || '';
         const countryCodeMatch = whatsappFull.match(/^(\+\d+)/);
         let whatsappNumOnly = whatsappFull;
-        let whatsappCountryCode = '+62'; // Default to Indonesia
+        let whatsappCountryCode = '+62';
 
         if (countryCodeMatch) {
             whatsappCountryCode = countryCodeMatch[1];
@@ -2438,10 +2545,9 @@ async function loadProfile() {
         document.getElementById('profile-name').value = data.name;
         document.getElementById('profile-whatsapp-country-code').value = whatsappCountryCode;
         document.getElementById('profile-whatsapp').value = whatsappNumOnly;
-        document.getElementById('profile-password').value = ''; // Clear password fields
+        document.getElementById('profile-password').value = '';
         document.getElementById('profile-confirm-password').value = '';
 
-        // Load profile picture
         userProfilePicUrl = data.profilePicUrl || 'https://via.placeholder.com/180';
         document.getElementById('profile-pic-display').src = userProfilePicUrl;
         document.getElementById('nav-profile-pic-small').src = userProfilePicUrl;
@@ -2453,7 +2559,7 @@ async function loadProfile() {
   }
 }
 
-// Load My Posts
+// --- Fungsi: Muat Postingan Saya ---
 async function loadMyPosts() {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
@@ -2466,7 +2572,7 @@ async function loadMyPosts() {
     profilePage.appendChild(myPostsContainer);
   }
   const myPostsList = document.getElementById('my-posts-list');
-  myPostsList.innerHTML = ''; // Clear previous posts
+  myPostsList.innerHTML = '';
 
   try {
     const snapshot = await db.ref('accounts').orderByChild('ownerId').equalTo(currentUser.uid).once('value');
@@ -2479,8 +2585,7 @@ async function loadMyPosts() {
         card.className = 'account-card';
         let imagesHtml = '<div class="image-gallery">';
         if (d.imageUrls && d.imageUrls.length > 0) {
-          // Menggunakan object-fit: contain untuk gambar di profil/postinganku
-          imagesHtml += `<img src="${d.imageUrls[0]}" alt="Gambar Akun ${d.category}" style="max-width: 100%; height: 150px; object-fit: contain; border-radius: 8px;">`; // Show only first image as main
+          imagesHtml += `<img src="${d.imageUrls[0]}" alt="Gambar Akun ${d.category}" style="max-width: 100%; height: 150px; object-fit: contain; border-radius: 8px;">`;
         }
         imagesHtml += '</div>';
         card.innerHTML = imagesHtml + `<h4>${d.category}</h4><p>Harga: Rp ${d.price.toLocaleString('id-ID')}</p><p>Status: <span style="color: ${d.status === 'terjual' ? 'red' : 'green'}; font-weight: bold;">${d.status === 'terjual' ? 'Terjual' : 'Tersedia'}</span></p>`;
@@ -2507,13 +2612,12 @@ async function loadMyPosts() {
   }
 }
 
-// Delete Post
+// --- Fungsi: Hapus Postingan ---
 async function deletePost(postId, imageUrls) {
   if (!confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
     return;
   }
   try {
-    // Delete images from storage
     if (imageUrls && imageUrls.length > 0) {
       for (const url of imageUrls) {
         try {
@@ -2521,21 +2625,19 @@ async function deletePost(postId, imageUrls) {
           await imageRef.delete();
         } catch (error) {
           console.warn(`Failed to delete image ${url}:`, error);
-          // Continue even if one image fails to delete
         }
       }
     }
-    // Delete data from database
     await db.ref('accounts/' + postId).remove();
     showAlert(profileAlert, 'Postingan berhasil dihapus!', 'success');
-    await loadMyPosts(); // Reload my posts
+    await loadMyPosts();
   } catch (err) {
     console.error("Error deleting post:", err);
     showAlert(profileAlert, `Gagal menghapus postingan: ${err.message}`, 'error');
   }
 }
 
-// Isi form edit
+// --- Fungsi: Isi Formulir Edit ---
 async function fillEditForm(postId) {
   const snapshot = await db.ref('accounts/' + postId).once('value');
   if (!snapshot.exists()) {
@@ -2547,23 +2649,21 @@ async function fillEditForm(postId) {
 
   hideAllPages();
   postAccountPage.classList.remove('hidden');
-  postSubmitBtn.textContent = 'Update Akun'; // Change button text
-  document.getElementById('account-images').required = false; // Images are optional for update
+  postSubmitBtn.textContent = 'Update Akun';
+  document.getElementById('account-images').required = false;
 
-  // Fill common fields
   document.getElementById('game-category').value = currentEditData.category || '';
   document.getElementById('price').value = currentEditData.price || '';
   document.getElementById('status').value = currentEditData.status || '';
 
-  // Display image previews
   const previews = document.getElementById('image-previews');
   previews.innerHTML = '';
   if (currentEditData.imageUrls && currentEditData.imageUrls.length > 0) {
     currentEditData.imageUrls.forEach(url => {
       const img = document.createElement('img');
       img.src = url;
-      img.alt = "Gambar Akun"; // Add alt text
-      img.style.objectFit = 'contain'; // Pastikan gambar preview tidak terpotong
+      img.alt = "Gambar Akun";
+      img.style.objectFit = 'contain';
       previews.appendChild(img);
     });
     previews.classList.remove('hidden');
@@ -2571,8 +2671,7 @@ async function fillEditForm(postId) {
     previews.classList.add('hidden');
   }
 
-  // Show and fill game-specific fields
-  showGameFields(); // This will hide all and then show the correct one
+  showGameFields(); // Panggil ini untuk mengatur visibilitas field game spesifik
 
   if (currentEditData.category === 'ml' && currentEditData.ml) {
     const ml = currentEditData.ml;
@@ -2587,7 +2686,7 @@ async function fillEditForm(postId) {
     document.getElementById('ml-skins').value = ml.skins || '';
 
     const heroesContainer = document.getElementById('ml-heroes-container');
-    heroesContainer.innerHTML = '<label>Hero Favorit (Minimal 1, Maksimal 3)</label>'; // Clear existing
+    heroesContainer.innerHTML = '<label>Hero Favorit (Minimal 1, Maksimal 3)</label>';
     if (ml.heroes && ml.heroes.length > 0) {
       ml.heroes.forEach(hero => {
         const div = document.createElement('div');
@@ -2600,7 +2699,6 @@ async function fillEditForm(postId) {
         heroesContainer.appendChild(div);
       });
     } else {
-      // Add at least one empty hero field if none exist
       addMlHeroField();
     }
   } else if (currentEditData.category === 'toram' && currentEditData.toram) {
@@ -2662,7 +2760,7 @@ async function fillEditForm(postId) {
   } else if (currentEditData.category === 'lifeafter' && currentEditData.lifeafter) {
     const la = currentEditData.lifeafter;
     document.getElementById('lifeafter-server').value = la.serverCategory || '';
-    showLifeAfterServer(); // Call to show correct server dropdown
+    showLifeAfterServer(); // Panggil ini untuk mengatur visibilitas fields
     if (la.serverCategory === 'sea') {
       document.getElementById('sea-server-dropdown').value = la.serverDetail || '';
     } else if (la.serverCategory === 'na') {
@@ -2673,8 +2771,8 @@ async function fillEditForm(postId) {
     document.getElementById('la-level-craft').value = la.levelCraft || '';
     document.getElementById('la-level-combat').value = la.levelCombat || '';
 
-    // Fill attachment levels and grades
-    const fillAttachmentFields = (prefix, attachments) => {
+    // Fungsi pembantu untuk mengisi attachment fields (normal)
+    const fillNormalAttachmentFields = (prefix, attachments) => {
       if (attachments) {
         document.querySelector(`.${prefix}-stock-level`).value = attachments[0]?.level || '';
         document.querySelector(`.${prefix}-stock-grade`).value = attachments[0]?.grade || '';
@@ -2690,8 +2788,8 @@ async function fillEditForm(postId) {
       }
     };
 
-    const fillMeeleAttachmentFields = (prefix) => {
-      const attachments = currentEditData.lifeafter.attachments.meeleWeapon;
+    // Fungsi pembantu untuk mengisi meele attachment fields (normal)
+    const fillNormalMeeleAttachmentFields = (prefix, attachments) => {
       if (attachments) {
         document.querySelector(`.${prefix}-knob-level`).value = attachments[0]?.level || '';
         document.querySelector(`.${prefix}-knob-grade`).value = attachments[0]?.grade || '';
@@ -2707,8 +2805,8 @@ async function fillEditForm(postId) {
       }
     };
 
-    const fillArmorAttachmentFields = (prefix) => {
-      const attachments = currentEditData.lifeafter.attachments.armor;
+    // Fungsi pembantu untuk mengisi armor attachment fields (normal)
+    const fillNormalArmorAttachmentFields = (prefix, attachments) => {
       if (attachments) {
         document.querySelector(`.${prefix}-steel-level`).value = attachments[0]?.level || '';
         document.querySelector(`.${prefix}-steel-grade`).value = attachments[0]?.grade || '';
@@ -2724,13 +2822,54 @@ async function fillEditForm(postId) {
       }
     };
 
-    fillAttachmentFields('la-lw', la.attachments.lightWeapon);
-    fillAttachmentFields('la-hw', la.attachments.heavyWeapon);
-    fillMeeleAttachmentFields('la-mw');
-    fillArmorAttachmentFields('la-armor');
+    // Fungsi pembantu untuk mengisi WEAPON attachment fields (EasyServer)
+    const fillEasyWeaponAttachmentFields = (prefix, attachments) => {
+      if (attachments) {
+        document.querySelector(`.${prefix}-grip-level`).value = attachments[0]?.level || '';
+        document.querySelector(`.${prefix}-grip-grade`).value = attachments[0]?.grade || '';
+        document.querySelector(`.${prefix}-grip-color`).value = attachments[0]?.color || '';
+
+        document.querySelector(`.${prefix}-pendant-level`).value = attachments[1]?.level || '';
+        document.querySelector(`.${prefix}-pendant-grade`).value = attachments[1]?.grade || '';
+        document.querySelector(`.${prefix}-pendant-color`).value = attachments[1]?.color || '';
+
+        document.querySelector(`.${prefix}-coating-level`).value = attachments[2]?.level || '';
+        document.querySelector(`.${prefix}-coating-grade`).value = attachments[2]?.grade || '';
+        document.querySelector(`.${prefix}-coating-color`).value = attachments[2]?.color || '';
+      }
+    };
+
+    // Fungsi pembantu untuk mengisi ARMOR attachment fields (EasyServer)
+    const fillEasyArmorAttachmentFields = (prefix, attachments) => {
+      if (attachments) {
+        document.querySelector(`.${prefix}-steel-level`).value = attachments[0]?.level || '';
+        document.querySelector(`.${prefix}-steel-grade`).value = attachments[0]?.grade || '';
+        document.querySelector(`.${prefix}-steel-color`).value = attachments[0]?.color || '';
+
+        document.querySelector(`.${prefix}-chain-level`).value = attachments[1]?.level || '';
+        document.querySelector(`.${prefix}-chain-grade`).value = attachments[1]?.grade || '';
+        document.querySelector(`.${prefix}-chain-color`).value = attachments[1]?.color || '';
+
+        document.querySelector(`.${prefix}-cotton-level`).value = attachments[2]?.level || '';
+        document.querySelector(`.${prefix}-cotton-grade`).value = attachments[2]?.grade || '';
+        document.querySelector(`.${prefix}-cotton-color`).value = attachments[2]?.color || '';
+      }
+    };
+
+
+    if (la.serverCategory === 'easy') {
+      // Mengisi attachment senjata EasyServer
+      fillEasyWeaponAttachmentFields('la-easy-weapon', la.attachments.weapon); // Menggunakan 'weapon' sebagai key
+      fillEasyArmorAttachmentFields('la-easy-armor', la.attachments.armor);
+    } else {
+      fillNormalAttachmentFields('la-lw', la.attachments.lightWeapon);
+      fillNormalAttachmentFields('la-hw', la.attachments.heavyWeapon);
+      fillNormalMeeleAttachmentFields('la-mw', la.attachments.meeleWeapon);
+      fillNormalArmorAttachmentFields('la-armor', la.attachments.armor);
+    }
 
     document.getElementById('la-job-category').value = la.jobCategory || '';
-    showLifeAfterJob(); // Call to populate job detail dropdown
+    showLifeAfterJob();
     document.getElementById('la-job-detail').value = la.jobDetail || '';
     document.getElementById('la-gene').value = la.gene || '';
     document.getElementById('la-charisma').value = la.charisma || '';
@@ -2741,121 +2880,123 @@ async function fillEditForm(postId) {
   }
 }
 
-// Update Profile
-profilePage.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const user = auth.currentUser;
-  if (!user) {
-    showAlert(profileAlert, 'Anda harus login untuk update profil.', 'error');
-    return;
-  }
-
-  const newName = document.getElementById('profile-name').value;
-  const newCountryCode = document.getElementById('profile-whatsapp-country-code').value;
-  const newWhatsappNumber = document.getElementById('profile-whatsapp').value;
-  const newWhatsapp = newCountryCode + newWhatsappNumber; // Combine code and number
-  const newPassword = document.getElementById('profile-password').value;
-  const confirmNewPassword = document.getElementById('profile-confirm-password').value;
-
-  if (newPassword && newPassword.length < 6) {
-    showAlert(profileAlert, 'Password baru minimal 6 karakter.', 'error');
-    return;
-  }
-  if (newPassword && newPassword !== confirmNewPassword) {
-    showAlert(profileAlert, 'Konfirmasi password baru tidak cocok.', 'error');
-    return;
-  }
-
-  try {
-    // Update Firestore user data
-    await db.ref('users/' + user.uid).update({
-      name: newName,
-      whatsapp: newWhatsapp
-    });
-
-    // Update Firebase Auth password if provided
-    if (newPassword) {
-      await user.updatePassword(newPassword);
-    }
-
-    showAlert(profileAlert, 'Profil berhasil diperbarui!', 'success');
-    loadProfile(); // Reload profile to show updated data
-  } catch (err) {
-    console.error("Error updating profile:", err);
-    showAlert(profileAlert, `Gagal memperbarui profil: ${err.message}`, 'error');
-  }
-});
-
-// Add event listener for profile picture upload
-document.getElementById('profile-pic-upload').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const user = auth.currentUser;
-  if (!user) {
-    showAlert(profileAlert, 'Anda harus login untuk mengunggah foto profil.', 'error');
-    return;
-  }
-
-  showAlert(profileAlert, 'Mengunggah foto profil...', 'info');
-  try {
-    const storageRef = storage.ref().child(`profile_pictures/${user.uid}/${file.name}`);
-    const snapshot = await storageRef.put(file);
-    const downloadURL = await snapshot.ref.getDownloadURL();
-
-    await db.ref('users/' + user.uid).update({
-      profilePicUrl: downloadURL
-    });
-
-    showAlert(profileAlert, 'Foto profil berhasil diperbarui!', 'success');
-    loadProfile(); // Reload profile to show new picture
-  } catch (err) {
-    console.error("Error uploading profile picture:", err);
-    showAlert(profileAlert, `Gagal mengunggah foto profil: ${err.message}`, 'error');
-  }
-});
-
-
-// Helper for attachment grade calculation
+// --- Fungsi Pembantu: Menghitung Grade Attachment ---
 const gradeOrder = { "Green": 1, "Blue": 2, "Purple": 3 };
 
-// Modified function to return detailed attachment string
 function getDetailedAttachmentDisplay(attachments) {
-  if (!attachments || attachments.length === 0) return 'N/A';
+  if (!attachments) return 'N/A';
 
   let detailParts = [];
-  let lowestGrade = 13; // Higher than max grade 12
+  let lowestGrade = 13; // Grade maksimal 12 untuk normal, 4 untuk easy
   let lowestColor = "";
 
-  attachments.forEach(att => {
-    const level = att.level || 0;
-    const grade = att.grade || 0;
-    const color = att.color || 'N/A';
-    detailParts.push(`${att.name}: ${level}|Grade ${grade}|${color}`);
+  // Cek apakah ini attachment EasyServer (hanya ada 'weapon' dan 'armor' sebagai key utama)
+  const isEasyServerAttachments = attachments.weapon && attachments.armor;
 
-    // Calculate lowest overall grade
-    if (grade > 0 && gradeOrder[color]) { // Only consider valid attachments
-      if (grade < lowestGrade) {
-        lowestGrade = grade;
-        lowestColor = color;
-      } else if (grade === lowestGrade) {
-        if (gradeOrder[color] < gradeOrder[lowestColor]) {
+  if (isEasyServerAttachments) {
+    // Tampilkan attachment senjata EasyServer
+    const weaponAttachments = attachments.weapon;
+    if (weaponAttachments && weaponAttachments.length > 0) {
+      detailParts.push(`Weapon: Grip ${weaponAttachments[0]?.level || 'N/A'}|Grade ${weaponAttachments[0]?.grade || 'N/A'}|${weaponAttachments[0]?.color || 'N/A'}`);
+      detailParts.push(`Pendant ${weaponAttachments[1]?.level || 'N/A'}|Grade ${weaponAttachments[1]?.grade || 'N/A'}|${weaponAttachments[1]?.color || 'N/A'}`);
+      detailParts.push(`Coating ${weaponAttachments[2]?.level || 'N/A'}|Grade ${weaponAttachments[2]?.grade || 'N/A'}|${weaponAttachments[2]?.color || 'N/A'}`);
+
+      // Hitung lowest grade untuk weapon EasyServer
+      weaponAttachments.forEach(att => {
+        const grade = att.grade || 0;
+        const color = att.color || 'N/A';
+        if (grade > 0 && gradeOrder[color]) {
+          if (grade < lowestGrade) {
+            lowestGrade = grade;
+            lowestColor = color;
+          } else if (grade === lowestGrade) {
+            if (gradeOrder[color] < gradeOrder[lowestColor]) {
+              lowestColor = color;
+            }
+          }
+        }
+      });
+    }
+
+    // Tampilkan attachment armor EasyServer (sama seperti normal)
+    const armorAttachments = attachments.armor;
+    if (armorAttachments && armorAttachments.length > 0) {
+      detailParts.push(`Armor: Steel Layer ${armorAttachments[0]?.level || 'N/A'}|Grade ${armorAttachments[0]?.grade || 'N/A'}|${armorAttachments[0]?.color || 'N/A'}`);
+      detailParts.push(`Chain Layer ${armorAttachments[1]?.level || 'N/A'}|Grade ${armorAttachments[1]?.grade || 'N/A'}|${armorAttachments[1]?.color || 'N/A'}`);
+      detailParts.push(`Cotton Layer ${armorAttachments[2]?.level || 'N/A'}|Grade ${armorAttachments[2]?.grade || 'N/A'}|${armorAttachments[2]?.color || 'N/A'}`);
+
+      // Hitung lowest grade untuk armor EasyServer (jika belum dihitung dari weapon)
+      armorAttachments.forEach(att => {
+        const grade = att.grade || 0;
+        const color = att.color || 'N/A';
+        if (grade > 0 && gradeOrder[color]) {
+          if (lowestGrade === 13 || grade < lowestGrade) { // Hanya update jika belum ada lowestGrade dari weapon, atau jika grade armor lebih rendah
+            lowestGrade = grade;
+            lowestColor = color;
+          } else if (grade === lowestGrade) {
+            if (gradeOrder[color] < gradeOrder[lowestColor]) {
+              lowestColor = color;
+            }
+          }
+        }
+      });
+    }
+
+  } else {
+    // Logika untuk attachment server normal (Light, Heavy, Meele, Armor terpisah)
+    if (attachments.lightWeapon && attachments.lightWeapon.length > 0) {
+      detailParts.push(`Light Weapon: Stock ${attachments.lightWeapon[0]?.level || 'N/A'}|Grade ${attachments.lightWeapon[0]?.grade || 'N/A'}|${attachments.lightWeapon[0]?.color || 'N/A'}`);
+      detailParts.push(`Sight ${attachments.lightWeapon[1]?.level || 'N/A'}|Grade ${attachments.lightWeapon[1]?.grade || 'N/A'}|${attachments.lightWeapon[1]?.color || 'N/A'}`);
+      detailParts.push(`Muzzle ${attachments.lightWeapon[2]?.level || 'N/A'}|Grade ${attachments.lightWeapon[2]?.grade || 'N/A'}|${attachments.lightWeapon[2]?.color || 'N/A'}`);
+    }
+    if (attachments.heavyWeapon && attachments.heavyWeapon.length > 0) {
+      detailParts.push(`Heavy Weapon: Stock ${attachments.heavyWeapon[0]?.level || 'N/A'}|Grade ${attachments.heavyWeapon[0]?.grade || 'N/A'}|${attachments.heavyWeapon[0]?.color || 'N/A'}`);
+      detailParts.push(`Sight ${attachments.heavyWeapon[1]?.level || 'N/A'}|Grade ${attachments.heavyWeapon[1]?.grade || 'N/A'}|${attachments.heavyWeapon[1]?.color || 'N/A'}`);
+      detailParts.push(`Muzzle ${attachments.heavyWeapon[2]?.level || 'N/A'}|Grade ${attachments.heavyWeapon[2]?.grade || 'N/A'}|${attachments.heavyWeapon[2]?.color || 'N/A'}`);
+    }
+    if (attachments.meeleWeapon && attachments.meeleWeapon.length > 0) {
+      detailParts.push(`Meele Weapon: Knob ${attachments.meeleWeapon[0]?.level || 'N/A'}|Grade ${attachments.meeleWeapon[0]?.grade || 'N/A'}|${attachments.meeleWeapon[0]?.color || 'N/A'}`);
+      detailParts.push(`Hanging Tasle ${attachments.meeleWeapon[1]?.level || 'N/A'}|Grade ${attachments.meeleWeapon[1]?.grade || 'N/A'}|${attachments.meeleWeapon[1]?.color || 'N/A'}`);
+      detailParts.push(`Sculpture ${attachments.meeleWeapon[2]?.level || 'N/A'}|Grade ${attachments.meeleWeapon[2]?.grade || 'N/A'}|${attachments.meeleWeapon[2]?.color || 'N/A'}`);
+    }
+    if (attachments.armor && attachments.armor.length > 0) {
+      detailParts.push(`Armor: Steel Layer ${attachments.armor[0]?.level || 'N/A'}|Grade ${attachments.armor[0]?.grade || 'N/A'}|${attachments.armor[0]?.color || 'N/A'}`);
+      detailParts.push(`Chain Layer ${attachments.armor[1]?.level || 'N/A'}|Grade ${attachments.armor[1]?.grade || 'N/A'}|${attachments.armor[1]?.color || 'N/A'}`);
+      detailParts.push(`Cotton Layer ${attachments.armor[2]?.level || 'N/A'}|Grade ${attachments.armor[2]?.grade || 'N/A'}|${attachments.armor[2]?.color || 'N/A'}`);
+    }
+
+    // Hitung lowest grade untuk server normal
+    const allNormalAttachments = [
+      ...(attachments.lightWeapon || []),
+      ...(attachments.heavyWeapon || []),
+      ...(attachments.meeleWeapon || []),
+      ...(attachments.armor || [])
+    ];
+    allNormalAttachments.forEach(att => {
+      const grade = att.grade || 0;
+      const color = att.color || 'N/A';
+      if (grade > 0 && gradeOrder[color]) {
+        if (grade < lowestGrade) {
+          lowestGrade = grade;
           lowestColor = color;
+        } else if (grade === lowestGrade) {
+          if (gradeOrder[color] < gradeOrder[lowestColor]) {
+            lowestColor = color;
+          }
         }
       }
-    }
-  });
+    });
+  }
 
   const resultPart = (lowestGrade === 13) ? '' : `(Result: Set Weapon Grade ${lowestGrade} ${lowestColor})`;
   return `${detailParts.join(', ')}${resultPart}`;
 }
 
-
-// Post Account
+// --- Event Listener: Posting Akun ---
 postAccountPage.addEventListener('submit', async (e) => {
   e.preventDefault();
-  postSubmitBtn.disabled = true; // Disable button to prevent double submission
-  postSubmitBtn.textContent = 'Processing...'; // Change button text
+  postSubmitBtn.disabled = true;
+  postSubmitBtn.textContent = 'Processing...';
 
   const user = auth.currentUser;
   if (!user) {
@@ -2877,7 +3018,7 @@ postAccountPage.addEventListener('submit', async (e) => {
     return;
   }
 
-  if (!editPostId && files.length === 0) { // Images are required only for new posts
+  if (!editPostId && files.length === 0) {
     showAlert(postAlert, 'Harap unggah setidaknya satu gambar akun.', 'error');
     postSubmitBtn.disabled = false;
     postSubmitBtn.textContent = 'Post Akun';
@@ -2886,6 +3027,7 @@ postAccountPage.addEventListener('submit', async (e) => {
 
   if (files.length > 12) {
     showAlert(postAlert, 'Maksimal 12 gambar yang dapat diunggah.', 'error');
+    event.target.value = ''; // Clear selected files
     postSubmitBtn.disabled = false;
     postSubmitBtn.textContent = editPostId ? 'Update Akun' : 'Post Akun';
     return;
@@ -2901,7 +3043,6 @@ postAccountPage.addEventListener('submit', async (e) => {
     postedAt: firebase.database.ServerValue.TIMESTAMP
   };
 
-  // Collect game-specific data
   if (gameCategory === 'ml') {
     const heroes = [];
     document.querySelectorAll('#ml-heroes-container .item-group').forEach(group => {
@@ -2961,21 +3102,32 @@ postAccountPage.addEventListener('submit', async (e) => {
     const getherLevel = parseInt(document.getElementById('la-level-gether').value) || 0;
     const craftLevel = parseInt(document.getElementById('la-level-craft').value) || 0;
     const combatLevel = parseInt(document.getElementById('la-level-combat').value) || 0;
+    const geneValue = parseInt(document.getElementById('la-gene').value) || 0; // Ambil nilai gene
 
-    // Validate character levels based on server
-    if (serverCategory === 'easy' && (getherLevel > 79 || craftLevel > 79 || combatLevel > 79)) {
-      showAlert(postAlert, 'LifeAfter: Untuk EasyServer, Level Character (Gether, Craft, Combat) maksimal 79.', 'error');
-      postSubmitBtn.disabled = false;
-      postSubmitBtn.textContent = editPostId ? 'Update Akun' : 'Post Akun';
-      return;
-    } else if (serverCategory !== 'easy' && (getherLevel > 149 || craftLevel > 149 || combatLevel > 149)) {
-      showAlert(postAlert, 'LifeAfter: Untuk server non-Easy, Level Character (Gether, Craft, Combat) maksimal 149.', 'error');
-      postSubmitBtn.disabled = false;
-      postSubmitBtn.textContent = editPostId ? 'Update Akun' : 'Post Akun';
-      return;
+    if (serverCategory === 'easy') {
+      if (getherLevel > 79 || craftLevel > 79 || combatLevel > 79) {
+        showAlert(postAlert, 'LifeAfter: Untuk EasyServer, Level Character (Gether, Craft, Combat) maksimal 79.', 'error');
+        postSubmitBtn.disabled = false;
+        postSubmitBtn.textContent = editPostId ? 'Update Akun' : 'Post Akun';
+        return;
+      }
+      if (geneValue > 20000) { // Validasi gene untuk EasyServer
+        showAlert(postAlert, 'LifeAfter: Untuk EasyServer, Gene maksimal 20.000.', 'error');
+        postSubmitBtn.disabled = false;
+        postSubmitBtn.textContent = editPostId ? 'Update Akun' : 'Post Akun';
+        return;
+      }
+    } else { // Server non-Easy
+      if (getherLevel > 149 || craftLevel > 149 || combatLevel > 149) {
+        showAlert(postAlert, 'LifeAfter: Untuk server non-Easy, Level Character (Gether, Craft, Combat) maksimal 149.', 'error');
+        postSubmitBtn.disabled = false;
+        postSubmitBtn.textContent = editPostId ? 'Update Akun' : 'Post Akun';
+        return;
+      }
     }
 
-    const getAttachmentData = (prefix) => {
+    // Fungsi untuk mengambil data attachment (normal)
+    const getNormalAttachmentData = (prefix) => {
       const stockLevel = parseInt(document.querySelector(`.${prefix}-stock-level`).value) || 0;
       const stockGrade = parseInt(document.querySelector(`.${prefix}-stock-grade`).value) || 0;
       const stockColor = document.querySelector(`.${prefix}-stock-color`).value;
@@ -2996,7 +3148,8 @@ postAccountPage.addEventListener('submit', async (e) => {
       return attachments;
     };
 
-    const getMeeleAttachmentData = (prefix) => {
+    // Fungsi untuk mengambil data meele attachment (normal)
+    const getNormalMeeleAttachmentData = (prefix) => {
       const knobLevel = parseInt(document.querySelector(`.${prefix}-knob-level`).value) || 0;
       const knobGrade = parseInt(document.querySelector(`.${prefix}-knob-grade`).value) || 0;
       const knobColor = document.querySelector(`.${prefix}-knob-color`).value;
@@ -3017,7 +3170,8 @@ postAccountPage.addEventListener('submit', async (e) => {
       return attachments;
     };
 
-    const getArmorAttachmentData = (prefix) => {
+    // Fungsi untuk mengambil data armor attachment (normal)
+    const getNormalArmorAttachmentData = (prefix) => {
       const steelLevel = parseInt(document.querySelector(`.${prefix}-steel-level`).value) || 0;
       const steelGrade = parseInt(document.querySelector(`.${prefix}-steel-grade`).value) || 0;
       const steelColor = document.querySelector(`.${prefix}-steel-color`).value;
@@ -3033,10 +3187,70 @@ postAccountPage.addEventListener('submit', async (e) => {
       const attachments = [
         { name: 'Steel Layer', level: steelLevel, grade: steelGrade, color: steelColor },
         { name: 'Chain Layer', level: chainLevel, grade: chainGrade, color: chainColor },
-        { name: 'Cotton Layer', level: cottonLevel, grade: cottonColor }
+        { name: 'Cotton Layer', level: cottonLevel, grade: cottonGrade, color: cottonColor }
       ];
       return attachments;
     };
+
+    // Fungsi untuk mengambil data WEAPON attachment (EasyServer)
+    const getEasyWeaponAttachmentData = (prefix) => {
+      const gripLevel = parseInt(document.querySelector(`.${prefix}-grip-level`).value) || 0;
+      const gripGrade = parseInt(document.querySelector(`.${prefix}-grip-grade`).value) || 0;
+      const gripColor = document.querySelector(`.${prefix}-grip-color`).value;
+
+      const pendantLevel = parseInt(document.querySelector(`.${prefix}-pendant-level`).value) || 0;
+      const pendantGrade = parseInt(document.querySelector(`.${prefix}-pendant-grade`).value) || 0;
+      const pendantColor = document.querySelector(`.${prefix}-pendant-color`).value;
+
+      const coatingLevel = parseInt(document.querySelector(`.${prefix}-coating-level`).value) || 0;
+      const coatingGrade = parseInt(document.querySelector(`.${prefix}-coating-grade`).value) || 0;
+      const coatingColor = document.querySelector(`.${prefix}-coating-color`).value;
+
+      const attachments = [
+        { name: 'Grip', level: gripLevel, grade: gripGrade, color: gripColor },
+        { name: 'Pendant', level: pendantLevel, grade: pendantGrade, color: pendantColor },
+        { name: 'Coating', level: coatingLevel, grade: coatingGrade, color: coatingColor }
+      ];
+      return attachments;
+    };
+
+    // Fungsi untuk mengambil data ARMOR attachment (EasyServer)
+    const getEasyArmorAttachmentData = (prefix) => {
+      const steelLevel = parseInt(document.querySelector(`.${prefix}-steel-level`).value) || 0;
+      const steelGrade = parseInt(document.querySelector(`.${prefix}-steel-grade`).value) || 0;
+      const steelColor = document.querySelector(`.${prefix}-steel-color`).value;
+
+      const chainLevel = parseInt(document.querySelector(`.${prefix}-chain-level`).value) || 0;
+      const chainGrade = parseInt(document.querySelector(`.${prefix}-chain-grade`).value) || 0;
+      const chainColor = document.querySelector(`.${prefix}-chain-color`).value;
+
+      const cottonLevel = parseInt(document.querySelector(`.${prefix}-cotton-level`).value) || 0;
+      const cottonGrade = parseInt(document.querySelector(`.${prefix}-cotton-grade`).value) || 0;
+      const cottonColor = document.querySelector(`.${prefix}-cotton-color`).value;
+
+      const attachments = [
+        { name: 'Steel Layer', level: steelLevel, grade: steelGrade, color: steelColor },
+        { name: 'Chain Layer', level: chainLevel, grade: chainGrade, color: chainColor },
+        { name: 'Cotton Layer', level: cottonLevel, grade: cottonGrade, color: cottonColor }
+      ];
+      return attachments;
+    };
+
+
+    let attachmentsData = {};
+    if (serverCategory === 'easy') {
+      attachmentsData = {
+        weapon: getEasyWeaponAttachmentData('la-easy-weapon'), // Simpan di bawah key 'weapon'
+        armor: getEasyArmorAttachmentData('la-easy-armor')
+      };
+    } else {
+      attachmentsData = {
+        lightWeapon: getNormalAttachmentData('la-lw'),
+        heavyWeapon: getNormalAttachmentData('la-hw'),
+        meeleWeapon: getNormalMeeleAttachmentData('la-mw'),
+        armor: getNormalArmorAttachmentData('la-armor')
+      };
+    }
 
     data.lifeafter = {
       serverCategory: serverCategory,
@@ -3045,15 +3259,10 @@ postAccountPage.addEventListener('submit', async (e) => {
       levelGether: getherLevel,
       levelCraft: craftLevel,
       levelCombat: combatLevel,
-      attachments: {
-        lightWeapon: getAttachmentData('la-lw'),
-        heavyWeapon: getAttachmentData('la-hw'),
-        meeleWeapon: getMeeleAttachmentData('la-mw'),
-        armor: getArmorAttachmentData('la-armor')
-      },
+      attachments: attachmentsData, // Gunakan attachmentsData yang sudah dipilih
       jobCategory: document.getElementById('la-job-category').value,
       jobDetail: document.getElementById('la-job-detail').value,
-      gene: parseInt(document.getElementById('la-gene').value) || 0,
+      gene: geneValue, // Simpan nilai gene
       charisma: parseInt(document.getElementById('la-charisma').value) || 0,
       outfit: {
         collector: parseInt(document.getElementById('la-outfit-collector').value) || 0,
@@ -3065,13 +3274,9 @@ postAccountPage.addEventListener('submit', async (e) => {
   }
 
   try {
-    let imageUrls = currentEditData ? currentEditData.imageUrls || [] : []; // Start with existing images if editing
+    let imageUrls = currentEditData ? currentEditData.imageUrls || [] : [];
 
-    // If new files are selected, upload them
     if (files.length > 0) {
-      // Optionally, delete old images if you want to replace them completely
-      // For simplicity, this example just adds new images.
-      // To replace, you'd need to track which images are removed/added.
       for (const file of files) {
         const storageRef = storage.ref().child(`accounts/${user.uid}/${Date.now()}_${file.name}`);
         const snapshot = await storageRef.put(file);
@@ -3079,41 +3284,45 @@ postAccountPage.addEventListener('submit', async (e) => {
         imageUrls.push(downloadURL);
       }
     }
-    data.imageUrls = imageUrls; // Store array of URLs
+    data.imageUrls = imageUrls;
 
     if (editPostId) {
-      // Update existing account
-      await db.ref('accounts/' + editPostId).update(data); // Use update to merge data
+      await db.ref('accounts/' + editPostId).update(data);
       showAlert(postAlert, 'Postingan berhasil diperbarui!', 'success');
     } else {
-      // Add new account
       await db.ref('accounts').push(data);
       showAlert(postAlert, 'Akun berhasil diposting!', 'success');
     }
 
-    // Reset form and state
     postAccountPage.reset();
     document.getElementById('image-previews').innerHTML = '';
     document.getElementById('image-previews').classList.add('hidden');
-    document.getElementById('account-images').required = true; // Reset required for new posts
+    document.getElementById('account-images').required = true;
     editPostId = null;
     currentEditData = null;
     postSubmitBtn.textContent = 'Post Akun';
 
-    // Hide game-specific fields after successful post
+    // Sembunyikan semua field game spesifik setelah posting
     document.getElementById('ml-fields').classList.add('hidden');
     document.getElementById('toram-fields').classList.add('hidden');
     document.getElementById('lifeafter-fields').classList.add('hidden');
     document.getElementById('sea-server-fields').classList.add('hidden');
     document.getElementById('na-server-fields').classList.add('hidden');
     document.getElementById('la-job-detail').classList.add('hidden');
-    // Reset dynamic fields to initial state
+    document.getElementById('easy-server-attachments').classList.add('hidden'); // Sembunyikan EasyServer attachments
+
+    // Tampilkan attachment normal secara default (jika ada)
+    document.getElementById('normal-lw-attachments').classList.remove('hidden');
+    document.getElementById('normal-hw-attachments').classList.remove('hidden');
+    document.getElementById('normal-mw-attachments').classList.remove('hidden');
+    document.getElementById('normal-armor-attachments').classList.remove('hidden');
+
     document.getElementById('ml-heroes-container').innerHTML = '<label>Hero Favorit (Minimal 1, Maksimal 3)</label><div class="item-group"><input type="text" class="ml-hero-name" placeholder="Nama Hero"><input type="number" class="ml-hero-wr" placeholder="Win Rate Hero (%)" min="0" max="100"><button type="button" class="remove-item-btn" onclick="this.parentElement.remove()">Hapus</button></div>';
     document.getElementById('toram-characters-container').innerHTML = '<label>Slot Character</label><div class="item-group"><input type="number" class="toram-char-level" placeholder="Level Character" min="1"><input type="text" class="toram-char-job" placeholder="Deskripsi Job Character (contoh: Tank)"><button type="button" class="remove-item-btn" onclick="this.parentElement.remove()">Hapus</button></div>';
     document.getElementById('toram-equip-container').innerHTML = '<label>Equip Untrade</label><div class="item-group"><input type="text" class="toram-equip-desc" placeholder="Deskripsi Item Equip (contoh: Pedang A)"><button type="button" class="remove-item-btn" onclick="this.parentElement.remove()">Hapus</button></div>';
     document.getElementById('toram-gudang-container').innerHTML = '<label>Gudang</label><div class="item-group"><input type="text" class="toram-gudang-name" placeholder="Nama Gudang (contoh: A)"><input type="number" class="toram-gudang-slot" placeholder="Jumlah Slot" min="0"><button type="button" class="remove-item-btn" onclick="this.parentElement.remove()">Hapus</button></div>';
 
-    loadAccounts(); // Refresh allAccountsData
+    loadAccounts();
     postSubmitBtn.disabled = false;
   } catch (err) {
     console.error("Error posting/updating account:", err);
@@ -3123,45 +3332,38 @@ postAccountPage.addEventListener('submit', async (e) => {
   }
 });
 
-// Load Accounts for Landing Page and Buy Page
+// --- Fungsi: Muat Akun ---
 async function loadAccounts() {
-  // const accountListDiv = document.getElementById('account-list'); // This is for old landing page
   const buyAccountListDiv = document.getElementById('buy-account-list');
-  // accountListDiv.innerHTML = '<p style="text-align: center; margin-top: 50px; font-size: 1.2em; color: #666;">Loading accounts...</p>';
-  buyAccountListDiv.innerHTML = '<p style="text-align: center; margin-top: 50px; font-size: 1.2em; color: #666;">Loading accounts...</p>';
+  buyAccountListDiv.innerHTML = '<p style="text-align: center; margin-top: 50px; font-size: 1.2em; color: #666;">Memuat akun...</p>';
 
   try {
     const snapshot = await db.ref('accounts').orderByChild('postedAt').once('value');
     
-    // accountListDiv.innerHTML = ''; // Clear loading message
-    buyAccountListDiv.innerHTML = ''; // Clear loading message
+    buyAccountListDiv.innerHTML = '';
 
     if (!snapshot.exists() || snapshot.val() === null) {
-      // accountListDiv.innerHTML = '<p style="text-align: center; margin-top: 50px; font-size: 1.2em; color: #666;">Belum ada akun yang diposting.</p>';
       buyAccountListDiv.innerHTML = '<p style="text-align: center; margin-top: 50px; font-size: 1.2em; color: #666;">Belum ada akun yang tersedia untuk dibeli.</p>';
-      allAccountsData = []; // Ensure data is empty
+      allAccountsData = [];
       return;
     }
 
-    allAccountsData = []; // Clear previous data
+    allAccountsData = [];
     snapshot.forEach(child => {
       allAccountsData.push({ id: child.key, ...child.val() });
     });
 
-    // Sort by postedAt in descending order (newest first)
     allAccountsData.sort((a, b) => b.postedAt - a.postedAt);
 
-    // displayAccounts(allAccountsData, accountListDiv, false); // For landing page (all accounts) - NO LONGER USED HERE
-    // applyFilters(); // Apply filters for buy page after loading all data - NO LONGER CALLED HERE
   } catch (err) {
     console.error("Error loading accounts:", err);
-    // accountListDiv.innerHTML = '<p style="text-align: center; margin-top: 50px; font-size: 1.2em; color: red;">Gagal memuat daftar akun. Silakan coba lagi nanti.</p>';
     buyAccountListDiv.innerHTML = '<p style="text-align: center; margin-top: 50px; font-size: 1.2em; color: red;">Gagal memuat daftar akun. Silakan coba lagi nanti.</p>';
   }
 }
 
+// --- Fungsi: Tampilkan Akun ---
 function displayAccounts(accountsToDisplay, targetDiv, isBuyPage = false) {
-  targetDiv.innerHTML = ''; // Clear current display
+  targetDiv.innerHTML = '';
 
   if (accountsToDisplay.length === 0) {
     targetDiv.innerHTML = `<p style="text-align: center; margin-top: 50px; font-size: 1.2em; color: #666;">${isBuyPage ? 'Tidak ada akun yang tersedia dengan filter ini.' : 'Belum ada akun yang diposting.'}</p>`;
@@ -3171,7 +3373,7 @@ function displayAccounts(accountsToDisplay, targetDiv, isBuyPage = false) {
   accountsToDisplay.forEach(d => {
     const card = document.createElement('div');
     card.className = 'account-card';
-    card.dataset.id = d.id; // Store ID for detail modal
+    card.dataset.id = d.id;
 
     let categoryDisplay = '';
     if (d.category === 'ml') categoryDisplay = 'Mobile Legend';
@@ -3193,14 +3395,13 @@ function displayAccounts(accountsToDisplay, targetDiv, isBuyPage = false) {
     `;
     targetDiv.appendChild(card);
 
-    // Add click listener for detail modal only on buy page cards
     if (isBuyPage) {
       card.addEventListener('click', () => showAccountDetailModal(d.id));
     }
   });
 }
 
-// Function to show account detail modal
+// --- Fungsi: Tampilkan Modal Detail Akun ---
 async function showAccountDetailModal(accountId) {
   const account = allAccountsData.find(acc => acc.id === accountId);
   if (!account) {
@@ -3208,7 +3409,7 @@ async function showAccountDetailModal(accountId) {
     return;
   }
 
-  currentAccountDetail = account; // Store for image viewer
+  currentAccountDetail = account;
 
   const modal = document.getElementById('accountDetailModal');
   document.getElementById('modal-account-title').textContent = `Detail Akun ${account.category === 'ml' ? 'Mobile Legend' : account.category === 'toram' ? 'Toram Online' : 'Life After'}`;
@@ -3220,12 +3421,10 @@ async function showAccountDetailModal(accountId) {
   const thumbnailGallery = document.getElementById('modal-thumbnail-gallery');
   const detailsDiv = document.getElementById('modal-account-details');
 
-  // Clear previous content
   mainImage.src = '';
   thumbnailGallery.innerHTML = '';
   detailsDiv.innerHTML = '';
 
-  // Populate images
   if (account.imageUrls && account.imageUrls.length > 0) {
     mainImage.src = account.imageUrls[0];
     mainImage.alt = `Main image of ${account.category} account`;
@@ -3234,7 +3433,7 @@ async function showAccountDetailModal(accountId) {
       thumb.src = url;
       thumb.alt = `Thumbnail ${index + 1}`;
       thumb.addEventListener('click', () => {
-        mainImage.src = url; // Change main image on thumbnail click
+        mainImage.src = url;
       });
       thumbnailGallery.appendChild(thumb);
     });
@@ -3243,7 +3442,6 @@ async function showAccountDetailModal(accountId) {
     mainImage.alt = 'No image available';
   }
 
-  // Populate game-specific details
   let detailsHtml = '';
   if (account.category === 'ml' && account.ml) {
     const ml = account.ml;
@@ -3283,10 +3481,21 @@ async function showAccountDetailModal(accountId) {
         <p><strong>Level Gether:</strong> ${la.levelGether || 'N/A'}</p>
         <p><strong>Level Craft:</strong> ${la.levelCraft || 'N/A'}</p>
         <p><strong>Level Combat:</strong> ${la.levelCombat || 'N/A'}</p>
-        <p><strong>Light Weapon Attachment:</strong> ${getDetailedAttachmentDisplay(la.attachments?.lightWeapon)}</p>
-        <p><strong>Heavy Weapon Attachment:</strong> ${getDetailedAttachmentDisplay(la.attachments?.heavyWeapon)}</p>
-        <p><strong>Meele Weapon Attachment:</strong> ${getDetailedAttachmentDisplay(la.attachments?.meeleWeapon)}</p>
-        <p><strong>Armor Attachment:</strong> ${getDetailedAttachmentDisplay(la.attachments?.armor)}</p>
+    `;
+
+    if (la.serverCategory === 'easy') {
+      // Tampilkan attachment EasyServer
+      detailsHtml += `<p><strong>Weapon Attachment:</strong> ${getDetailedAttachmentDisplay({weapon: la.attachments?.weapon})}</p>`; // Kirim hanya weapon attachment
+      detailsHtml += `<p><strong>Armor Attachment:</strong> ${getDetailedAttachmentDisplay({armor: la.attachments?.armor})}</p>`; // Kirim hanya armor attachment
+    } else {
+      // Tampilkan attachment server normal
+      detailsHtml += `<p><strong>Light Weapon Attachment:</strong> ${getDetailedAttachmentDisplay({lightWeapon: la.attachments?.lightWeapon})}</p>`;
+      detailsHtml += `<p><strong>Heavy Weapon Attachment:</strong> ${getDetailedAttachmentDisplay({heavyWeapon: la.attachments?.heavyWeapon})}</p>`;
+      detailsHtml += `<p><strong>Meele Weapon Attachment:</strong> ${getDetailedAttachmentDisplay({meeleWeapon: la.attachments?.meeleWeapon})}</p>`;
+      detailsHtml += `<p><strong>Armor Attachment:</strong> ${getDetailedAttachmentDisplay({armor: la.attachments?.armor})}</p>`;
+    }
+
+    detailsHtml += `
         <p><strong>Kategori Job:</strong> ${la.jobCategory || 'N/A'}</p>
         <p><strong>Job Detail:</strong> ${la.jobDetail || 'N/A'}</p>
         <p><strong>Gene:</strong> ${la.gene || 'N/A'}</p>
@@ -3297,19 +3506,26 @@ async function showAccountDetailModal(accountId) {
   }
   detailsDiv.innerHTML = detailsHtml;
 
-  modal.classList.add('show'); // Add 'show' class to trigger transition
-  modal.style.display = 'flex'; // Show the modal
+  modal.classList.add('show');
+  modal.style.display = 'flex';
 }
 
-
-// Dynamic game fields visibility
+// --- Fungsi: Visibilitas Field Game Dinamis ---
 function showGameFields() {
   document.getElementById('ml-fields').classList.add('hidden');
   document.getElementById('toram-fields').classList.add('hidden');
   document.getElementById('lifeafter-fields').classList.add('hidden');
   document.getElementById('sea-server-fields').classList.add('hidden');
-  document.getElementById('na-server-fields').classList.add('hidden'); // Hide all sub-servers too
-  document.getElementById('la-job-detail').classList.add('hidden'); // Hide job detail dropdown
+  document.getElementById('na-server-fields').classList.add('hidden');
+  document.getElementById('la-job-detail').classList.add('hidden');
+  document.getElementById('easy-server-attachments').classList.add('hidden'); // Sembunyikan EasyServer attachments
+
+  // Tampilkan attachment normal secara default
+  document.getElementById('normal-lw-attachments').classList.remove('hidden');
+  document.getElementById('normal-hw-attachments').classList.remove('hidden');
+  document.getElementById('normal-mw-attachments').classList.remove('hidden');
+  document.getElementById('normal-armor-attachments').classList.remove('hidden');
+
 
   const val = document.getElementById('game-category').value;
   if (val === 'ml') document.getElementById('ml-fields').classList.remove('hidden');
@@ -3321,18 +3537,36 @@ function showLifeAfterServer() {
   const val = document.getElementById('lifeafter-server').value;
   document.getElementById('sea-server-fields').classList.add('hidden');
   document.getElementById('na-server-fields').classList.add('hidden');
-  
-  // Reset character level max values
+  document.getElementById('easy-server-attachments').classList.add('hidden'); // Sembunyikan EasyServer attachments secara default
+
+  // Tampilkan semua attachment normal secara default
+  document.getElementById('normal-lw-attachments').classList.remove('hidden');
+  document.getElementById('normal-hw-attachments').classList.remove('hidden');
+  document.getElementById('normal-mw-attachments').classList.remove('hidden');
+  document.getElementById('normal-armor-attachments').classList.remove('hidden');
+
+
   document.getElementById('la-level-gether').max = 149;
   document.getElementById('la-level-craft').max = 149;
   document.getElementById('la-level-combat').max = 149;
+  document.getElementById('la-gene').max = 999999; // Default max gene untuk server normal
 
-  if (val === 'sea') document.getElementById('sea-server-fields').classList.remove('hidden');
-  if (val === 'na') document.getElementById('na-server-fields').classList.remove('hidden');
-  if (val === 'easy') {
+  if (val === 'sea') {
+    document.getElementById('sea-server-fields').classList.remove('hidden');
+  } else if (val === 'na') {
+    document.getElementById('na-server-fields').classList.remove('hidden');
+  } else if (val === 'easy') {
     document.getElementById('la-level-gether').max = 79;
     document.getElementById('la-level-craft').max = 79;
     document.getElementById('la-level-combat').max = 79;
+    document.getElementById('la-gene').max = 20000; // Max gene untuk EasyServer
+    document.getElementById('easy-server-attachments').classList.remove('hidden'); // Tampilkan EasyServer attachments
+
+    // Sembunyikan attachment fields normal saat EasyServer dipilih
+    document.getElementById('normal-lw-attachments').classList.add('hidden');
+    document.getElementById('normal-hw-attachments').classList.add('hidden');
+    document.getElementById('normal-mw-attachments').classList.add('hidden');
+    document.getElementById('normal-armor-attachments').classList.add('hidden');
   }
 }
 
@@ -3362,7 +3596,7 @@ function showLifeAfterJob() {
   }
 }
 
-// Dynamic field add/remove functions
+// --- Fungsi: Tambah/Hapus Field Dinamis ---
 function addMlHeroField() {
   const container = document.getElementById('ml-heroes-container');
   if (container.querySelectorAll('.item-group').length < 3) {
@@ -3414,18 +3648,17 @@ function addToramGudangField() {
   container.appendChild(div);
 }
 
-
-// Preview multiple images before upload
+// --- Event Listener: Pratinjau Gambar ---
 document.getElementById('account-images').addEventListener('change', function(event) {
   const previewContainer = document.getElementById('image-previews');
-  previewContainer.innerHTML = ''; // Clear previous previews
+  previewContainer.innerHTML = '';
   previewContainer.classList.add('hidden');
 
   const files = event.target.files;
   if (files.length > 0) {
     if (files.length > 12) {
       showAlert(postAlert, 'Maksimal 12 gambar yang dapat diunggah.', 'error');
-      event.target.value = ''; // Clear selected files
+      event.target.value = '';
       return;
     }
     previewContainer.classList.remove('hidden');
@@ -3435,8 +3668,8 @@ document.getElementById('account-images').addEventListener('change', function(ev
       reader.onload = function(e) {
         const img = document.createElement('img');
         img.src = e.target.result;
-        img.alt = `Preview Gambar ${i + 1}`; // Add alt text
-        img.style.objectFit = 'contain'; // Pastikan gambar preview tidak terpotong
+        img.alt = `Preview Gambar ${i + 1}`;
+        img.style.objectFit = 'contain';
         previewContainer.appendChild(img);
       }
       reader.readAsDataURL(file);
@@ -3444,28 +3677,25 @@ document.getElementById('account-images').addEventListener('change', function(ev
   }
 });
 
-
-// Image modal viewer (for profile page and post page previews)
+// --- Event Listener: Modal Penampil Gambar (untuk pratinjau profil/postingan) ---
 document.addEventListener('click', function(e) {
   if (e.target.tagName === 'IMG' && (e.target.closest('.image-gallery') || e.target.closest('#image-previews'))) {
-    // This is the old image modal, keep it for profile/post page previews
     const modalImage = document.getElementById('modalImage');
     const imageModal = document.getElementById('imageModal');
     if (modalImage && imageModal) {
       modalImage.src = e.target.src;
-      imageModal.style.display = 'flex'; // Use flex to center
+      imageModal.style.display = 'flex';
     }
   }
 });
 
-// --- Filter Functions ---
+// --- Fungsi Filter ---
 function toggleGameFilters() {
   const category = document.getElementById('filter-category').value;
   document.getElementById('ml-filters').classList.add('hidden');
   document.getElementById('toram-filters').classList.add('hidden');
   document.getElementById('lifeafter-filters').classList.add('hidden');
 
-  // Reset specific filters when category changes
   document.getElementById('filter-ml-role').value = 'all';
   document.getElementById('filter-toram-char-count').value = '';
   document.getElementById('filter-toram-char-level').value = '';
@@ -3487,14 +3717,12 @@ function applyFilters() {
   const searchKeyword = document.getElementById('search-input').value.toLowerCase().trim();
   const sortBy = document.getElementById('sort-by').value;
 
-  let filteredAccounts = allAccountsData.filter(d => d.status === 'belum'); // Always filter by 'belum' status
+  let filteredAccounts = allAccountsData.filter(d => d.status === 'belum');
 
-  // Apply category filter
   if (categoryFilter !== 'all') {
     filteredAccounts = filteredAccounts.filter(account => account.category === categoryFilter);
   }
 
-  // Apply game-specific filters
   if (categoryFilter === 'ml') {
     const roleFilter = document.getElementById('filter-ml-role').value;
     if (roleFilter !== 'all') {
@@ -3539,20 +3767,18 @@ function applyFilters() {
     });
   }
 
-  // Apply search keyword filter (general search across relevant fields)
   if (searchKeyword) {
     filteredAccounts = filteredAccounts.filter(account => {
-      const searchString = JSON.stringify(account).toLowerCase(); // Convert entire account object to string for broad search
+      const searchString = JSON.stringify(account).toLowerCase();
       return searchString.includes(searchKeyword);
     });
   }
 
-  // Apply sorting
   if (sortBy === 'price-asc') {
     filteredAccounts.sort((a, b) => a.price - b.price);
   } else if (sortBy === 'price-desc') {
     filteredAccounts.sort((a, b) => b.price - a.price);
-  } else { // 'newest' or default
+  } else {
     filteredAccounts.sort((a, b) => b.postedAt - a.postedAt);
   }
 
@@ -3563,11 +3789,10 @@ function resetFilters() {
   document.getElementById('filter-category').value = 'all';
   document.getElementById('search-input').value = '';
   document.getElementById('sort-by').value = 'newest';
-  toggleGameFilters(); // This will hide all specific filters and reset their values
-  // applyFilters(); // Re-apply filters to show all available accounts - NO LONGER CALLED HERE
+  toggleGameFilters();
 }
 
-// Function to load chat messages based on category
+// --- Fungsi: Muat Pesan Chat ---
 async function loadChatMessages(category, partnerId = null) {
   const user = auth.currentUser;
   if (!user) {
@@ -3583,7 +3808,6 @@ async function loadChatMessages(category, partnerId = null) {
   } else if (category === 'public') {
     chatRef = db.ref('community_chats/public');
   } else if (category === 'private' && partnerId) {
-    // For private chat, create a unique room ID between two users
     const roomId = [user.uid, partnerId].sort().join('_');
     chatRef = db.ref('community_chats/private/' + roomId);
   } else {
@@ -3591,21 +3815,18 @@ async function loadChatMessages(category, partnerId = null) {
     return;
   }
 
-  // Detach previous listener if any
   if (window.currentChatListener) {
     window.currentChatListener.off();
   }
 
-  // Listen for real-time updates
-  window.currentChatListener = chatRef.on('value', async (snapshot) => { // Made async to await user data
-    chatMessagesDiv.innerHTML = ''; // Clear existing messages
+  window.currentChatListener = chatRef.on('value', async (snapshot) => {
+    chatMessagesDiv.innerHTML = '';
     if (snapshot.exists()) {
       const messages = [];
       snapshot.forEach(child => {
         messages.push(child.val());
       });
 
-      // Fetch all unique sender profiles
       const uniqueSenderIds = [...new Set(messages.map(msg => msg.senderId))];
       const senderProfiles = {};
       for (const senderId of uniqueSenderIds) {
@@ -3641,7 +3862,6 @@ async function loadChatMessages(category, partnerId = null) {
         `;
         chatMessagesDiv.appendChild(messageElement);
       });
-      // Scroll to bottom
       chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
     } else {
       chatMessagesDiv.innerHTML = '<p style="text-align: center; color: #666;">Belum ada pesan. Mulai percakapan!</p>';
@@ -3652,7 +3872,7 @@ async function loadChatMessages(category, partnerId = null) {
   });
 }
 
-// Function to send chat message
+// --- Event Listener: Kirim Pesan Chat ---
 sendChatBtn.addEventListener('click', async () => {
   const user = auth.currentUser;
   if (!user) {
@@ -3678,7 +3898,6 @@ sendChatBtn.addEventListener('click', async () => {
     } else if (currentChatCategory === 'private' && currentPrivateChatPartnerId) {
       const roomId = [user.uid, currentPrivateChatPartnerId].sort().join('_');
       chatPath = 'community_chats/private/' + roomId;
-      // For private chat, ensure user1 and user2 are set if it's a new room
       const roomRef = db.ref(chatPath);
       const roomSnapshot = await roomRef.once('value');
       if (!roomSnapshot.exists()) {
@@ -3693,11 +3912,10 @@ sendChatBtn.addEventListener('click', async () => {
       return;
     }
 
-    // Always include senderId matching auth.uid for rules
     await db.ref(chatPath).push({
       senderId: user.uid,
       senderName: userData?.name || 'Unknown',
-      senderPic: userData?.profilePicUrl || 'https://via.placeholder.com/40', // Include sender's profile picture
+      senderPic: userData?.profilePicUrl || 'https://via.placeholder.com/40',
       text: messageText,
       timestamp: firebase.database.ServerValue.TIMESTAMP
     });
@@ -3709,7 +3927,7 @@ sendChatBtn.addEventListener('click', async () => {
   }
 });
 
-// Switch chat categories
+// --- Event Listener: Ganti Kategori Chat ---
 chatTabButtons.forEach(button => {
   button.addEventListener('click', (e) => {
     const category = e.target.dataset.chatCategory;
@@ -3719,9 +3937,8 @@ chatTabButtons.forEach(button => {
 
 async function switchChatCategory(category) {
   currentChatCategory = category;
-  currentPrivateChatPartnerId = null; // Reset private chat partner
+  currentPrivateChatPartnerId = null;
 
-  // Update active button styling
   chatTabButtons.forEach(btn => {
     if (btn.dataset.chatCategory === category) {
       btn.classList.add('active');
@@ -3730,7 +3947,6 @@ async function switchChatCategory(category) {
     }
   });
 
-  // Show/hide private chat selection
   if (category === 'private') {
     privateChatSelection.classList.remove('hidden');
     await loadUsersForPrivateChat();
@@ -3738,11 +3954,10 @@ async function switchChatCategory(category) {
     privateChatSelection.classList.add('hidden');
   }
 
-  // Load messages for the selected category
   loadChatMessages(currentChatCategory);
 }
 
-// Load users for private chat dropdown
+// --- Fungsi: Muat Pengguna untuk Chat Privat ---
 async function loadUsersForPrivateChat() {
   const currentUser = auth.currentUser;
   if (!currentUser) return;
@@ -3752,7 +3967,7 @@ async function loadUsersForPrivateChat() {
     const snapshot = await db.ref('users').once('value');
     snapshot.forEach(child => {
       const userData = child.val();
-      if (child.key !== currentUser.uid) { // Don't list current user
+      if (child.key !== currentUser.uid) {
         const option = document.createElement('option');
         option.value = child.key;
         option.textContent = userData.name;
@@ -3765,7 +3980,7 @@ async function loadUsersForPrivateChat() {
   }
 }
 
-// Start private chat
+// --- Event Listener: Mulai Chat Privat ---
 startPrivateChatBtn.addEventListener('click', () => {
   const selectedUserId = privateChatUserSelect.value;
   if (selectedUserId) {
@@ -3777,25 +3992,22 @@ startPrivateChatBtn.addEventListener('click', () => {
   }
 });
 
-
-// Initial load check
+// --- Pengecekan Muat Awal ---
 auth.onAuthStateChanged(user => {
   if (!user) {
     hideAllPages();
     loginForm.classList.remove('hidden');
   } else {
-    // If user is logged in, default to landing page
     hideAllPages();
     landingPage.classList.remove('hidden');
-    loadAccounts(); // Load all accounts data for filtering later
+    loadAccounts();
   }
 });
 
-// Initial toggle for filters on page load
+// --- Event Listener DOMContentLoaded ---
 document.addEventListener("DOMContentLoaded", function() {
-  toggleGameFilters(); // Ensure correct filter fields are shown/hidden initially
+  toggleGameFilters();
 
-  // Event listeners for modals
   const accountDetailModal = document.getElementById('accountDetailModal');
   const closeAccountDetailModal = document.getElementById('closeAccountDetailModal');
   const imageViewerModal = document.getElementById('imageViewerModal');
@@ -3806,18 +4018,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
   if (closeAccountDetailModal) {
     closeAccountDetailModal.addEventListener('click', () => {
-      accountDetailModal.classList.remove('show'); // Remove 'show' class for transition
+      accountDetailModal.classList.remove('show');
       accountDetailModal.addEventListener('transitionend', function handler() {
         accountDetailModal.style.display = 'none';
         accountDetailModal.removeEventListener('transitionend', handler);
       });
-      currentAccountDetail = null; // Clear data
+      currentAccountDetail = null;
     });
   }
 
   if (accountDetailModal) {
     accountDetailModal.addEventListener('click', (e) => {
-      if (e.target === accountDetailModal) { // Only close if modal background is clicked
+      if (e.target === accountDetailModal) {
         accountDetailModal.classList.remove('show');
         accountDetailModal.addEventListener('transitionend', function handler() {
           accountDetailModal.style.display = 'none';
@@ -3828,13 +4040,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // --- Image Viewer Modal Functions ---
-  if (modalMainImage) { // Check if element exists
+  // --- Fungsi Modal Penampil Gambar ---
+  if (modalMainImage) {
     modalMainImage.addEventListener('click', () => {
       if (currentAccountDetail && currentAccountDetail.imageUrls && currentAccountDetail.imageUrls.length > 0) {
         currentImageViewerImages = currentAccountDetail.imageUrls;
         currentImageViewerIndex = currentImageViewerImages.indexOf(modalMainImage.src);
-        if (currentImageViewerIndex === -1) currentImageViewerIndex = 0; // Fallback if current image not found
+        if (currentImageViewerIndex === -1) currentImageViewerIndex = 0;
 
         showImageViewerModal(currentImageViewerIndex);
       }
@@ -3852,12 +4064,12 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('viewerImage').src = currentImageViewerImages[currentImageViewerIndex];
     }
 
-    if (prevImageBtn) prevImageBtn.style.display = (currentImageViewerIndex > 0) ? 'flex' : 'none'; // Use flex for centering
-    if (nextImageBtn) nextImageBtn.style.display = (currentImageViewerIndex < currentImageViewerImages.length - 1) ? 'flex' : 'none'; // Use flex for centering
+    if (prevImageBtn) prevImageBtn.style.display = (currentImageViewerIndex > 0) ? 'flex' : 'none';
+    if (nextImageBtn) nextImageBtn.style.display = (currentImageViewerIndex < currentImageViewerImages.length - 1) ? 'flex' : 'none';
 
     if (imageViewerModal) {
       imageViewerModal.style.display = 'flex';
-      setTimeout(() => imageViewerModal.classList.add('show'), 10); // Small delay to ensure display is set before transition
+      setTimeout(() => imageViewerModal.classList.add('show'), 10);
     }
   }
 
@@ -3905,19 +4117,18 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Existing image preview listener (moved inside DOMContentLoaded)
   const accountImagesInput = document.getElementById('account-images');
   if (accountImagesInput) {
     accountImagesInput.addEventListener('change', function(event) {
       const previewContainer = document.getElementById('image-previews');
-      previewContainer.innerHTML = ''; // Clear previous previews
+      previewContainer.innerHTML = '';
       previewContainer.classList.add('hidden');
 
       const files = event.target.files;
       if (files.length > 0) {
         if (files.length > 12) {
           showAlert(postAlert, 'Maksimal 12 gambar yang dapat diunggah.', 'error');
-          event.target.value = ''; // Clear selected files
+          event.target.value = '';
           return;
         }
         previewContainer.classList.remove('hidden');
@@ -3927,8 +4138,8 @@ document.addEventListener("DOMContentLoaded", function() {
           reader.onload = function(e) {
             const img = document.createElement('img');
             img.src = e.target.result;
-            img.alt = `Preview Gambar ${i + 1}`; // Add alt text
-            img.style.objectFit = 'contain'; // Pastikan gambar preview tidak terpotong
+            img.alt = `Preview Gambar ${i + 1}`;
+            img.style.objectFit = 'contain';
             previewContainer.appendChild(img);
           }
           reader.readAsDataURL(file);
@@ -3937,14 +4148,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Existing image modal viewer (for profile page and post page previews)
   document.addEventListener('click', function(e) {
     if (e.target.tagName === 'IMG' && (e.target.closest('.image-gallery') || e.target.closest('#image-previews'))) {
       const modalImage = document.getElementById('modalImage');
       const imageModal = document.getElementById('imageModal');
       if (modalImage && imageModal) {
         modalImage.src = e.target.src;
-        imageModal.style.display = 'flex'; // Use flex to center
+        imageModal.style.display = 'flex';
       }
     }
   });
@@ -3962,50 +4172,40 @@ document.addEventListener("DOMContentLoaded", function() {
 
   if (imageModalDiv) {
     imageModalDiv.addEventListener('click', (e) => {
-      if (e.target === imageModalDiv) { // Only close if modal background is clicked
+      if (e.target === imageModalDiv) {
         imageModalDiv.style.display = 'none';
         document.getElementById('modalImage').src = '';
       }
     });
   }
 
-  // Event listener for category cards on buy page
+  // Event listener untuk kartu kategori di halaman beli
   categorySelection.addEventListener('click', (e) => {
     const card = e.target.closest('.category-card');
     if (card) {
       const category = card.dataset.category;
       
-      // Set filter kategori di dropdown
       filterCategorySelect.value = category;
-      toggleGameFilters(); // Update tampilan filter spesifik game
-      applyFilters(); // Terapkan filter
+      toggleGameFilters();
+      applyFilters();
 
-      categorySelection.classList.add('hidden'); // Sembunyikan pilihan kategori
-      accountListingSection.classList.remove('hidden'); // Tampilkan daftar akun
+      categorySelection.classList.add('hidden');
+      accountListingSection.classList.remove('hidden');
     }
   });
 
-  // Event listener for "Back to Categories" button
+  // Event listener untuk tombol "Kembali ke Kategori"
   backToCategoriesBtn.addEventListener('click', () => {
-    categorySelection.classList.remove('hidden'); // Tampilkan pilihan kategori
-    accountListingSection.classList.add('hidden'); // Sembunyikan daftar akun
-    resetFilters(); // Reset filter saat kembali ke kategori
+    categorySelection.classList.remove('hidden');
+    accountListingSection.classList.add('hidden');
+    resetFilters();
   });
 
-  // Initial load of all accounts data when DOM is ready
   loadAccounts();
 
-}); // End of DOMContentLoaded
-</script>
+});
 
-<!-- Image Modal Viewer (old one, kept for profile/post page previews) -->
-<div id="imageModal" class="hidden" style="position:fixed;z-index:9999;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;">
-  <span id="closeModal" style="position:absolute;top:20px;right:30px;color:white;font-size:40px;cursor:pointer;">&times;</span>
-  <img id="modalImage" src="" style="max-width:90%;max-height:90%;border-radius:10px;box-shadow:0 0 20px rgba(0,0,0,0.5);">
-</div>
-
-
-<script>
+// --- Fungsi: Muat Ikon Kategori ---
 function loadCategoryIcons() {
     const storage = firebase.storage();
     const icons = {
@@ -4026,6 +4226,12 @@ function loadCategoryIcons() {
 }
 document.addEventListener("DOMContentLoaded", loadCategoryIcons);
 </script>
+
+<!-- Modal Penampil Gambar (lama, dipertahankan untuk pratinjau profil/postingan) -->
+<div id="imageModal" class="hidden" style="position:fixed;z-index:9999;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;">
+  <span id="closeModal" style="position:absolute;top:20px;right:30px;color:white;font-size:40px;cursor:pointer;">&times;</span>
+  <img id="modalImage" src="" style="max-width:90%;max-height:90%;border-radius:10px;box-shadow:0 0 20px rgba(0,0,0,0.5);">
+</div>
 
 </body>
 </html>
