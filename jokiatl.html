@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joki LifeAfter Pro - Mizuki Hiroshi Ch.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #1a1a2e; /* Darker background */
+      color: #e0e0e0; /* Lighter text */
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Orbitron', sans-serif; /* Sci-fi/gaming font for headings */
+    }
+    .btn-primary {
+      background-image: linear-gradient(to right, #e94560, #ff6b6b);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+    }
+    .btn-primary:hover {
+      background-image: linear-gradient(to right, #ff6b6b, #e94560);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(233, 69, 96, 0.6);
+    }
+    .btn-secondary {
+      background-color: #3f72af;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(63, 114, 175, 0.4);
+    }
+    .btn-secondary:hover {
+      background-color: #528ecc;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(63, 114, 175, 0.6);
+    }
+    .btn-success {
+      background-color: #4CAF50;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+    }
+    .btn-success:hover {
+      background-color: #66BB6A;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+    }
+    .card {
+      background-color: #2e2e4a; /* Slightly lighter card background */
+      border: 1px solid #4a4a6a;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    input[type="text"], input[type="password"], input[type="email"], input[type="tel"], select, textarea {
+      background-color: #1f1f3a;
+      border: 1px solid #4a4a6a;
+      color: #e0e0e0;
+    }
+    input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus, textarea:focus {
+      border-color: #e94560;
+      box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.5);
+    }
+    .checkbox:checked {
+      background-color: #e94560;
+      border-color: #e94560;
+    }
+    .checkbox:focus {
+      box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.5);
+    }
+    .status-pending { color: #ffc107; } /* Yellow */
+    .status-in-progress { color: #00bcd4; } /* Cyan */
+    .status-completed { color: #4CAF50; } /* Green */
+  </style>
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+  <script type="module">
+    // --- Firebase Setup (Updated to Compat v9 for Legacy Syntax) ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBdKELW2FNsL7H1zB8R765czcDPaSYybdg",
+      authDomain: "atlantis-store.firebaseapp.com",
+      databaseURL: "https://atlantis-store-default-rtdb.firebaseio.com",
+      projectId: "atlantis-store",
+      storageBucket: "atlantis-store.appspot.com",
+      messagingSenderId: "566295949160",
+      appId: "1:566295949160:web:3ad8956c753d2f05a5f0dd",
+      measurementId: "G-F5RG09TFCK"
+    };
+
+    // Initialize Firebase only once
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.database();
+    const storage = firebase.storage();
+
+    // --- UI Elements ---
+    const loginRegisterSection = document.getElementById("loginRegisterSection");
+    const orderSection = document.getElementById("orderSection");
+    const userDashboardSection = document.getElementById("userDashboardSection");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const orderForm = document.getElementById("orderForm");
+    const userEmailDisplay = document.getElementById("userEmailDisplay");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const userOrdersList = document.getElementById("userOrdersList");
+    const toggleLoginRegisterBtn = document.getElementById("toggleLoginRegister");
+    const loginCard = document.getElementById("loginCard");
+    const registerCard = document.getElementById("registerCard");
+
+    // --- Toggle Login/Register View ---
+    let isLoginView = true;
+    if (toggleLoginRegisterBtn) {
+        toggleLoginRegisterBtn.addEventListener('click', () => {
+            isLoginView = !isLoginView;
+            if (isLoginView) {
+                loginCard.classList.remove('hidden');
+                registerCard.classList.add('hidden');
+                toggleLoginRegisterBtn.textContent = "Belum punya akun? Registrasi";
+            } else {
+                loginCard.classList.add('hidden');
+                registerCard.classList.remove('hidden');
+                toggleLoginRegisterBtn.textContent = "Sudah punya akun? Login";
+            }
+        });
+    }
+
+
+    // --- Auth State Listener ---
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in
+        loginRegisterSection.classList.add("hidden");
+        orderSection.classList.remove("hidden");
+        userDashboardSection.classList.remove("hidden");
+        userEmailDisplay.textContent = user.email;
+        fetchUserOrders(user.uid); // Fetch and display user's orders
+      } else {
+        // User is signed out
+        loginRegisterSection.classList.remove("hidden");
+        orderSection.classList.add("hidden");
+        userDashboardSection.classList.add("hidden");
+        userEmailDisplay.textContent = "";
+        userOrdersList.innerHTML = ""; // Clear orders
+        // Ensure login form is visible by default when logged out
+        loginCard.classList.remove('hidden');
+        registerCard.classList.add('hidden');
+        if (toggleLoginRegisterBtn) {
+            toggleLoginRegisterBtn.textContent = "Belum punya akun? Registrasi";
+            isLoginView = true;
+        }
+      }
+    });
+
+    // --- Handle Login ---
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = loginForm.loginEmail.value;
+      const password = loginForm.loginPassword.value;
+
+      if (!email || !password) {
+        alert("Email dan password harus diisi.");
+        return;
+      }
+
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        alert("Login berhasil! Selamat datang kembali.");
+        loginForm.reset();
+      } catch (error) {
+        console.error("Login gagal:", error);
+        alert("Login gagal: " + error.message);
+      }
+    }
+
+    // --- Handle Registration ---
+    async function handleRegister(e) {
+      e.preventDefault();
+      const email = registerForm.registerEmail.value;
+      const password = registerForm.registerPassword.value;
+
+      if (!email || !password) {
+        alert("Email dan password harus diisi.");
+        return;
+      }
+      if (password.length < 6) {
+        alert("Password harus minimal 6 karakter.");
+        return;
+      }
+
+      try {
+        await auth.createUserWithEmailAndPassword(email, password);
+        alert("Registrasi berhasil! Silakan login dengan akun Anda.");
+        registerForm.reset();
+        // Automatically switch to login view after successful registration
+        loginCard.classList.remove('hidden');
+        registerCard.classList.add('hidden');
+        if (toggleLoginRegisterBtn) {
+            toggleLoginRegisterBtn.textContent = "Belum punya akun? Registrasi";
+            isLoginView = true;
+        }
+      } catch (error) {
+        console.error("Registrasi gagal:", error);
+        alert("Registrasi gagal: " + error.message);
+      }
+    }
+
+    // --- Handle Logout ---
+    async function handleLogout() {
+      try {
+        await auth.signOut();
+        alert("Anda telah logout.");
+      } catch (error) {
+        console.error("Logout gagal:", error);
+        alert("Logout gagal: " + error.message);
+      }
+    }
+
+    // --- Handle Order Form with Screenshot Upload ---
+    async function handleOrder(e) {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Harap login dulu untuk membuat pesanan.");
+        return;
+      }
+
+      const jenis = document.getElementById("jenis").value;
+      const device = document.getElementById("device").value;
+      const code = document.getElementById("code").value;
+      const pass = document.getElementById("pass").value;
+      const whatsapp = document.getElementById("whatsapp").value;
+      const proofFile = document.getElementById("proof").files[0];
+      const agree = document.getElementById("agree").checked;
+
+      if (!jenis || !device || !code || !pass || !whatsapp) {
+        alert("Semua kolom wajib diisi.");
+        return;
+      }
+      if (!agree) {
+        alert("Harap setujui rules sebelum submit order.");
+        return;
+      }
+      if (!proofFile) {
+        alert("Harap upload screenshot bukti pembayaran.");
+        return;
+      }
+
+      // Basic WhatsApp number validation (starts with 62, min 10 digits)
+      if (!whatsapp.match(/^62\d{9,}$/)) {
+        alert("Format nomor WhatsApp tidak valid. Gunakan format 62xxxxxxxxxx (tanpa +).");
+        return;
+      }
+
+      // Show loading indicator (optional)
+      const submitButton = orderForm.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim Order...';
+
+      try {
+        // Upload screenshot to Firebase Storage
+        const storageRef = storage.ref().child(`proofs/${user.uid}_${Date.now()}_${proofFile.name}`);
+        const uploadTask = storageRef.put(proofFile);
+
+        // Wait for upload to complete
+        await new Promise((resolve, reject) => {
+          uploadTask.on('state_changed',
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+              // Update UI progress bar if implemented
+            },
+            (error) => {
+              console.error('Upload error:', error);
+              reject(new Error("Gagal upload bukti pembayaran."));
+            },
+            async () => {
+              resolve();
+            }
+          );
+        });
+
+        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+
+        // Save order to Realtime Database
+        const orderData = {
+          userId: user.uid,
+          nama: user.displayName || user.email.split('@')[0], // Use email prefix if no display name
+          email: user.email,
+          jenis,
+          device,
+          transferCode: code,
+          password: pass, // Storing password for joki access
+          whatsapp: whatsapp,
+          proofURL: downloadURL,
+          waktu: firebase.database.ServerValue.TIMESTAMP,
+          status: "pending"
+        };
+
+        const newOrderRef = db.ref('orders').push();
+        await newOrderRef.set(orderData);
+
+        alert("Order berhasil dikirim! Kami akan konfirmasi segera melalui WhatsApp Anda.");
+        orderForm.reset();
+        document.getElementById("proofPreview").innerHTML = ""; // Clear preview
+        fetchUserOrders(user.uid); // Refresh user's orders
+      } catch (error) {
+        console.error('Order submission failed:', error);
+        alert("Gagal mengirim order: " + error.message);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
+      }
+    }
+
+    // --- Fetch and Display User Orders ---
+    function fetchUserOrders(userId) {
+      userOrdersList.innerHTML = '<p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat pesanan...</p>';
+      db.ref('orders').orderByChild('userId').equalTo(userId).on('value', (snapshot) => {
+        if (snapshot.exists()) {
+          userOrdersList.innerHTML = ''; // Clear previous list
+          const orders = [];
+          snapshot.forEach((childSnapshot) => {
+            orders.push({ id: childSnapshot.key, ...childSnapshot.val() });
+          });
+
+          // Sort orders by timestamp, newest first
+          orders.sort((a, b) => b.waktu - a.waktu);
+
+          orders.forEach((order) => {
+            const orderElement = document.createElement('div');
+            orderElement.className = 'card p-5 rounded-xl mb-4';
+            let statusClass = '';
+            switch (order.status) {
+              case 'pending': statusClass = 'status-pending'; break;
+              case 'in progress': statusClass = 'status-in-progress'; break;
+              case 'completed': statusClass = 'status-completed'; break;
+              default: statusClass = 'text-gray-400';
+            }
+
+            orderElement.innerHTML = `
+              <div class="flex justify-between items-center mb-3 border-b border-gray-600 pb-2">
+                <h5 class="text-lg font-bold text-red-400">Order ID: <span class="text-gray-300 text-sm">${order.id}</span></h5>
+                <span class="text-sm font-semibold ${statusClass}">${order.status.toUpperCase()}</span>
+              </div>
+              <p class="mb-1"><i class="fas fa-gamepad text-blue-400 mr-2"></i>Jenis Joki: <span class="font-medium">${order.jenis === 'full' ? 'Death High Full Service' : 'Death High Per Floor'}</span></p>
+              <p class="mb-1"><i class="fas fa-mobile-alt text-blue-400 mr-2"></i>Device: <span class="font-medium">${order.device}</span></p>
+              <p class="mb-1"><i class="fab fa-whatsapp text-blue-400 mr-2"></i>WhatsApp: <span class="font-medium">${order.whatsapp}</span></p>
+              <p class="text-sm text-gray-500 mt-2">Waktu Order: ${new Date(order.waktu).toLocaleString()}</p>
+              ${order.proofURL ? `<a href="${order.proofURL}" target="_blank" class="text-red-400 hover:underline text-sm mt-3 block"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>` : ''}
+            `;
+            userOrdersList.appendChild(orderElement);
+          });
+        } else {
+          userOrdersList.innerHTML = '<p class="text-gray-400 text-center py-4">Anda belum memiliki pesanan.</p>';
+        }
+      }, (error) => {
+        console.error("Error fetching user orders:", error);
+        userOrdersList.innerHTML = '<p class="text-red-500 text-center py-4">Gagal memuat pesanan. Silakan coba lagi.</p>';
+      });
+    }
+
+    // Preview screenshot on select
+    function previewProof(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById("proofPreview").innerHTML = `<img src="${e.target.result}" alt="Preview Bukti Pembayaran" class="max-w-full h-48 object-cover rounded-lg mt-2 border border-gray-600 shadow-md">`;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        document.getElementById("proofPreview").innerHTML = "";
+      }
+    }
+
+    // Expose functions to the global scope
+    window.handleLogin = handleLogin;
+    window.handleRegister = handleRegister;
+    window.handleLogout = handleLogout;
+    window.handleOrder = handleOrder;
+    window.previewProof = previewProof;
+  </script>
+</head>
+<body class="flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-[#1a1a2e] to-[#0f0f1a] p-4 md:p-6 text-center shadow-2xl border-b-2 border-[#e94560]">
+    <div class="flex justify-center items-center space-x-3 mb-2">
+      <i class="fas fa-gamepad text-4xl text-[#e94560]"></i>
+      <h1 class="text-3xl md:text-5xl font-bold text-white tracking-wide">Joki LifeAfter <span class="text-[#e94560]">PRO</span></h1>
+    </div>
+    <p class="text-sm md:text-base text-gray-400">Mizuki Hiroshi Ch. <span class="text-[#e94560]">水木広氏</span> - Your Elite Gaming Partner</p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto p-6 md:p-8">
+
+    <!-- Banner Promo -->
+    <section class="p-6 md:p-8 text-center bg-gradient-to-r from-[#e94560] to-[#ff6b6b] shadow-xl rounded-xl mb-12 transform hover:scale-105 transition-transform duration-300">
+      <div class="flex justify-center items-center space-x-3 mb-3">
+        <i class="fas fa-fire text-3xl text-white animate-pulse"></i>
+        <h2 class="text-2xl md:text-4xl font-bold text-white">PROMO SPESIAL!</h2>
+      </div>
+      <p class="text-lg md:text-2xl text-white mb-4">Death High Full Service hanya <span class="line-through text-gray-200">Rp 250.000</span> jadi <span class="font-bold text-yellow-300 text-3xl">Rp 150.000</span></p>
+      <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-primary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
+        <i class="fab fa-whatsapp mr-2"></i>Hubungi Kami Sekarang!
+      </button>
+    </section>
+
+    <!-- Info Layanan -->
+    <section class="mb-12">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+        <i class="fas fa-cogs"></i>
+        <span>Layanan Joki Profesional</span>
+      </h3>
+      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div class="card p-8 rounded-xl hover:shadow-2xl">
+          <i class="fas fa-crown text-4xl text-yellow-400 mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-3 text-white">Death High Full Service</h4>
+          <p class="text-gray-400 mb-4">Pengerjaan lengkap selama 1 bulan penuh untuk performa maksimal.</p>
+          <p class="text-3xl font-bold text-green-400">Rp 150.000 <span class="text-base font-normal text-gray-500">(Promo Perdana)</span></p>
+          <span class="text-sm text-gray-500 block mt-2 line-through">Normal: Rp 250.000</span>
+        </div>
+        <div class="card p-8 rounded-xl hover:shadow-2xl">
+          <i class="fas fa-layer-group text-4xl text-blue-400 mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-3 text-white">Death High Per Floor</h4>
+          <p class="text-gray-400 mb-4">Fleksibel, bayar sesuai lantai yang ingin diselesaikan. Cocok untuk kebutuhan spesifik.</p>
+          <p class="text-2xl font-bold text-green-400">Harga Negosiasi</p>
+          <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-success text-white px-6 py-2 rounded-full font-semibold mt-4">
+            <i class="fab fa-whatsapp mr-2"></i>Konsultasi Harga
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login/Register Section -->
+    <section id="loginRegisterSection" class="max-w-2xl mx-auto mb-12">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+        <i class="fas fa-user-shield"></i>
+        <span>Akses Jasa Joki</span>
+      </h3>
+      <div class="card p-8 rounded-xl">
+        <div id="loginCard">
+          <h4 class="text-xl font-semibold mb-6 text-center text-white">Login ke Akun Anda</h4>
+          <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+            <div>
+              <label for="loginEmail" class="block text-sm font-medium mb-2 text-gray-300">Email</label>
+              <input type="email" id="loginEmail" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Masukkan email Anda">
+            </div>
+            <div>
+              <label for="loginPassword" class="block text-sm font-medium mb-2 text-gray-300">Password</label>
+              <input type="password" id="loginPassword" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Masukkan password Anda">
+            </div>
+            <button type="submit" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+              <i class="fas fa-sign-in-alt mr-2"></i>Login
+            </button>
+          </form>
+        </div>
+        <div id="registerCard" class="hidden">
+          <h4 class="text-xl font-semibold mb-6 text-center text-white">Buat Akun Baru</h4>
+          <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-5">
+            <div>
+              <label for="registerEmail" class="block text-sm font-medium mb-2 text-gray-300">Email</label>
+              <input type="email" id="registerEmail" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Masukkan email Anda">
+            </div>
+            <div>
+              <label for="registerPassword" class="block text-sm font-medium mb-2 text-gray-300">Password</label>
+              <input type="password" id="registerPassword" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Buat password (min. 6 karakter)">
+            </div>
+            <button type="submit" class="btn-secondary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+              <i class="fas fa-user-plus mr-2"></i>Registrasi
+            </button>
+          </form>
+        </div>
+        <button id="toggleLoginRegister" class="mt-6 w-full text-center text-gray-400 hover:text-[#e94560] transition-colors duration-200 text-sm">
+          Belum punya akun? Registrasi
+        </button>
+      </div>
+    </section>
+
+    <!-- User Dashboard Section (Hidden until logged in) -->
+    <section id="userDashboardSection" class="hidden max-w-4xl mx-auto mb-12">
+      <div class="card p-8 rounded-xl">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 pb-4 border-b border-gray-600">
+          <h3 class="text-2xl md:text-3xl font-bold text-[#e94560] flex items-center space-x-3 mb-4 md:mb-0">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard Pengguna</span>
+          </h3>
+          <div class="flex items-center space-x-4">
+            <span class="text-gray-300 text-lg">Halo, <span id="userEmailDisplay" class="font-semibold text-red-300"></span>!</span>
+            <button id="logoutBtn" onclick="handleLogout()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-300">
+              <i class="fas fa-sign-out-alt mr-1"></i>Logout
+            </button>
+          </div>
+        </div>
+
+        <h4 class="text-xl font-bold mb-5 text-red-300 flex items-center space-x-2">
+          <i class="fas fa-history"></i>
+          <span>Riwayat Pesanan Anda</span>
+        </h4>
+        <div id="userOrdersList" class="space-y-4">
+          <!-- User orders will be loaded here -->
+          <p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat pesanan...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form Order (Hidden until logged in) -->
+    <section id="orderSection" class="hidden max-w-2xl mx-auto mb-12">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+        <i class="fas fa-file-alt"></i>
+        <span>Formulir Pemesanan Joki</span>
+      </h3>
+      <form id="orderForm" onsubmit="handleOrder(event)" class="card p-8 rounded-xl space-y-6">
+        <div>
+          <label for="jenis" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+            <i class="fas fa-list text-[#e94560]"></i>
+            <span>Jenis Joki</span>
+          </label>
+          <select id="jenis" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required>
+            <option value="full">Death High Full Service</option>
+            <option value="floor">Death High Per Floor</option>
+          </select>
+        </div>
+        <div>
+          <label for="device" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+            <i class="fas fa-mobile-alt text-[#e94560]"></i>
+            <span>Platform Device</span>
+          </label>
+          <select id="device" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required>
+            <option value="android">Android</option>
+            <option value="ios">iOS</option>
+          </select>
+        </div>
+        <div>
+          <label for="code" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+            <i class="fas fa-key text-[#e94560]"></i>
+            <span>Transfer Code Akun</span>
+          </label>
+          <input type="text" id="code" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required placeholder="Masukkan transfer code akun Anda">
+        </div>
+        <div>
+          <label for="pass" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+            <i class="fas fa-lock text-[#e94560]"></i>
+            <span>Password Akun</span>
+          </label>
+          <input type="password" id="pass" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required placeholder="Masukkan password akun Anda">
+        </div>
+        <div>
+          <label for="whatsapp" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+            <i class="fab fa-whatsapp text-[#e94560]"></i>
+            <span>Nomor WhatsApp (Cth: 6281234567890)</span>
+          </label>
+          <input type="tel" id="whatsapp" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required placeholder="Nomor WhatsApp aktif Anda (tanpa +)">
+          <p class="text-xs text-gray-500 mt-1">Kami akan menghubungi Anda melalui nomor ini untuk update joki.</p>
+        </div>
+        <div>
+          <label for="proof" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+            <i class="fas fa-image text-[#e94560]"></i>
+            <span>Bukti Pembayaran (Screenshot)</span>
+          </label>
+          <input type="file" id="proof" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" required onchange="previewProof(event)">
+          <div id="proofPreview" class="mt-4 flex justify-center"></div>
+        </div>
+        <div class="flex items-center space-x-3 p-4 card rounded-lg">
+          <input type="checkbox" id="agree" class="w-5 h-5 rounded checkbox focus:ring-offset-2 focus:ring-offset-[#1a1a2e]">
+          <label for="agree" class="text-sm text-gray-300">Saya sudah membaca dan menyetujui <a href="#rules" class="text-[#e94560] underline hover:text-[#ff6b6b] transition-colors duration-200">rules</a> yang berlaku</label>
+        </div>
+        <button type="submit" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+          <i class="fas fa-paper-plane mr-2"></i>Kirim Order
+        </button>
+      </form>
+    </section>
+
+    <!-- Informasi & Rules -->
+    <section id="rules" class="max-w-4xl mx-auto mt-12">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+        <i class="fas fa-info-circle"></i>
+        <span>Informasi & Aturan Jasa Joki</span>
+      </h3>
+      <div class="card p-8 rounded-xl">
+        <h4 class="text-xl font-bold mb-4 text-white">Informasi Penting:</h4>
+        <ul class="space-y-4 text-gray-300 list-disc pl-5 mb-8">
+          <li class="flex items-start space-x-3">
+            <i class="fas fa-check-circle text-green-400 mt-1"></i>
+            <div>
+              <b>Death High Full Service</b> – Pengerjaan 1 bulan penuh. Harga normal Rp 250.000 → <span class="font-bold text-yellow-300">Rp 150.000</span> untuk pelanggan pertama.
+            </div>
+          </li>
+          <li class="flex items-start space-x-3">
+            <i class="fas fa-check-circle text-green-400 mt-1"></i>
+            <div>
+              <b>Death High Per Floor</b> – Harga fleksibel, konfirmasi via WhatsApp: <a href="https://wa.me/6289634568406" class="text-green-400 underline font-semibold hover:text-green-300 transition-colors duration-200">0896-3456-8406</a>
+            </div>
+          </li>
+          <li class="flex items-start space-x-3">
+            <i class="fas fa-clock text-blue-400 mt-1"></i>
+            <span>Estimasi pengerjaan sesuai antrian dan kesepakatan. Kami akan memberikan update secara berkala.</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <i class="fas fa-shield-alt text-purple-400 mt-1"></i>
+            <span>Data akun Anda dijamin aman & tidak akan disalahgunakan. Keamanan adalah prioritas kami.</span>
+          </li>
+        </ul>
+
+        <h4 class="text-xl font-bold mb-4 text-white">Aturan Jasa Joki:</h4>
+        <ol class="list-decimal pl-8 space-y-3 text-gray-300">
+          <li>Akun wajib memiliki Transfer Code & Password yang valid dan benar.</li>
+          <li>Dilarang login ke akun selama proses joki berlangsung untuk menghindari konflik dan error.</li>
+          <li>Pembayaran dilakukan <b>sebelum pengerjaan dimulai</b>. Harap upload bukti screenshot pembayaran yang jelas.</li>
+          <li>Progress update akan diberikan secara rutin (screenshot / video via WhatsApp) sesuai permintaan.</li>
+          <li>Durasi pengerjaan bisa diperpanjang jika ada gangguan server, maintenance game, atau kendala teknis lainnya.</li>
+          <li>Refund hanya berlaku jika pengerjaan belum dimulai dan ada kesepakatan.</li>
+          <li>Dengan melakukan order, Anda dianggap telah membaca dan menyetujui semua aturan yang berlaku.</li>
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center p-6 mt-12 text-gray-500 border-t-2 border-[#2e2e4a] bg-[#1a1a2e]">
+    <p>© 2025 Mizuki Hiroshi Ch. | Joki LifeAfter Pro | <a href="https://wa.me/6289634568406" class="text-green-400 underline hover:text-green-300 transition-colors duration-200">Kontak Kami</a></p>
+  </footer>
+</body>
+</html>
