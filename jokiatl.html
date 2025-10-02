@@ -135,6 +135,17 @@
     const registerCard = document.getElementById("registerCard");
     const dynamicBannerSection = document.getElementById("dynamicBannerSection"); // New element
 
+    // New UI Elements for dynamic order form
+    const fullServicePriceDiv = document.getElementById("fullServicePrice");
+    const currentFullServicePriceSpan = document.getElementById("currentFullServicePrice");
+    const perFloorDetailsDiv = document.getElementById("perFloorDetails");
+    const statProofInput = document.getElementById("statProof");
+    const statProofPreviewDiv = document.getElementById("statProofPreview");
+    const floorTargetInput = document.getElementById("floorTarget");
+    const floorCountInput = document.getElementById("floorCount");
+    const proofOfPaymentDiv = document.getElementById("proofOfPaymentDiv"); // Tambahkan ini
+
+
     // --- Toggle Login/Register View ---
     let isLoginView = true;
     if (toggleLoginRegisterBtn) {
@@ -162,6 +173,7 @@
         userDashboardSection.classList.remove("hidden");
         userEmailDisplay.textContent = user.email;
         fetchUserOrders(user.uid); // Fetch and display user's orders
+        updateOrderDetails(); // Call this to set initial price and form visibility
       } else {
         // User is signed out
         loginRegisterSection.classList.remove("hidden");
@@ -176,6 +188,10 @@
             toggleLoginRegisterBtn.textContent = "Belum punya akun? Registrasi";
             isLoginView = true;
         }
+        // Hide specific order details when logged out
+        fullServicePriceDiv.classList.add('hidden');
+        perFloorDetailsDiv.classList.add('hidden');
+        proofOfPaymentDiv.classList.add('hidden'); // Sembunyikan juga bukti pembayaran saat logout
       }
     });
 
@@ -243,6 +259,55 @@
       }
     }
 
+    // --- Function to update order details based on selection and user history ---
+    async function updateOrderDetails() {
+      const user = auth.currentUser;
+      const jenis = document.getElementById("jenis").value;
+
+      // Reset visibility
+      fullServicePriceDiv.classList.add('hidden');
+      perFloorDetailsDiv.classList.add('hidden');
+      proofOfPaymentDiv.classList.add('hidden'); // Sembunyikan secara default
+
+      // Reset required attributes for per-floor specific inputs
+      statProofInput.removeAttribute('required');
+      floorTargetInput.removeAttribute('required');
+      floorCountInput.removeAttribute('required');
+      document.getElementById("proof").removeAttribute('required'); // Hapus required dari bukti pembayaran secara default
+
+      if (jenis === 'full') {
+        fullServicePriceDiv.classList.remove('hidden');
+        proofOfPaymentDiv.classList.remove('hidden'); // Tampilkan bukti pembayaran
+        document.getElementById("proof").setAttribute('required', 'required'); // Set required untuk bukti pembayaran
+
+        let price = 250000; // Default price for subsequent orders
+
+        if (user) {
+          const snapshot = await db.ref('orders').orderByChild('userId').equalTo(user.uid).once('value');
+          const userOrders = snapshot.val();
+          let hasFullServiceOrder = false;
+          if (userOrders) {
+            for (const orderId in userOrders) {
+              if (userOrders[orderId].jenis === 'full') {
+                hasFullServiceOrder = true;
+                break;
+              }
+            }
+          }
+          if (!hasFullServiceOrder) {
+            price = 150000; // First-time full service order
+          }
+        }
+        currentFullServicePriceSpan.textContent = `Rp ${price.toLocaleString('id-ID')}`;
+      } else if (jenis === 'floor') {
+        perFloorDetailsDiv.classList.remove('hidden');
+        statProofInput.setAttribute('required', 'required');
+        floorTargetInput.setAttribute('required', 'required');
+        floorCountInput.setAttribute('required', 'required');
+        // Bukti pembayaran tetap tersembunyi dan tidak required
+      }
+    }
+
     // --- Handle Order Form with Screenshot Upload ---
     async function handleOrder(e) {
       e.preventDefault();
@@ -257,7 +322,6 @@
       const code = document.getElementById("code").value;
       const pass = document.getElementById("pass").value;
       const whatsapp = document.getElementById("whatsapp").value;
-      const proofFile = document.getElementById("proof").files[0];
       const agree = document.getElementById("agree").checked;
 
       if (!jenis || !device || !code || !pass || !whatsapp) {
@@ -266,10 +330,6 @@
       }
       if (!agree) {
         alert("Harap setujui rules sebelum submit order.");
-        return;
-      }
-      if (!proofFile) {
-        alert("Harap upload screenshot bukti pembayaran.");
         return;
       }
 
@@ -284,30 +344,60 @@
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim Order...';
 
+      let proofURL = null;
+      let statProofURL = null;
+      let orderPrice = 0; // Initialize order price
+
       try {
-        // Upload screenshot to Firebase Storage
-        const storageRef = storage.ref().child(`proofs/${user.uid}_${Date.now()}_${proofFile.name}`);
-        const uploadTask = storageRef.put(proofFile);
+        // Handle proof of payment for 'full' service
+        if (jenis === 'full') {
+          const proofFile = document.getElementById("proof").files[0];
+          if (!proofFile) {
+            alert("Harap upload screenshot bukti pembayaran.");
+            return;
+          }
+          const storageRef = storage.ref().child(`proofs/${user.uid}_${Date.now()}_${proofFile.name}`);
+          const uploadTask = storageRef.put(proofFile);
+          await new Promise((resolve, reject) => {
+            uploadTask.on('state_changed', () => {}, (error) => reject(new Error("Gagal upload bukti pembayaran.")), resolve);
+          });
+          proofURL = await uploadTask.snapshot.ref.getDownloadURL();
 
-        // Wait for upload to complete
-        await new Promise((resolve, reject) => {
-          uploadTask.on('state_changed',
-            (snapshot) => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log('Upload is ' + progress + '% done');
-              // Update UI progress bar if implemented
-            },
-            (error) => {
-              console.error('Upload error:', error);
-              reject(new Error("Gagal upload bukti pembayaran."));
-            },
-            async () => {
-              resolve();
+          // Determine price for full service
+          const snapshot = await db.ref('orders').orderByChild('userId').equalTo(user.uid).once('value');
+          const userOrders = snapshot.val();
+          let hasFullServiceOrder = false;
+          if (userOrders) {
+            for (const orderId in userOrders) {
+              if (userOrders[orderId].jenis === 'full') {
+                hasFullServiceOrder = true;
+                break;
+              }
             }
-          );
-        });
+          }
+          orderPrice = hasFullServiceOrder ? 250000 : 150000;
+        }
 
-        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+        // Handle stat proof for 'floor' service
+        let floorTarget = null;
+        let floorCount = null;
+        if (jenis === 'floor') {
+          const statProofFile = document.getElementById("statProof").files[0];
+          floorTarget = floorTargetInput.value;
+          floorCount = floorCountInput.value;
+
+          if (!statProofFile || !floorTarget || !floorCount) {
+            alert("Harap lengkapi semua detail untuk Death High Per Floor (Screenshot Stat Akun, Target Floor, Jumlah Floor).");
+            return;
+          }
+
+          const statStorageRef = storage.ref().child(`stat_proofs/${user.uid}_${Date.now()}_${statProofFile.name}`);
+          const statUploadTask = statStorageRef.put(statProofFile);
+          await new Promise((resolve, reject) => {
+            statUploadTask.on('state_changed', () => {}, (error) => reject(new Error("Gagal upload screenshot stat akun.")), resolve);
+          });
+          statProofURL = await statUploadTask.snapshot.ref.getDownloadURL();
+        }
 
         // Save order to Realtime Database
         const orderData = {
@@ -319,10 +409,19 @@
           transferCode: code,
           password: pass, // Storing password for joki access
           whatsapp: whatsapp,
-          proofURL: downloadURL,
           waktu: firebase.database.ServerValue.TIMESTAMP,
           status: "pending"
         };
+
+        if (jenis === 'full') {
+          orderData.proofURL = proofURL;
+          orderData.price = orderPrice;
+        } else if (jenis === 'floor') {
+          orderData.statProofURL = statProofURL;
+          orderData.floorTarget = floorTarget;
+          orderData.floorCount = floorCount;
+          orderData.priceInfo = "Harga akan diinformasikan via WhatsApp"; // No fixed price
+        }
 
         const newOrderRef = db.ref('orders').push();
         await newOrderRef.set(orderData);
@@ -330,7 +429,9 @@
         alert("Order berhasil dikirim! Kami akan konfirmasi segera melalui WhatsApp Anda.");
         orderForm.reset();
         document.getElementById("proofPreview").innerHTML = ""; // Clear preview
+        document.getElementById("statProofPreview").innerHTML = ""; // Clear stat proof preview
         fetchUserOrders(user.uid); // Refresh user's orders
+        updateOrderDetails(); // Re-evaluate prices/visibility
       } catch (error) {
         console.error('Order submission failed:', error);
         alert("Gagal mengirim order: " + error.message);
@@ -365,6 +466,22 @@
               default: statusClass = 'text-gray-400';
             }
 
+            let orderDetailsHtml = '';
+            if (order.jenis === 'full') {
+              orderDetailsHtml = `
+                <p class="mb-1"><i class="fas fa-dollar-sign text-blue-400 mr-2"></i>Harga: <span class="font-medium text-green-400">Rp ${order.price ? order.price.toLocaleString('id-ID') : 'N/A'}</span></p>
+                ${order.proofURL ? `<a href="${order.proofURL}" target="_blank" class="text-red-400 hover:underline text-sm mt-3 block"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>` : ''}
+              `;
+            } else if (order.jenis === 'floor') {
+              orderDetailsHtml = `
+                <p class="mb-1"><i class="fas fa-layer-group text-blue-400 mr-2"></i>Target Floor: <span class="font-medium">${order.floorTarget || 'N/A'}</span></p>
+                <p class="mb-1"><i class="fas fa-hashtag text-blue-400 mr-2"></i>Jumlah Floor: <span class="font-medium">${order.floorCount || 'N/A'}</span></p>
+                <p class="mb-1"><i class="fas fa-dollar-sign text-blue-400 mr-2"></i>Harga: <span class="font-medium text-yellow-400">${order.priceInfo || 'Akan diinformasikan via WhatsApp'}</span></p>
+                ${order.statProofURL ? `<a href="${order.statProofURL}" target="_blank" class="text-red-400 hover:underline text-sm mt-3 block"><i class="fas fa-chart-bar mr-1"></i>Lihat Screenshot Stat Akun</a>` : ''}
+              `;
+            }
+
+
             orderElement.innerHTML = `
               <div class="flex justify-between items-center mb-3 border-b border-gray-600 pb-2">
                 <h5 class="text-lg font-bold text-red-400">Order ID: <span class="text-gray-300 text-sm">${order.id}</span></h5>
@@ -373,8 +490,8 @@
               <p class="mb-1"><i class="fas fa-gamepad text-blue-400 mr-2"></i>Jenis Joki: <span class="font-medium">${order.jenis === 'full' ? 'Death High Full Service' : 'Death High Per Floor'}</span></p>
               <p class="mb-1"><i class="fas fa-mobile-alt text-blue-400 mr-2"></i>Device: <span class="font-medium">${order.device}</span></p>
               <p class="mb-1"><i class="fab fa-whatsapp text-blue-400 mr-2"></i>WhatsApp: <span class="font-medium">${order.whatsapp}</span></p>
+              ${orderDetailsHtml}
               <p class="text-sm text-gray-500 mt-2">Waktu Order: ${new Date(order.waktu).toLocaleString()}</p>
-              ${order.proofURL ? `<a href="${order.proofURL}" target="_blank" class="text-red-400 hover:underline text-sm mt-3 block"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>` : ''}
             `;
             userOrdersList.appendChild(orderElement);
           });
@@ -398,6 +515,20 @@
         reader.readAsDataURL(file);
       } else {
         document.getElementById("proofPreview").innerHTML = "";
+      }
+    }
+
+    // Preview stat proof on select
+    function previewStatProof(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById("statProofPreview").innerHTML = `<img src="${e.target.result}" alt="Preview Stat Akun" class="max-w-full h-48 object-cover rounded-lg mt-2 border border-gray-600 shadow-md">`;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        document.getElementById("statProofPreview").innerHTML = "";
       }
     }
 
@@ -456,6 +587,8 @@
     window.handleLogout = handleLogout;
     window.handleOrder = handleOrder;
     window.previewProof = previewProof;
+    window.previewStatProof = previewStatProof; // Expose new preview function
+    window.updateOrderDetails = updateOrderDetails; // Expose new update function
   </script>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -598,11 +731,47 @@
             <i class="fas fa-list text-[#e94560]"></i>
             <span>Jenis Joki</span>
           </label>
-          <select id="jenis" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required>
+          <select id="jenis" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required onchange="updateOrderDetails()">
             <option value="full">Death High Full Service</option>
             <option value="floor">Death High Per Floor</option>
           </select>
         </div>
+
+        <!-- Nominal Harga untuk Full Service -->
+        <div id="fullServicePrice" class="hidden">
+          <p class="text-lg font-bold text-white mb-2">Biaya Joki:</p>
+          <p id="currentFullServicePrice" class="text-3xl font-bold text-green-400"></p>
+          <p class="text-sm text-gray-500 mt-1">Harga akan disesuaikan berdasarkan riwayat order Anda.</p>
+        </div>
+
+        <!-- Input Spesifik untuk Per Floor -->
+        <div id="perFloorDetails" class="hidden space-y-6">
+          <p class="text-lg font-bold text-white mb-2">Detail Death High Per Floor:</p>
+          <div>
+            <label for="statProof" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+              <i class="fas fa-chart-bar text-[#e94560]"></i>
+              <span>Screenshot Stat Akun</span>
+            </label>
+            <input type="file" id="statProof" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" onchange="previewStatProof(event)">
+            <div id="statProofPreview" class="mt-4 flex justify-center"></div>
+          </div>
+          <div>
+            <label for="floorTarget" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+              <i class="fas fa-layer-group text-[#e94560]"></i>
+              <span>Floor yang akan dikerjakan (Cth: F100, F120)</span>
+            </label>
+            <input type="text" id="floorTarget" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Masukkan target floor">
+          </div>
+          <div>
+            <label for="floorCount" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+              <i class="fas fa-hashtag text-[#e94560]"></i>
+              <span>Jumlah Floor</span>
+            </label>
+            <input type="number" id="floorCount" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" min="1" placeholder="Masukkan jumlah floor">
+          </div>
+          <p class="text-sm text-gray-500 mt-1">Harga joki Death High Per Floor akan diinformasikan melalui WhatsApp setelah kami menganalisis detail order Anda.</p>
+        </div>
+
         <div>
           <label for="device" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
             <i class="fas fa-mobile-alt text-[#e94560]"></i>
@@ -635,12 +804,13 @@
           <input type="tel" id="whatsapp" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required placeholder="Nomor WhatsApp aktif Anda (tanpa +)">
           <p class="text-xs text-gray-500 mt-1">Kami akan menghubungi Anda melalui nomor ini untuk update joki.</p>
         </div>
-        <div>
+        <!-- Tambahkan ID pada div ini -->
+        <div id="proofOfPaymentDiv">
           <label for="proof" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
             <i class="fas fa-image text-[#e94560]"></i>
             <span>Bukti Pembayaran (Screenshot)</span>
           </label>
-          <input type="file" id="proof" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" required onchange="previewProof(event)">
+          <input type="file" id="proof" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" onchange="previewProof(event)">
           <div id="proofPreview" class="mt-4 flex justify-center"></div>
         </div>
         <div class="flex items-center space-x-3 p-4 card rounded-lg">
@@ -665,7 +835,7 @@
           <li class="flex items-start space-x-3">
             <i class="fas fa-check-circle text-green-400 mt-1"></i>
             <div>
-              <b>Death High Full Service</b> – Pengerjaan 1 bulan penuh. Harga normal Rp 250.000 → <span class="font-bold text-yellow-300">Rp 150.000</span> untuk pelanggan pertama.
+              <b>Death High Full Service</b> – Pengerjaan 1 bulan penuh. Harga <span class="font-bold text-yellow-300">Rp 150.000</span> untuk order pertama kali. Harga normal <span class="font-bold text-yellow-300">Rp 250.000</span> untuk order selanjutnya.
             </div>
           </li>
           <li class="flex items-start space-x-3">
@@ -688,7 +858,8 @@
         <ol class="list-decimal pl-8 space-y-3 text-gray-300">
           <li>Akun wajib memiliki Transfer Code & Password yang valid dan benar.</li>
           <li>Dilarang login ke akun selama proses joki berlangsung untuk menghindari konflik dan error.</li>
-          <li>Pembayaran dilakukan <b>sebelum pengerjaan dimulai</b>. Harap upload bukti screenshot pembayaran yang jelas.</li>
+          <li>Pembayaran dilakukan <b>sebelum pengerjaan dimulai</b> (untuk Full Service).</li>
+          <li>Harap upload bukti screenshot pembayaran yang jelas (untuk Full Service).</li>
           <li>Progress update akan diberikan secara rutin (screenshot / video via WhatsApp) sesuai permintaan.</li>
           <li>Durasi pengerjaan bisa diperpanjang jika ada gangguan server, maintenance game, atau kendala teknis lainnya.</li>
           <li>Refund hanya berlaku jika pengerjaan belum dimulai dan ada kesepakatan.</li>
