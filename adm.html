@@ -310,6 +310,28 @@
                 cancelledClass = 'cancelled';
             }
 
+            // Dynamic content for order details based on 'jenis'
+            let orderSpecificDetails = '';
+            let imageButtons = '';
+
+            if (order.jenis === 'full') {
+                orderSpecificDetails = `
+                    <p><i class="fas fa-dollar-sign mr-2 text-blue-400"></i>Harga: <span class="font-medium text-green-400">Rp ${order.price ? order.price.toLocaleString('id-ID') : 'N/A'}</span></p>
+                `;
+                if (order.proofURL) {
+                    imageButtons += `<a href="${order.proofURL}" target="_blank" class="btn-secondary inline-block text-white px-4 py-2 rounded-lg text-sm mt-2 mr-2"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>`;
+                }
+            } else if (order.jenis === 'floor') {
+                orderSpecificDetails = `
+                    <p><i class="fas fa-layer-group mr-2 text-blue-400"></i>Target Floor: <span class="font-medium">${order.floorTarget || 'N/A'}</span></p>
+                    <p><i class="fas fa-hashtag mr-2 text-blue-400"></i>Jumlah Floor: <span class="font-medium">${order.floorCount || 'N/A'}</span></p>
+                    <p><i class="fas fa-dollar-sign mr-2 text-blue-400"></i>Harga: <span class="font-medium text-yellow-400">${order.priceInfo || 'Akan diinformasikan via WhatsApp'}</span></p>
+                `;
+                if (order.statProofURL) {
+                    imageButtons += `<a href="${order.statProofURL}" target="_blank" class="btn-secondary inline-block text-white px-4 py-2 rounded-lg text-sm mt-2 mr-2"><i class="fas fa-chart-bar mr-1"></i>Lihat Screenshot Stat Akun</a>`;
+                }
+            }
+
 
             orderElement.innerHTML = `
               <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-3">
@@ -324,9 +346,10 @@
                 <p><i class="fas fa-key mr-2 text-yellow-400"></i>Transfer Code: <span class="font-medium">${order.transferCode || 'N/A'}</span></p>
                 <p><i class="fas fa-lock mr-2 text-yellow-400"></i>Password: <span class="font-medium">${order.password || 'N/A'}</span></p>
                 <p><i class="fab fa-whatsapp mr-2 text-green-400"></i>WhatsApp: <a href="https://wa.me/${order.whatsapp}" target="_blank" class="text-green-400 hover:underline">${order.whatsapp || 'N/A'}</a></p>
+                ${orderSpecificDetails}
                 <p class="text-sm text-gray-500"><i class="fas fa-clock mr-2 text-gray-500"></i>Waktu Order: ${order.waktu ? new Date(order.waktu).toLocaleString() : 'N/A'}</p>
               </div>
-              ${order.proofURL ? `<a href="${order.proofURL}" target="_blank" class="btn-secondary inline-block text-white px-4 py-2 rounded-lg text-sm mt-2 mr-2"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>` : ''}
+              ${imageButtons}
               
               <!-- Progress Tracker -->
               <div class="progress-tracker">
