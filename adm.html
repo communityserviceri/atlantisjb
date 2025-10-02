@@ -36,6 +36,16 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(63, 114, 175, 0.6);
     }
+    .btn-danger {
+      background-color: #dc3545;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.6);
+    }
     .card {
       background-color: #2e2e4a; /* Slightly lighter card background */
       border: 1px solid #4a4a6a;
@@ -59,6 +69,86 @@
     .status-in-progress { color: #00bcd4; } /* Cyan */
     .status-completed { color: #4CAF50; } /* Green */
     .status-cancelled { color: #dc3545; } /* Red */
+
+    /* Progress Tracker Styles */
+    .progress-tracker {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      position: relative;
+      padding: 0 10px; /* Add padding to ensure circles are not cut off */
+    }
+    .progress-tracker::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #4a4a6a; /* Line color */
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      flex: 1; /* Distribute space evenly */
+    }
+    .progress-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #4a4a6a; /* Default circle color */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #e0e0e0;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border: 2px solid #4a4a6a;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .progress-label {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      color: #9ca3af; /* Default label color */
+      transition: color 0.3s ease;
+    }
+
+    /* Active/Completed/Cancelled states for progress tracker */
+    .progress-step.active .progress-circle {
+      background-color: #00bcd4; /* In Progress */
+      border-color: #00bcd4;
+    }
+    .progress-step.active .progress-label {
+      color: #00bcd4;
+    }
+    .progress-step.completed .progress-circle {
+      background-color: #4CAF50; /* Completed */
+      border-color: #4CAF50;
+    }
+    .progress-step.completed .progress-label {
+      color: #4CAF50;
+    }
+    .progress-step.cancelled .progress-circle {
+      background-color: #dc3545; /* Cancelled */
+      border-color: #dc3545;
+    }
+    .progress-step.cancelled .progress-label {
+      color: #dc3545;
+    }
+    .progress-step.pending .progress-circle {
+      background-color: #ffc107; /* Pending */
+      border-color: #ffc107;
+    }
+    .progress-step.pending .progress-label {
+      color: #ffc107;
+    }
   </style>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
@@ -93,6 +183,16 @@
     const adminEmailDisplay = document.getElementById("adminEmailDisplay");
     const ordersList = document.getElementById("ordersList");
     const loginForm = document.getElementById("loginForm");
+    const bannerManagementSection = document.getElementById("bannerManagementSection");
+    const bannerForm = document.getElementById("bannerForm");
+    const bannerList = document.getElementById("bannerList");
+    const bannerImagePreview = document.getElementById("bannerImagePreview");
+    const bannerSubmitButton = document.getElementById("bannerSubmitButton");
+    const bannerCancelEditButton = document.getElementById("bannerCancelEditButton");
+    const orderStatusFilter = document.getElementById("orderStatusFilter"); // New filter element
+
+    let editingBannerId = null; // To store the ID of the banner being edited
+    let currentFilterStatus = 'all'; // Default filter status for orders
 
     // --- Auth State Listener ---
     auth.onAuthStateChanged(async (user) => {
@@ -103,7 +203,8 @@
           loginSection.classList.add("hidden");
           dashboardSection.classList.remove("hidden");
           adminEmailDisplay.textContent = user.email;
-          fetchOrders();
+          fetchOrders(currentFilterStatus); // Fetch orders with current filter
+          fetchBanners(); // Fetch banners when admin logs in
         } else {
           // If email is not whitelisted, deny access and log out
           alert("Akses ditolak. Email Anda tidak terdaftar sebagai admin yang diizinkan.");
@@ -115,6 +216,7 @@
         dashboardSection.classList.add("hidden");
         adminEmailDisplay.textContent = "";
         ordersList.innerHTML = "";
+        bannerList.innerHTML = ""; // Clear banners on logout
       }
     });
 
@@ -156,10 +258,15 @@
     }
 
     // --- Fetch All Orders ---
-    function fetchOrders() {
+    function fetchOrders(filterStatus = 'all') {
       ordersList.innerHTML = '<p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat pesanan...</p>';
-      // Listen for changes in orders in real-time
-      db.ref('orders').on('value', (snapshot) => {
+      let ordersRef = db.ref('orders');
+
+      if (filterStatus !== 'all') {
+        ordersRef = ordersRef.orderByChild('status').equalTo(filterStatus);
+      }
+
+      ordersRef.on('value', (snapshot) => {
         if (snapshot.exists()) {
           ordersList.innerHTML = '';
           const orders = [];
@@ -182,6 +289,28 @@
               default: statusClass = 'text-gray-400';
             }
 
+            // Determine progress tracker classes
+            let pendingClass = '';
+            let inProgressClass = '';
+            let completedClass = '';
+            let cancelledClass = '';
+
+            if (order.status === 'pending') {
+                pendingClass = 'pending';
+            } else if (order.status === 'in progress') {
+                pendingClass = 'completed'; // Considered completed for previous step
+                inProgressClass = 'active';
+            } else if (order.status === 'completed') {
+                pendingClass = 'completed';
+                inProgressClass = 'completed';
+                completedClass = 'completed';
+            } else if (order.status === 'cancelled') {
+                pendingClass = 'completed'; // Show previous steps as completed before cancellation
+                inProgressClass = 'completed';
+                cancelledClass = 'cancelled';
+            }
+
+
             orderElement.innerHTML = `
               <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-3">
                 <h5 class="text-xl font-bold text-red-400">Order ID: <span class="text-gray-300 text-base">${order.id}</span></h5>
@@ -199,6 +328,26 @@
               </div>
               ${order.proofURL ? `<a href="${order.proofURL}" target="_blank" class="btn-secondary inline-block text-white px-4 py-2 rounded-lg text-sm mt-2 mr-2"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>` : ''}
               
+              <!-- Progress Tracker -->
+              <div class="progress-tracker">
+                <div class="progress-step ${pendingClass}">
+                  <div class="progress-circle"><i class="fas fa-hourglass-half"></i></div>
+                  <div class="progress-label">Pending</div>
+                </div>
+                <div class="progress-step ${inProgressClass}">
+                  <div class="progress-circle"><i class="fas fa-cogs"></i></div>
+                  <div class="progress-label">In Progress</div>
+                </div>
+                <div class="progress-step ${completedClass}">
+                  <div class="progress-circle"><i class="fas fa-check"></i></div>
+                  <div class="progress-label">Completed</div>
+                </div>
+                <div class="progress-step ${cancelledClass}">
+                  <div class="progress-circle"><i class="fas fa-times"></i></div>
+                  <div class="progress-label">Cancelled</div>
+                </div>
+              </div>
+
               <div class="mt-4 flex items-center space-x-3">
                 <label for="status-${order.id}" class="text-gray-300">Ubah Status:</label>
                 <select id="status-${order.id}" class="p-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" onchange="updateOrderStatus('${order.id}', this.value)">
@@ -212,12 +361,20 @@
             ordersList.appendChild(orderElement);
           });
         } else {
-          ordersList.innerHTML = '<p class="text-gray-400 text-center py-4">Belum ada pesanan joki.</p>';
+          ordersList.innerHTML = '<p class="text-gray-400 text-center py-4">Belum ada pesanan joki dengan status ini.</p>';
         }
       }, (error) => {
         console.error("Error fetching orders:", error);
         ordersList.innerHTML = '<p class="text-red-500 text-center py-4">Gagal memuat pesanan. Silakan coba lagi.</p>';
       });
+    }
+
+    // Event listener for filter change
+    if (orderStatusFilter) {
+        orderStatusFilter.addEventListener('change', (e) => {
+            currentFilterStatus = e.target.value;
+            fetchOrders(currentFilterStatus);
+        });
     }
 
     // --- Update Order Status ---
@@ -231,10 +388,224 @@
       }
     }
 
+    // --- Banner Management Functions ---
+
+    // Preview banner image on select
+    function previewBannerImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          bannerImagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview Banner" class="max-w-full h-48 object-contain rounded-lg mt-2 border border-gray-600 shadow-md">`;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        bannerImagePreview.innerHTML = "";
+      }
+    }
+
+    // Handle banner upload/submission (create or update)
+    async function handleBannerSubmit(e) {
+      e.preventDefault();
+      const title = bannerForm.bannerTitle.value;
+      const description = bannerForm.bannerDescription.value;
+      const link = bannerForm.bannerLink.value;
+      const imageFile = bannerForm.bannerImage.files[0]; // This will be null if no new file is selected during edit
+
+      if (!title) {
+        alert("Judul banner wajib diisi.");
+        return;
+      }
+
+      // If creating a new banner, image file is required
+      if (!editingBannerId && !imageFile) {
+        alert("Gambar banner wajib diunggah untuk banner baru.");
+        return;
+      }
+
+      bannerSubmitButton.disabled = true;
+      bannerSubmitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
+
+      try {
+        let downloadURL = bannerImagePreview.querySelector('img') ? bannerImagePreview.querySelector('img').src : null; // Current image URL if editing and no new file
+
+        // If a new image file is selected, upload it
+        if (imageFile) {
+          const storageRef = storage.ref().child(`banners/${Date.now()}_${imageFile.name}`);
+          const uploadTask = storageRef.put(imageFile);
+
+          await new Promise((resolve, reject) => {
+            uploadTask.on('state_changed',
+              (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+              },
+              (error) => {
+                console.error('Upload error:', error);
+                reject(new Error("Gagal mengunggah gambar banner."));
+              },
+              async () => {
+                resolve();
+              }
+            );
+          });
+          downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+
+          // If editing and a new image is uploaded, delete the old one if it exists
+          if (editingBannerId) {
+            const oldBanner = await db.ref('banners/' + editingBannerId).once('value');
+            const oldImageUrl = oldBanner.val().imageUrl;
+            if (oldImageUrl && oldImageUrl !== downloadURL) {
+              try {
+                const oldImageRef = storage.refFromURL(oldImageUrl);
+                await oldImageRef.delete();
+                console.log("Old banner image deleted successfully.");
+              } catch (deleteError) {
+                console.warn("Could not delete old banner image (might not exist or permission issue):", deleteError);
+              }
+            }
+          }
+        } else if (!editingBannerId && !downloadURL) {
+            // This case should be caught by the initial !imageFile check for new banners
+            alert("Gambar banner wajib diunggah untuk banner baru.");
+            return;
+        }
+
+
+        const bannerData = {
+          title,
+          description: description || '',
+          link: link || '',
+          imageUrl: downloadURL,
+          timestamp: firebase.database.ServerValue.TIMESTAMP // Update timestamp on any change
+        };
+
+        if (editingBannerId) {
+          await db.ref('banners/' + editingBannerId).update(bannerData);
+          alert("Banner berhasil diperbarui!");
+        } else {
+          await db.ref('banners').push(bannerData);
+          alert("Banner berhasil diunggah!");
+        }
+
+        bannerForm.reset();
+        bannerImagePreview.innerHTML = "";
+        editingBannerId = null; // Reset editing state
+        bannerSubmitButton.innerHTML = '<i class="fas fa-upload mr-2"></i>Unggah Banner';
+        bannerCancelEditButton.classList.add('hidden');
+        fetchBanners(); // Refresh banner list
+      } catch (error) {
+        console.error('Gagal memproses banner:', error);
+        alert("Gagal memproses banner: " + error.message);
+      } finally {
+        bannerSubmitButton.disabled = false;
+      }
+    }
+
+    // Fetch and display all banners
+    function fetchBanners() {
+      bannerList.innerHTML = '<p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat banner...</p>';
+      db.ref('banners').on('value', (snapshot) => {
+        if (snapshot.exists()) {
+          bannerList.innerHTML = '';
+          const banners = [];
+          snapshot.forEach((childSnapshot) => {
+            banners.push({ id: childSnapshot.key, ...childSnapshot.val() });
+          });
+
+          banners.sort((a, b) => b.timestamp - a.timestamp); // Newest first
+
+          banners.forEach((banner) => {
+            const bannerElement = document.createElement('div');
+            bannerElement.className = 'card p-4 rounded-xl flex flex-col md:flex-row items-center mb-4 space-y-4 md:space-y-0 md:space-x-4';
+            bannerElement.innerHTML = `
+              <img src="${banner.imageUrl}" alt="${banner.title}" class="w-full md:w-48 h-32 object-cover rounded-lg border border-gray-700">
+              <div class="flex-grow text-center md:text-left">
+                <h5 class="text-lg font-bold text-white">${banner.title}</h5>
+                <p class="text-sm text-gray-400">${banner.description}</p>
+                ${banner.link ? `<a href="${banner.link}" target="_blank" class="text-blue-400 hover:underline text-sm block mt-1"><i class="fas fa-external-link-alt mr-1"></i>Link</a>` : ''}
+                <p class="text-xs text-gray-500 mt-1">Diunggah: ${new Date(banner.timestamp).toLocaleString()}</p>
+              </div>
+              <div class="flex space-x-2 mt-4 md:mt-0">
+                <button onclick="editBanner('${banner.id}')" class="btn-secondary px-3 py-1 rounded-lg text-sm"><i class="fas fa-edit mr-1"></i>Edit</button>
+                <button onclick="deleteBanner('${banner.id}', '${banner.imageUrl}')" class="btn-danger px-3 py-1 rounded-lg text-sm"><i class="fas fa-trash-alt mr-1"></i>Hapus</button>
+              </div>
+            `;
+            bannerList.appendChild(bannerElement);
+          });
+        } else {
+          bannerList.innerHTML = '<p class="text-gray-400 text-center py-4">Belum ada banner yang diunggah.</p>';
+        }
+      }, (error) => {
+        console.error("Error fetching banners:", error);
+        bannerList.innerHTML = '<p class="text-red-500 text-center py-4">Gagal memuat banner. Silakan coba lagi.</p>';
+      });
+    }
+
+    // Function to edit banner
+    async function editBanner(bannerId) {
+      try {
+        const snapshot = await db.ref('banners/' + bannerId).once('value');
+        const banner = snapshot.val();
+
+        if (banner) {
+          editingBannerId = bannerId;
+          bannerForm.bannerTitle.value = banner.title;
+          bannerForm.bannerDescription.value = banner.description;
+          bannerForm.bannerLink.value = banner.link;
+          bannerImagePreview.innerHTML = `<img src="${banner.imageUrl}" alt="Preview Banner" class="max-w-full h-48 object-contain rounded-lg mt-2 border border-gray-600 shadow-md">`;
+          bannerSubmitButton.innerHTML = '<i class="fas fa-save mr-2"></i>Update Banner';
+          bannerCancelEditButton.classList.remove('hidden');
+          window.scrollTo({ top: bannerManagementSection.offsetTop, behavior: 'smooth' }); // Scroll to form
+        }
+      } catch (error) {
+        console.error("Error fetching banner for edit:", error);
+        alert("Gagal memuat data banner untuk diedit.");
+      }
+    }
+
+    // Function to cancel edit mode
+    function cancelEdit() {
+      editingBannerId = null;
+      bannerForm.reset();
+      bannerImagePreview.innerHTML = "";
+      bannerSubmitButton.innerHTML = '<i class="fas fa-upload mr-2"></i>Unggah Banner';
+      bannerCancelEditButton.classList.add('hidden');
+    }
+
+    // Function to delete banner
+    async function deleteBanner(bannerId, imageUrl) {
+      if (!confirm("Apakah Anda yakin ingin menghapus banner ini?")) {
+        return;
+      }
+
+      try {
+        // Delete image from Firebase Storage
+        if (imageUrl) {
+          const imageRef = storage.refFromURL(imageUrl);
+          await imageRef.delete();
+        }
+
+        // Delete data from Realtime Database
+        await db.ref('banners/' + bannerId).remove();
+
+        alert("Banner berhasil dihapus!");
+        // No need to call fetchBanners() explicitly, as on('value') listener will handle it
+      } catch (error) {
+        console.error("Gagal menghapus banner:", error);
+        alert("Gagal menghapus banner: " + error.message);
+      }
+    }
+
     // Expose functions to global scope
     window.handleLogin = handleLogin;
     window.handleLogout = handleLogout;
     window.updateOrderStatus = updateOrderStatus;
+    window.previewBannerImage = previewBannerImage;
+    window.handleBannerSubmit = handleBannerSubmit;
+    window.editBanner = editBanner;
+    window.deleteBanner = deleteBanner;
+    window.cancelEdit = cancelEdit; // Expose cancelEdit
   </script>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -289,11 +660,71 @@
           </div>
         </div>
 
+        <!-- Order Status Filter -->
+        <div class="mb-6 flex items-center space-x-3">
+            <label for="orderStatusFilter" class="text-gray-300 font-medium">Filter Status:</label>
+            <select id="orderStatusFilter" class="p-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none">
+                <option value="all">Semua Status</option>
+                <option value="pending">Pending</option>
+                <option value="in progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+
         <div id="ordersList" class="space-y-6">
           <!-- Orders will be loaded here -->
           <p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat pesanan...</p>
         </div>
       </div>
+
+      <!-- Banner Management Section -->
+      <section id="bannerManagementSection" class="mt-12">
+        <h3 class="text-2xl md:text-3xl font-bold mb-6 text-center text-[#e94560] flex items-center justify-center space-x-3">
+          <i class="fas fa-bullhorn"></i>
+          <span>Manajemen Banner Promosi</span>
+        </h3>
+
+        <div class="card p-8 rounded-xl mb-8">
+          <h4 class="text-xl font-bold mb-4 text-white" id="bannerFormTitle">Unggah Banner Baru</h4>
+          <form id="bannerForm" onsubmit="handleBannerSubmit(event)" class="space-y-5">
+            <div>
+              <label for="bannerTitle" class="block text-sm font-medium mb-2 text-gray-300">Judul Banner</label>
+              <input type="text" id="bannerTitle" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Contoh: Promo Akhir Tahun!">
+            </div>
+            <div>
+              <label for="bannerDescription" class="block text-sm font-medium mb-2 text-gray-300">Deskripsi (Opsional)</label>
+              <textarea id="bannerDescription" rows="3" class="w-full p-3 rounded-lg focus:outline-none" placeholder="Deskripsi singkat tentang promosi atau event"></textarea>
+            </div>
+            <div>
+              <label for="bannerLink" class="block text-sm font-medium mb-2 text-gray-300">URL Tautan (Opsional)</label>
+              <input type="url" id="bannerLink" class="w-full p-3 rounded-lg focus:outline-none" placeholder="Contoh: https://wa.me/6281234567890">
+            </div>
+            <div>
+              <label for="bannerImage" class="block text-sm font-medium mb-2 text-gray-300">Gambar Banner (Kosongkan jika tidak ingin mengubah)</label>
+              <input type="file" id="bannerImage" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" onchange="previewBannerImage(event)">
+              <div id="bannerImagePreview" class="mt-4 flex justify-center"></div>
+            </div>
+            <div class="flex space-x-4">
+                <button type="submit" id="bannerSubmitButton" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+                    <i class="fas fa-upload mr-2"></i>Unggah Banner
+                </button>
+                <button type="button" id="bannerCancelEditButton" onclick="cancelEdit()" class="btn-secondary w-full text-white px-6 py-3 rounded-lg font-bold text-lg hidden">
+                    <i class="fas fa-times mr-2"></i>Batal Edit
+                </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card p-8 rounded-xl">
+          <h4 class="text-xl font-bold mb-4 text-white">Daftar Banner Aktif</h4>
+          <div id="bannerList" class="space-y-4">
+            <!-- Banners will be loaded here -->
+            <p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat banner...</p>
+          </div>
+        </div>
+      </section>
+
     </section>
 
   </main>
