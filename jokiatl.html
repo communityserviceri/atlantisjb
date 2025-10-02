@@ -75,6 +75,25 @@
     .status-pending { color: #ffc107; } /* Yellow */
     .status-in-progress { color: #00bcd4; } /* Cyan */
     .status-completed { color: #4CAF50; } /* Green */
+
+    /* Custom styles for dynamic banners */
+    .dynamic-banner-item {
+      background-color: #2e2e4a;
+      border: 1px solid #4a4a6a;
+      border-radius: 0.75rem; /* rounded-xl */
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .dynamic-banner-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    .dynamic-banner-image {
+      width: 100%;
+      height: 200px; /* Fixed height for consistency */
+      object-fit: cover; /* Cover the area, cropping if necessary */
+    }
   </style>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
@@ -114,6 +133,7 @@
     const toggleLoginRegisterBtn = document.getElementById("toggleLoginRegister");
     const loginCard = document.getElementById("loginCard");
     const registerCard = document.getElementById("registerCard");
+    const dynamicBannerSection = document.getElementById("dynamicBannerSection"); // New element
 
     // --- Toggle Login/Register View ---
     let isLoginView = true;
@@ -381,6 +401,55 @@
       }
     }
 
+    // --- Fetch and Display Dynamic Banners ---
+    function fetchAndDisplayBanners() {
+      dynamicBannerSection.innerHTML = '<p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat promosi...</p>';
+      db.ref('banners').on('value', (snapshot) => {
+        if (snapshot.exists()) {
+          dynamicBannerSection.innerHTML = `
+            <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+              <i class="fas fa-bullhorn"></i>
+              <span>Promo & Event Terbaru</span>
+            </h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="bannersContainer"></div>
+          `;
+          const bannersContainer = document.getElementById("bannersContainer");
+          bannersContainer.innerHTML = ''; // Clear previous banners
+
+          const banners = [];
+          snapshot.forEach((childSnapshot) => {
+            banners.push({ id: childSnapshot.key, ...childSnapshot.val() });
+          });
+
+          banners.sort((a, b) => b.timestamp - a.timestamp); // Newest first
+
+          banners.forEach((banner) => {
+            const bannerElement = document.createElement('div');
+            bannerElement.className = 'dynamic-banner-item';
+            bannerElement.innerHTML = `
+              <a href="${banner.link || '#'}" target="${banner.link ? '_blank' : '_self'}" class="block">
+                <img src="${banner.imageUrl}" alt="${banner.title}" class="dynamic-banner-image">
+                <div class="p-4">
+                  <h4 class="text-xl font-semibold text-white mb-2">${banner.title}</h4>
+                  ${banner.description ? `<p class="text-gray-400 text-sm">${banner.description}</p>` : ''}
+                </div>
+              </a>
+            `;
+            bannersContainer.appendChild(bannerElement);
+          });
+        } else {
+          dynamicBannerSection.innerHTML = ''; // Hide section if no banners
+        }
+      }, (error) => {
+        console.error("Error fetching dynamic banners:", error);
+        dynamicBannerSection.innerHTML = '<p class="text-red-500 text-center py-4">Gagal memuat promosi. Silakan coba lagi.</p>';
+      });
+    }
+
+    // Call fetchAndDisplayBanners on page load
+    document.addEventListener('DOMContentLoaded', fetchAndDisplayBanners);
+
+
     // Expose functions to the global scope
     window.handleLogin = handleLogin;
     window.handleRegister = handleRegister;
@@ -402,7 +471,12 @@
   <!-- Main Content -->
   <main class="flex-grow container mx-auto p-6 md:p-8">
 
-    <!-- Banner Promo -->
+    <!-- Dynamic Banner Section (New) -->
+    <section id="dynamicBannerSection" class="mb-12">
+      <!-- Dynamic banners will be loaded here by JavaScript -->
+    </section>
+
+    <!-- Banner Promo (Existing, can be replaced by dynamic banners if preferred) -->
     <section class="p-6 md:p-8 text-center bg-gradient-to-r from-[#e94560] to-[#ff6b6b] shadow-xl rounded-xl mb-12 transform hover:scale-105 transition-transform duration-300">
       <div class="flex justify-center items-center space-x-3 mb-3">
         <i class="fas fa-fire text-3xl text-white animate-pulse"></i>
