@@ -145,6 +145,15 @@
     const floorCountInput = document.getElementById("floorCount");
     const proofOfPaymentDiv = document.getElementById("proofOfPaymentDiv"); // Tambahkan ini
 
+    // New UI Elements for Roblox Joki
+    const robloxJokiDetailsDiv = document.getElementById("robloxJokiDetails");
+    const robloxUsernameInput = document.getElementById("robloxUsername");
+    const mountainNameInput = document.getElementById("mountainName");
+    const mountainQtyInput = document.getElementById("mountainQty");
+    const robloxJokiPriceSpan = document.getElementById("robloxJokiPrice");
+    const robloxJokiPaymentMethodsDiv = document.getElementById("robloxJokiPaymentMethods");
+    const lifeAfterCredentialsDiv = document.getElementById("lifeAfterCredentials"); // New element for LifeAfter credentials
+
 
     // --- Toggle Login/Register View ---
     let isLoginView = true;
@@ -191,7 +200,9 @@
         // Hide specific order details when logged out
         fullServicePriceDiv.classList.add('hidden');
         perFloorDetailsDiv.classList.add('hidden');
+        robloxJokiDetailsDiv.classList.add('hidden'); // Hide Roblox details
         proofOfPaymentDiv.classList.add('hidden'); // Sembunyikan juga bukti pembayaran saat logout
+        lifeAfterCredentialsDiv.classList.add('hidden'); // Hide LifeAfter credentials
       }
     });
 
@@ -264,21 +275,31 @@
       const user = auth.currentUser;
       const jenis = document.getElementById("jenis").value;
 
-      // Reset visibility
+      // Reset visibility for all specific service details
       fullServicePriceDiv.classList.add('hidden');
       perFloorDetailsDiv.classList.add('hidden');
+      robloxJokiDetailsDiv.classList.add('hidden');
       proofOfPaymentDiv.classList.add('hidden'); // Sembunyikan secara default
+      lifeAfterCredentialsDiv.classList.add('hidden'); // Sembunyikan LifeAfter credentials secara default
 
-      // Reset required attributes for per-floor specific inputs
+      // Reset required attributes for all specific inputs
       statProofInput.removeAttribute('required');
       floorTargetInput.removeAttribute('required');
       floorCountInput.removeAttribute('required');
+      robloxUsernameInput.removeAttribute('required');
+      mountainNameInput.removeAttribute('required');
+      mountainQtyInput.removeAttribute('required');
       document.getElementById("proof").removeAttribute('required'); // Hapus required dari bukti pembayaran secara default
+      document.getElementById("code").removeAttribute('required'); // Hapus required dari transfer code
+      document.getElementById("pass").removeAttribute('required'); // Hapus required dari password
 
       if (jenis === 'full') {
         fullServicePriceDiv.classList.remove('hidden');
         proofOfPaymentDiv.classList.remove('hidden'); // Tampilkan bukti pembayaran
+        lifeAfterCredentialsDiv.classList.remove('hidden'); // Tampilkan LifeAfter credentials
         document.getElementById("proof").setAttribute('required', 'required'); // Set required untuk bukti pembayaran
+        document.getElementById("code").setAttribute('required', 'required'); // Set required untuk transfer code
+        document.getElementById("pass").setAttribute('required', 'required'); // Set required untuk password
 
         let price = 250000; // Default price for subsequent orders
 
@@ -301,12 +322,41 @@
         currentFullServicePriceSpan.textContent = `Rp ${price.toLocaleString('id-ID')}`;
       } else if (jenis === 'floor') {
         perFloorDetailsDiv.classList.remove('hidden');
+        lifeAfterCredentialsDiv.classList.remove('hidden'); // Tampilkan LifeAfter credentials
         statProofInput.setAttribute('required', 'required');
         floorTargetInput.setAttribute('required', 'required');
         floorCountInput.setAttribute('required', 'required');
+        document.getElementById("code").setAttribute('required', 'required'); // Set required untuk transfer code
+        document.getElementById("pass").setAttribute('required', 'required'); // Set required untuk password
         // Bukti pembayaran tetap tersembunyi dan tidak required
+      } else if (jenis === 'roblox_mountain') {
+        robloxJokiDetailsDiv.classList.remove('hidden');
+        proofOfPaymentDiv.classList.remove('hidden'); // Tampilkan bukti pembayaran
+        document.getElementById("proof").setAttribute('required', 'required'); // Set required untuk bukti pembayaran
+
+        robloxUsernameInput.setAttribute('required', 'required');
+        mountainNameInput.setAttribute('required', 'required');
+        mountainQtyInput.setAttribute('required', 'required');
+
+        // Update price dynamically for Roblox Joki
+        const robloxPricePerMountain = 5000;
+        const qty = parseInt(mountainQtyInput.value) || 1;
+        robloxJokiPriceSpan.textContent = `Rp ${(robloxPricePerMountain * qty).toLocaleString('id-ID')}`;
       }
     }
+
+    // Event listener for mountain quantity change
+    if (mountainQtyInput) {
+      mountainQtyInput.addEventListener('input', () => {
+        const jenis = document.getElementById("jenis").value;
+        if (jenis === 'roblox_mountain') {
+          const robloxPricePerMountain = 5000;
+          const qty = parseInt(mountainQtyInput.value) || 1;
+          robloxJokiPriceSpan.textContent = `Rp ${(robloxPricePerMountain * qty).toLocaleString('id-ID')}`;
+        }
+      });
+    }
+
 
     // --- Handle Order Form with Screenshot Upload ---
     async function handleOrder(e) {
@@ -319,12 +369,14 @@
 
       const jenis = document.getElementById("jenis").value;
       const device = document.getElementById("device").value;
-      const code = document.getElementById("code").value;
-      const pass = document.getElementById("pass").value;
       const whatsapp = document.getElementById("whatsapp").value;
       const agree = document.getElementById("agree").checked;
 
-      if (!jenis || !device || !code || !pass || !whatsapp) {
+      // LifeAfter specific credentials
+      const code = document.getElementById("code").value;
+      const pass = document.getElementById("pass").value;
+
+      if (!jenis || !device || !whatsapp) {
         alert("Semua kolom wajib diisi.");
         return;
       }
@@ -349,8 +401,8 @@
       let orderPrice = 0; // Initialize order price
 
       try {
-        // Handle proof of payment for 'full' service
-        if (jenis === 'full') {
+        // Handle proof of payment for 'full' service and 'roblox_mountain'
+        if (jenis === 'full' || jenis === 'roblox_mountain') {
           const proofFile = document.getElementById("proof").files[0];
           if (!proofFile) {
             alert("Harap upload screenshot bukti pembayaran.");
@@ -362,6 +414,27 @@
             uploadTask.on('state_changed', () => {}, (error) => reject(new Error("Gagal upload bukti pembayaran.")), resolve);
           });
           proofURL = await uploadTask.snapshot.ref.getDownloadURL();
+        }
+
+        // Determine price and specific data based on service type
+        const orderData = {
+          userId: user.uid,
+          nama: user.displayName || user.email.split('@')[0], // Use email prefix if no display name
+          email: user.email,
+          jenis,
+          device,
+          whatsapp: whatsapp,
+          waktu: firebase.database.ServerValue.TIMESTAMP,
+          status: "pending",
+          proofURL: proofURL // Proof URL is common for paid services
+        };
+
+        if (jenis === 'full') {
+          // Validate LifeAfter credentials
+          if (!code || !pass) {
+            alert("Transfer Code Akun dan Password Akun wajib diisi untuk Death High Full Service.");
+            return;
+          }
 
           // Determine price for full service
           const snapshot = await db.ref('orders').orderByChild('userId').equalTo(user.uid).once('value');
@@ -376,15 +449,19 @@
             }
           }
           orderPrice = hasFullServiceOrder ? 250000 : 150000;
-        }
+          orderData.price = orderPrice;
+          orderData.transferCode = code; // LifeAfter specific
+          orderData.password = pass; // LifeAfter specific
+        } else if (jenis === 'floor') {
+          // Validate LifeAfter credentials
+          if (!code || !pass) {
+            alert("Transfer Code Akun dan Password Akun wajib diisi untuk Death High Per Floor.");
+            return;
+          }
 
-        // Handle stat proof for 'floor' service
-        let floorTarget = null;
-        let floorCount = null;
-        if (jenis === 'floor') {
           const statProofFile = document.getElementById("statProof").files[0];
-          floorTarget = floorTargetInput.value;
-          floorCount = floorCountInput.value;
+          const floorTarget = floorTargetInput.value;
+          const floorCount = floorCountInput.value;
 
           if (!statProofFile || !floorTarget || !floorCount) {
             alert("Harap lengkapi semua detail untuk Death High Per Floor (Screenshot Stat Akun, Target Floor, Jumlah Floor).");
@@ -397,30 +474,31 @@
             statUploadTask.on('state_changed', () => {}, (error) => reject(new Error("Gagal upload screenshot stat akun.")), resolve);
           });
           statProofURL = await statUploadTask.snapshot.ref.getDownloadURL();
-        }
 
-        // Save order to Realtime Database
-        const orderData = {
-          userId: user.uid,
-          nama: user.displayName || user.email.split('@')[0], // Use email prefix if no display name
-          email: user.email,
-          jenis,
-          device,
-          transferCode: code,
-          password: pass, // Storing password for joki access
-          whatsapp: whatsapp,
-          waktu: firebase.database.ServerValue.TIMESTAMP,
-          status: "pending"
-        };
-
-        if (jenis === 'full') {
-          orderData.proofURL = proofURL;
-          orderData.price = orderPrice;
-        } else if (jenis === 'floor') {
           orderData.statProofURL = statProofURL;
           orderData.floorTarget = floorTarget;
           orderData.floorCount = floorCount;
           orderData.priceInfo = "Harga akan diinformasikan via WhatsApp"; // No fixed price
+          orderData.transferCode = code; // LifeAfter specific
+          orderData.password = pass; // LifeAfter specific
+        } else if (jenis === 'roblox_mountain') {
+          const robloxUsername = robloxUsernameInput.value;
+          const mountainName = mountainNameInput.value;
+          const mountainQty = parseInt(mountainQtyInput.value) || 1;
+          const robloxPricePerMountain = 5000;
+
+          if (!robloxUsername || !mountainName || !mountainQty) {
+            alert("Harap lengkapi semua detail untuk Joki Gendong Naik Gunung Roblox (Username Roblox, Nama Gunung, Jumlah Gunung).");
+            return;
+          }
+          orderPrice = robloxPricePerMountain * mountainQty;
+
+          orderData.robloxUsername = robloxUsername;
+          orderData.mountainName = mountainName;
+          orderData.mountainQty = mountainQty;
+          orderData.price = orderPrice;
+          // For Roblox, 'code' and 'pass' are not directly used as account credentials
+          // They are not added to orderData for this service type
         }
 
         const newOrderRef = db.ref('orders').push();
@@ -479,6 +557,14 @@
                 <p class="mb-1"><i class="fas fa-dollar-sign text-blue-400 mr-2"></i>Harga: <span class="font-medium text-yellow-400">${order.priceInfo || 'Akan diinformasikan via WhatsApp'}</span></p>
                 ${order.statProofURL ? `<a href="${order.statProofURL}" target="_blank" class="text-red-400 hover:underline text-sm mt-3 block"><i class="fas fa-chart-bar mr-1"></i>Lihat Screenshot Stat Akun</a>` : ''}
               `;
+            } else if (order.jenis === 'roblox_mountain') {
+                orderDetailsHtml = `
+                    <p class="mb-1"><i class="fab fa-roblox text-blue-400 mr-2"></i>Username Roblox: <span class="font-medium">${order.robloxUsername || 'N/A'}</span></p>
+                    <p class="mb-1"><i class="fas fa-mountain text-blue-400 mr-2"></i>Nama Gunung: <span class="font-medium">${order.mountainName || 'N/A'}</span></p>
+                    <p class="mb-1"><i class="fas fa-hashtag text-blue-400 mr-2"></i>Jumlah Gunung: <span class="font-medium">${order.mountainQty || 'N/A'}</span></p>
+                    <p class="mb-1"><i class="fas fa-dollar-sign text-blue-400 mr-2"></i>Harga: <span class="font-medium text-green-400">Rp ${order.price ? order.price.toLocaleString('id-ID') : 'N/A'}</span></p>
+                    ${order.proofURL ? `<a href="${order.proofURL}" target="_blank" class="text-red-400 hover:underline text-sm mt-3 block"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>` : ''}
+                `;
             }
 
 
@@ -487,7 +573,7 @@
                 <h5 class="text-lg font-bold text-red-400">Order ID: <span class="text-gray-300 text-sm">${order.id}</span></h5>
                 <span class="text-sm font-semibold ${statusClass}">${order.status.toUpperCase()}</span>
               </div>
-              <p class="mb-1"><i class="fas fa-gamepad text-blue-400 mr-2"></i>Jenis Joki: <span class="font-medium">${order.jenis === 'full' ? 'Death High Full Service' : 'Death High Per Floor'}</span></p>
+              <p class="mb-1"><i class="fas fa-gamepad text-blue-400 mr-2"></i>Jenis Joki: <span class="font-medium">${order.jenis === 'full' ? 'Death High Full Service' : order.jenis === 'floor' ? 'Death High Per Floor' : 'Joki Gendong Naik Gunung Roblox'}</span></p>
               <p class="mb-1"><i class="fas fa-mobile-alt text-blue-400 mr-2"></i>Device: <span class="font-medium">${order.device}</span></p>
               <p class="mb-1"><i class="fab fa-whatsapp text-blue-400 mr-2"></i>WhatsApp: <span class="font-medium">${order.whatsapp}</span></p>
               ${orderDetailsHtml}
@@ -627,7 +713,7 @@
         <i class="fas fa-cogs"></i>
         <span>Layanan Joki Profesional</span>
       </h3>
-      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
         <div class="card p-8 rounded-xl hover:shadow-2xl">
           <i class="fas fa-crown text-4xl text-yellow-400 mb-4"></i>
           <h4 class="text-2xl font-semibold mb-3 text-white">Death High Full Service</h4>
@@ -643,6 +729,15 @@
           <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-success text-white px-6 py-2 rounded-full font-semibold mt-4">
             <i class="fab fa-whatsapp mr-2"></i>Konsultasi Harga
           </button>
+        </div>
+        <div class="card p-8 rounded-xl hover:shadow-2xl">
+            <i class="fab fa-roblox text-4xl text-purple-400 mb-4"></i>
+            <h4 class="text-2xl font-semibold mb-3 text-white">Joki Gendong Naik Gunung Roblox</h4>
+            <p class="text-gray-400 mb-4">Bantu kamu mencapai puncak gunung di Roblox dengan cepat dan aman.</p>
+            <p class="text-3xl font-bold text-green-400">Rp 5.000 <span class="text-base font-normal text-gray-500">/ gunung</span></p>
+            <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-primary text-white px-6 py-2 rounded-full font-semibold mt-4">
+                <i class="fab fa-whatsapp mr-2"></i>Pesan Sekarang!
+            </button>
         </div>
       </div>
     </section>
@@ -734,6 +829,7 @@
           <select id="jenis" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required onchange="updateOrderDetails()">
             <option value="full">Death High Full Service</option>
             <option value="floor">Death High Per Floor</option>
+            <option value="roblox_mountain">Joki Gendong Naik Gunung Roblox</option>
           </select>
         </div>
 
@@ -813,6 +909,74 @@
           <p class="text-sm text-gray-500 mt-1">Harga joki Death High Per Floor akan diinformasikan melalui WhatsApp setelah kami menganalisis detail order Anda.</p>
         </div>
 
+        <!-- Input Spesifik untuk Joki Gendong Naik Gunung Roblox -->
+        <div id="robloxJokiDetails" class="hidden space-y-6">
+            <p class="text-lg font-bold text-white mb-2">Detail Joki Gendong Naik Gunung Roblox:</p>
+            <div>
+                <label for="robloxUsername" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+                    <i class="fab fa-roblox text-[#e94560]"></i>
+                    <span>Username Roblox</span>
+                </label>
+                <input type="text" id="robloxUsername" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Contoh: HiroGamer123">
+            </div>
+            <div>
+                <label for="mountainName" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+                    <i class="fas fa-mountain text-[#e94560]"></i>
+                    <span>Nama Gunung</span>
+                </label>
+                <input type="text" id="mountainName" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Contoh: Gunung Sakura">
+            </div>
+            <div>
+                <label for="mountainQty" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+                    <i class="fas fa-hashtag text-[#e94560]"></i>
+                    <span>Jumlah Gunung</span>
+                </label>
+                <input type="number" id="mountainQty" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" min="1" value="1" oninput="updateOrderDetails()">
+            </div>
+            <p class="text-lg font-bold text-white mb-2">Total Biaya:</p>
+            <p id="robloxJokiPrice" class="text-3xl font-bold text-green-400">Rp 5.000</p>
+            <p class="text-sm text-gray-500 mt-1">Harga: Rp 5.000 / gunung.</p>
+
+            <!-- Payment Methods for Roblox Joki (can be same as LifeAfter or specific) -->
+            <div id="robloxJokiPaymentMethods" class="mt-6 p-4 bg-[#1f1f3a] rounded-lg border border-[#4a4a6a]">
+                <h5 class="text-xl font-bold text-white mb-3 flex items-center space-x-2">
+                  <i class="fas fa-wallet text-green-400"></i>
+                  <span>Metode Pembayaran</span>
+                </h5>
+                <ul class="space-y-2 text-gray-300">
+                  <li class="flex items-center space-x-2">
+                    <i class="fas fa-money-bill-wave text-green-400"></i>
+                    <span>DANA: <span class="font-semibold">089634568406</span></span>
+                  </li>
+                  <li class="flex items-center space-x-2">
+                    <i class="fas fa-money-bill-wave text-green-400"></i>
+                    <span>Gopay: <span class="font-semibold">089634568406</span></span>
+                  </li>
+                  <li class="flex items-center space-x-2">
+                    <i class="fas fa-money-bill-wave text-green-400"></i>
+                    <span>OVO: <span class="font-semibold">089634568406</span></span>
+                  </li>
+                  <li class="flex items-center space-x-2">
+                    <i class="fas fa-university text-blue-400"></i>
+                    <span>BRI: <span class="font-semibold">079801006323504</span></span>
+                  </li>
+                  <li class="flex items-center space-x-2">
+                    <i class="fas fa-university text-blue-400"></i>
+                    <span>BCA: <span class="font-semibold">4460995146</span></span>
+                  </li>
+                  <li class="flex items-center space-x-2">
+                    <i class="fas fa-hand-holding-heart text-red-400"></i>
+                    <span>Trakteer: <a href="https://trakteer.id/itshiro16/tip" target="_blank" class="text-red-400 hover:underline font-semibold">trakteer.id/itshiro16/tip</a></span>
+                  </li>
+                  <li class="flex items-center space-x-2">
+                    <i class="fas fa-hand-holding-usd text-yellow-400"></i>
+                    <span>Saweria: <a href="https://saweria.co/mizukikun" target="_blank" class="text-yellow-400 hover:underline font-semibold">saweria.co/mizukikun</a></span>
+                  </li>
+                </ul>
+                <p class="text-sm text-gray-500 mt-3">Mohon lakukan pembayaran sebelum mengunggah bukti pembayaran.</p>
+              </div>
+        </div>
+
         <div>
           <label for="device" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
             <i class="fas fa-mobile-alt text-[#e94560]"></i>
@@ -821,21 +985,25 @@
           <select id="device" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required>
             <option value="android">Android</option>
             <option value="ios">iOS</option>
+            <option value="pc">PC / Emulator</option>
           </select>
         </div>
-        <div>
-          <label for="code" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-            <i class="fas fa-key text-[#e94560]"></i>
-            <span>Transfer Code Akun</span>
-          </label>
-          <input type="text" id="code" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required placeholder="Masukkan transfer code akun Anda">
-        </div>
-        <div>
-          <label for="pass" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-            <i class="fas fa-lock text-[#e94560]"></i>
-            <span>Password Akun</span>
-          </label>
-          <input type="password" id="pass" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required placeholder="Masukkan password akun Anda">
+        <!-- Transfer Code and Password are for LifeAfter, hidden for Roblox -->
+        <div id="lifeAfterCredentials">
+            <div>
+              <label for="code" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+                <i class="fas fa-key text-[#e94560]"></i>
+                <span>Transfer Code Akun</span>
+              </label>
+              <input type="text" id="code" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Masukkan transfer code akun Anda">
+            </div>
+            <div>
+              <label for="pass" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
+                <i class="fas fa-lock text-[#e94560]"></i>
+                <span>Password Akun</span>
+              </label>
+              <input type="password" id="pass" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Masukkan password akun Anda">
+            </div>
         </div>
         <div>
           <label for="whatsapp" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
@@ -886,6 +1054,12 @@
             </div>
           </li>
           <li class="flex items-start space-x-3">
+            <i class="fas fa-check-circle text-green-400 mt-1"></i>
+            <div>
+              <b>Joki Gendong Naik Gunung Roblox</b> – Harga <span class="font-bold text-yellow-300">Rp 5.000</span> per gunung.
+            </div>
+          </li>
+          <li class="flex items-start space-x-3">
             <i class="fas fa-clock text-blue-400 mt-1"></i>
             <span>Estimasi pengerjaan sesuai antrian dan kesepakatan. Kami akan memberikan update secara berkala.</span>
           </li>
@@ -897,10 +1071,11 @@
 
         <h4 class="text-xl font-bold mb-4 text-white">Aturan Jasa Joki:</h4>
         <ol class="list-decimal pl-8 space-y-3 text-gray-300">
-          <li>Akun wajib memiliki Transfer Code & Password yang valid dan benar.</li>
+          <li>Akun wajib memiliki Transfer Code & Password yang valid dan benar (untuk LifeAfter).</li>
+          <li>Untuk Roblox, pastikan username dan akses yang diberikan benar.</li>
           <li>Dilarang login ke akun selama proses joki berlangsung untuk menghindari konflik dan error.</li>
-          <li>Pembayaran dilakukan <b>sebelum pengerjaan dimulai</b> (untuk Full Service).</li>
-          <li>Harap upload bukti screenshot pembayaran yang jelas (untuk Full Service).</li>
+          <li>Pembayaran dilakukan <b>sebelum pengerjaan dimulai</b> (untuk Full Service dan Joki Roblox).</li>
+          <li>Harap upload bukti screenshot pembayaran yang jelas.</li>
           <li>Progress update akan diberikan secara rutin (screenshot / video via WhatsApp) sesuai permintaan.</li>
           <li>Durasi pengerjaan bisa diperpanjang jika ada gangguan server, maintenance game, atau kendala teknis lainnya.</li>
           <li>Refund hanya berlaku jika pengerjaan belum dimulai dan ada kesepakatan.</li>
