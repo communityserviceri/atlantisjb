@@ -244,36 +244,37 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      height: 300px;
+      height: 300px; /* Tetap pertahankan tinggi untuk konsistensi */
       background-color: var(--bg-card); /* Use card background for consistency */
       border: 1px solid var(--border-color);
       border-radius: 1rem;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, border-color 0.5s ease;
+
+      /* Tambahkan properti background untuk gambar */
+      background-size: cover; /* Pastikan gambar menutupi seluruh area */
+      background-position: center; /* Pusatkan gambar */
+      background-repeat: no-repeat; /* Jangan ulangi gambar */
     }
     .dynamic-banner-item:hover {
       transform: translateY(-8px);
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     }
+    /* Hapus atau ubah .dynamic-banner-image jika menggunakan background-image */
     .dynamic-banner-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      transition: transform 0.5s ease;
+      /* Ini tidak lagi diperlukan jika menggunakan background-image pada parent */
+      display: none; /* Sembunyikan jika menggunakan background-image */
     }
     .dynamic-banner-item:hover .dynamic-banner-image {
-      transform: scale(1.05);
+      /* Properti ini tidak lagi relevan jika gambar dipindahkan ke background */
+      /* transform: scale(1.05); */
     }
     .dynamic-banner-item .p-4 {
       position: relative;
       z-index: 1;
       background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
       padding-top: 1rem;
-      padding-bottom: 1rem;
+      padding-bottom: 1.5rem; /* Tambahkan padding-bottom agar teks tidak terlalu mepet ke bawah */
       color: var(--text-heading); /* Ensure text is readable */
     }
 
@@ -419,6 +420,7 @@
       }
       header h1 {
         font-size: 2rem; /* Smaller header title */
+        line-height: 1.2; /* Tambahkan line-height agar tidak terlalu rapat */
       }
       header p {
         font-size: 0.875rem; /* Smaller header subtitle */
@@ -1060,9 +1062,11 @@
           banners.forEach((banner) => {
             const bannerElement = document.createElement('div');
             bannerElement.className = 'dynamic-banner-item';
+            // Set background-image langsung pada elemen bannerElement
+            bannerElement.style.backgroundImage = `url('${banner.imageUrl}')`;
             bannerElement.innerHTML = `
               <a href="${banner.link || '#'}" target="${banner.link ? '_blank' : '_self'}" class="block h-full flex flex-col justify-end">
-                <img src="${banner.imageUrl}" alt="${banner.title}" class="dynamic-banner-image">
+                <!-- Hapus tag <img> di sini -->
                 <div class="p-4">
                   <h4 class="text-xl font-semibold text-white mb-2">${banner.title}</h4>
                   ${banner.description ? `<p class="text-gray-400 text-sm">${banner.description}</p>` : ''}
