@@ -8,92 +8,508 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Default/Fallback Theme (Winter-ish) */
+    :root {
+      --bg-primary: #1a1a2e; /* Darker background */
+      --bg-secondary: #0f0f1a; /* Even darker for header/footer */
+      --bg-card: #2e2e4a; /* Slightly lighter card background */
+      --bg-input: #1f1f3a;
+      --border-color: #4a4a6a;
+      --text-color: #e0e0e0; /* Lighter text */
+      --text-heading: #ffffff;
+      --accent-color-main: #e94560; /* Reddish-pink */
+      --accent-color-light: #ff6b6b; /* Lighter red */
+      --accent-color-blue: #3f72af; /* Blue for secondary btn */
+      --accent-color-blue-light: #528ecc;
+      --accent-color-green: #4CAF50; /* Green for success btn */
+      --accent-color-green-light: #66BB6A;
+      --accent-color-yellow: #ffc107; /* Yellow for pending status */
+      --accent-color-cyan: #00bcd4; /* Cyan for in-progress status */
+      --accent-color-purple: #a78bfa; /* Purple for Roblox icon */
+      --accent-color-gold: #facc15; /* Gold for promo text */
+
+      /* Gradient colors for animated background */
+      --gradient-color-1: #1a1a2e;
+      --gradient-color-2: #0f0f1a;
+      --gradient-color-3: #2e2e4a;
+      --gradient-color-4: #1f1f3a;
+    }
+
+    /* Spring Theme */
+    .theme-spring {
+      --bg-primary: #e0f2f7; /* Light blue */
+      --bg-secondary: #c8e6c9; /* Light green */
+      --bg-card: #f0f4c3; /* Pale yellow */
+      --bg-input: #e8f5e9;
+      --border-color: #a5d6a7;
+      --text-color: #424242; /* Darker text */
+      --text-heading: #212121;
+      --accent-color-main: #81c784; /* Spring green */
+      --accent-color-light: #a5d6a7;
+      --accent-color-blue: #64b5f6;
+      --accent-color-blue-light: #90caf9;
+      --accent-color-green: #4CAF50;
+      --accent-color-green-light: #66BB6A;
+      --accent-color-yellow: #ffeb3b;
+      --accent-color-cyan: #00bcd4;
+      --accent-color-purple: #ba68c8;
+      --accent-color-gold: #fdd835;
+
+      --gradient-color-1: #e0f2f7;
+      --gradient-color-2: #c8e6c9;
+      --gradient-color-3: #f0f4c3;
+      --gradient-color-4: #e8f5e9;
+    }
+
+    /* Summer Theme */
+    .theme-summer {
+      --bg-primary: #fff3e0; /* Light orange */
+      --bg-secondary: #ffe0b2; /* Orange */
+      --bg-card: #fff9c4; /* Pale yellow */
+      --bg-input: #ffecb3;
+      --border-color: #ffcc80;
+      --text-color: #424242;
+      --text-heading: #212121;
+      --accent-color-main: #ff9800; /* Deep orange */
+      --accent-color-light: #ffb74d;
+      --accent-color-blue: #2196f3; /* Bright blue */
+      --accent-color-blue-light: #64b5f6;
+      --accent-color-green: #8bc34a;
+      --accent-color-green-light: #aed581;
+      --accent-color-yellow: #ffc107;
+      --accent-color-cyan: #00bcd4;
+      --accent-color-purple: #e57373;
+      --accent-color-gold: #ffca28;
+
+      --gradient-color-1: #fff3e0;
+      --gradient-color-2: #ffe0b2;
+      --gradient-color-3: #fff9c4;
+      --gradient-color-4: #ffecb3;
+    }
+
+    /* Autumn Theme */
+    .theme-autumn {
+      --bg-primary: #3e2723; /* Dark brown */
+      --bg-secondary: #211a17; /* Even darker brown */
+      --bg-card: #5d4037; /* Medium brown */
+      --bg-input: #4e342e;
+      --border-color: #8d6e63;
+      --text-color: #d7ccc8; /* Light brown text */
+      --text-heading: #ffffff;
+      --accent-color-main: #d84315; /* Burnt orange */
+      --accent-color-light: #ff7043;
+      --accent-color-blue: #4db6ac;
+      --accent-color-blue-light: #80cbc4;
+      --accent-color-green: #689f38;
+      --accent-color-green-light: #8bc34a;
+      --accent-color-yellow: #ffb300;
+      --accent-color-cyan: #00838f;
+      --accent-color-purple: #795548;
+      --accent-color-gold: #ff8f00;
+
+      --gradient-color-1: #3e2723;
+      --gradient-color-2: #211a17;
+      --gradient-color-3: #5d4037;
+      --gradient-color-4: #4e342e;
+    }
+
+    /* Winter Theme (Default-like, but explicitly defined) */
+    .theme-winter {
+      --bg-primary: #1a1a2e;
+      --bg-secondary: #0f0f1a;
+      --bg-card: #2e2e4a;
+      --bg-input: #1f1f3a;
+      --border-color: #4a4a6a;
+      --text-color: #e0e0e0;
+      --text-heading: #ffffff;
+      --accent-color-main: #e94560;
+      --accent-color-light: #ff6b6b;
+      --accent-color-blue: #3f72af;
+      --accent-color-blue-light: #528ecc;
+      --accent-color-green: #4CAF50;
+      --accent-color-green-light: #66BB6A;
+      --accent-color-yellow: #ffc107;
+      --accent-color-cyan: #00bcd4;
+      --accent-color-purple: #a78bfa;
+      --accent-color-gold: #facc15;
+
+      --gradient-color-1: #1a1a2e;
+      --gradient-color-2: #0f0f1a;
+      --gradient-color-3: #2e2e4a;
+      --gradient-color-4: #1f1f3a;
+    }
+
     body {
       font-family: 'Montserrat', sans-serif;
-      background-color: #1a1a2e; /* Darker background */
-      color: #e0e0e0; /* Lighter text */
+      background-color: var(--bg-primary);
+      color: var(--text-color);
+      transition: background-color 0.5s ease, color 0.5s ease; /* Smooth theme transition */
+      /* Animated background */
+      background: linear-gradient(135deg, var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3), var(--gradient-color-4));
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
     }
+
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     h1, h2, h3, h4 {
-      font-family: 'Orbitron', sans-serif; /* Sci-fi/gaming font for headings */
+      font-family: 'Orbitron', sans-serif;
+      color: var(--text-heading);
     }
     .btn-primary {
-      background-image: linear-gradient(to right, #e94560, #ff6b6b);
+      background-image: linear-gradient(to right, var(--accent-color-main), var(--accent-color-light));
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+      box-shadow: 0 4px 15px rgba(var(--accent-color-main-rgb), 0.4); /* Use RGB for shadow */
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-heading); /* Ensure button text is readable */
     }
     .btn-primary:hover {
-      background-image: linear-gradient(to right, #ff6b6b, #e94560);
+      background-image: linear-gradient(to right, var(--accent-color-light), var(--accent-color-main));
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(233, 69, 96, 0.6);
+      box-shadow: 0 6px 20px rgba(var(--accent-color-main-rgb), 0.6);
     }
     .btn-secondary {
-      background-color: #3f72af;
+      background-color: var(--accent-color-blue);
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(63, 114, 175, 0.4);
+      box-shadow: 0 4px 15px rgba(var(--accent-color-blue-rgb), 0.4);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-heading);
     }
     .btn-secondary:hover {
-      background-color: #528ecc;
+      background-color: var(--accent-color-blue-light);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(63, 114, 175, 0.6);
+      box-shadow: 0 6px 20px rgba(var(--accent-color-blue-rgb), 0.6);
     }
     .btn-success {
-      background-color: #4CAF50;
+      background-color: var(--accent-color-green);
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+      box-shadow: 0 4px 15px rgba(var(--accent-color-green-rgb), 0.4);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-heading);
     }
     .btn-success:hover {
-      background-color: #66BB6A;
+      background-color: var(--accent-color-green-light);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+      box-shadow: 0 6px 20px rgba(var(--accent-color-green-rgb), 0.6);
     }
     .card {
-      background-color: #2e2e4a; /* Slightly lighter card background */
-      border: 1px solid #4a4a6a;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, border-color 0.5s ease;
+      border-radius: 1rem;
+      padding: 2.5rem;
     }
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
     }
-    input[type="text"], input[type="password"], input[type="email"], input[type="tel"], select, textarea {
-      background-color: #1f1f3a;
-      border: 1px solid #4a4a6a;
-      color: #e0e0e0;
+    /* Unified input field styling */
+    .input-field {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      outline: none;
+      transition: all 0.2s ease, background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
     }
-    input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus, textarea:focus {
-      border-color: #e94560;
-      box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.5);
+    .input-field:focus {
+      border-color: var(--accent-color-main);
+      box-shadow: 0 0 0 2px rgba(var(--accent-color-main-rgb), 0.5);
     }
     .checkbox:checked {
-      background-color: #e94560;
-      border-color: #e94560;
+      background-color: var(--accent-color-main);
+      border-color: var(--accent-color-main);
     }
     .checkbox:focus {
-      box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.5);
+      box-shadow: 0 0 0 2px rgba(var(--accent-color-main-rgb), 0.5);
     }
-    .status-pending { color: #ffc107; } /* Yellow */
-    .status-in-progress { color: #00bcd4; } /* Cyan */
-    .status-completed { color: #4CAF50; } /* Green */
+    .status-pending { color: var(--accent-color-yellow); }
+    .status-in-progress { color: var(--accent-color-cyan); }
+    .status-completed { color: var(--accent-color-green); }
 
     /* Custom styles for dynamic banners */
     .dynamic-banner-item {
-      background-color: #2e2e4a;
-      border: 1px solid #4a4a6a;
-      border-radius: 0.75rem; /* rounded-xl */
+      position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 300px;
+      background-color: var(--bg-card); /* Use card background for consistency */
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, border-color 0.5s ease;
     }
     .dynamic-banner-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     }
     .dynamic-banner-image {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 200px; /* Fixed height for consistency */
-      object-fit: cover; /* Cover the area, cropping if necessary */
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      transition: transform 0.5s ease;
     }
+    .dynamic-banner-item:hover .dynamic-banner-image {
+      transform: scale(1.05);
+    }
+    .dynamic-banner-item .p-4 {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      color: var(--text-heading); /* Ensure text is readable */
+    }
+
+    /* General improvements */
+    .container {
+      max-width: 1200px;
+    }
+    /* Icon styling for lists */
+    .list-item-icon {
+      min-width: 1.25rem;
+      text-align: center;
+    }
+
+    /* Adjust header for more impact */
+    header h1 {
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 15px rgba(var(--accent-color-main-rgb), 0.7);
+      color: var(--text-heading);
+    }
+    header p {
+      letter-spacing: 0.03em;
+      color: var(--text-color);
+    }
+    header {
+      background-image: linear-gradient(to right, var(--bg-primary), var(--bg-secondary));
+      border-bottom-color: var(--accent-color-main);
+      transition: background-image 0.5s ease, border-bottom-color 0.5s ease;
+    }
+
+    /* Promo banner specific */
+    .promo-banner {
+      background-image: linear-gradient(to right, var(--accent-color-main), var(--accent-color-light));
+      transition: background-image 0.5s ease;
+    }
+    .promo-banner h2 {
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      color: var(--text-heading);
+    }
+    .promo-banner p span {
+      text-shadow: 0 0 8px rgba(var(--accent-color-gold-rgb), 0.7);
+      color: var(--accent-color-gold);
+    }
+
+    /* Specific icon colors */
+    .text-\[\#e94560\] { color: var(--accent-color-main); }
+    .text-yellow-400 { color: var(--accent-color-gold); }
+    .text-blue-400 { color: var(--accent-color-blue); }
+    .text-purple-400 { color: var(--accent-color-purple); }
+    .text-green-400 { color: var(--accent-color-green); }
+    .text-red-400 { color: var(--accent-color-main); } /* For links/alerts */
+    .text-red-300 { color: var(--accent-color-light); } /* For user email */
+    .text-gray-300 { color: var(--text-color); }
+    .text-gray-400 { color: var(--text-color); } /* Adjust if needed */
+    .text-gray-500 { color: var(--text-color); } /* Adjust if needed */
+    .border-gray-600 { border-color: var(--border-color); }
+    .bg-\[\#1f1f3a\] { background-color: var(--bg-input); }
+    .border-\[\#4a4a6a\] { border-color: var(--border-color); }
+    .focus\:ring-offset-\[\#1a1a2e\]:focus { --tw-ring-offset-color: var(--bg-primary); }
+
+    /* Helper to convert hex to rgb for box-shadow */
+    /* This is a simplified approach, for full dynamic shadows, a JS helper would be better */
+    :root {
+      --accent-color-main-rgb: 233, 69, 96; /* Default for winter */
+      --accent-color-blue-rgb: 63, 114, 175;
+      --accent-color-green-rgb: 76, 175, 80;
+      --accent-color-gold-rgb: 252, 201, 21;
+    }
+    .theme-spring {
+      --accent-color-main-rgb: 129, 199, 132;
+      --accent-color-blue-rgb: 100, 181, 246;
+      --accent-color-green-rgb: 76, 175, 80;
+      --accent-color-gold-rgb: 253, 216, 53;
+    }
+    .theme-summer {
+      --accent-color-main-rgb: 255, 152, 0;
+      --accent-color-blue-rgb: 33, 150, 243;
+      --accent-color-green-rgb: 139, 195, 74;
+      --accent-color-gold-rgb: 255, 202, 40;
+    }
+    .theme-autumn {
+      --accent-color-main-rgb: 216, 67, 21;
+      --accent-color-blue-rgb: 77, 182, 172;
+      --accent-color-green-rgb: 104, 159, 56;
+      --accent-color-gold-rgb: 255, 143, 0;
+    }
+
+    /* Custom styles for the floating WhatsApp button */
+    .floating-whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366; /* WhatsApp green */
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    .floating-whatsapp:hover {
+      transform: scale(1.1);
+      background-color: #1DA851; /* Darker green on hover */
+    }
+
+    /* Styling for the clock in the header */
+    .header-clock {
+      font-family: 'Orbitron', sans-serif; /* Use Orbitron for clock for techy feel */
+      font-size: 1rem; /* Default size */
+      color: var(--accent-color-gold); /* Gold color for prominence */
+      background-color: var(--bg-input); /* Slightly different background */
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.5s ease, background-color 0.5s ease;
+    }
+    .header-clock i {
+      color: var(--accent-color-main); /* Accent color for icon */
+    }
+
+    @media (min-width: 768px) {
+      .header-clock {
+        font-size: 1.1rem; /* Larger on desktop */
+      }
+    }
+
+    /* --- Mobile UI Optimizations --- */
+    @media (max-width: 767px) {
+      /* General adjustments for smaller screens */
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      header {
+        padding: 1rem;
+      }
+      header h1 {
+        font-size: 2rem; /* Smaller header title */
+      }
+      header p {
+        font-size: 0.875rem; /* Smaller header subtitle */
+      }
+      .promo-banner {
+        padding: 1.5rem;
+      }
+      .promo-banner h2 {
+        font-size: 1.75rem;
+      }
+      .promo-banner p {
+        font-size: 1rem;
+      }
+      .promo-banner p span {
+        font-size: 2rem;
+      }
+      .btn-primary, .btn-secondary, .btn-success {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+      }
+      .card {
+        padding: 1.5rem;
+      }
+
+      /* Dashboard Pengguna Specific Optimizations */
+      #userDashboardSection .card {
+        padding: 1.5rem; /* Consistent padding */
+      }
+      #userDashboardSection .flex-col.md:flex-row {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: flex-start; /* Align items to the start */
+      }
+      #userDashboardSection .flex-col.md:flex-row .mb-4.md:mb-0 {
+        margin-bottom: 1rem; /* Add space below title on mobile */
+      }
+      #userDashboardSection .flex.items-center.space-x-4 {
+        flex-direction: column; /* Stack email and logout button */
+        align-items: flex-start; /* Align to start */
+        width: 100%; /* Take full width */
+        space-x: 0; /* Remove horizontal space */
+      }
+      #userDashboardSection .flex.items-center.space-x-4 > span {
+        margin-bottom: 0.5rem; /* Space below email */
+        font-size: 0.95rem; /* Slightly smaller email text */
+      }
+      #userDashboardSection #logoutBtn {
+        width: 100%; /* Full width button */
+        text-align: center;
+        margin-top: 0.5rem; /* Space above button */
+      }
+
+      /* Order List Item Optimizations */
+      #userOrdersList .card {
+        padding: 1rem; /* Smaller padding for order items */
+      }
+      #userOrdersList .flex.justify-between.items-center.mb-3 {
+        flex-direction: column; /* Stack order ID and status */
+        align-items: flex-start; /* Align to start */
+        margin-bottom: 0.75rem;
+      }
+      #userOrdersList .flex.justify-between.items-center.mb-3 h5 {
+        font-size: 1rem; /* Smaller order ID title */
+        margin-bottom: 0.25rem;
+      }
+      #userOrdersList .flex.justify-between.items-center.mb-3 span {
+        font-size: 0.85rem; /* Smaller status text */
+      }
+      #userOrdersList p {
+        font-size: 0.9rem; /* Smaller text for order details */
+        margin-bottom: 0.5rem;
+      }
+      #userOrdersList p i {
+        font-size: 0.9rem; /* Smaller icons */
+      }
+      #userOrdersList a {
+        font-size: 0.8rem; /* Smaller link text */
+      }
+
+      /* Form elements */
+      .input-field {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+      }
+      label {
+        font-size: 0.875rem;
+      }
+      .checkbox + label {
+        font-size: 0.875rem;
+      }
+    }
+
   </style>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
@@ -134,6 +550,7 @@
     const loginCard = document.getElementById("loginCard");
     const registerCard = document.getElementById("registerCard");
     const dynamicBannerSection = document.getElementById("dynamicBannerSection"); // New element
+    const currentTimeDisplay = document.getElementById("currentTimeDisplay"); // New element for time
 
     // New UI Elements for dynamic order form
     const fullServicePriceDiv = document.getElementById("fullServicePrice");
@@ -575,7 +992,7 @@
               </div>
               <p class="mb-1"><i class="fas fa-gamepad text-blue-400 mr-2"></i>Jenis Joki: <span class="font-medium">${order.jenis === 'full' ? 'Death High Full Service' : order.jenis === 'floor' ? 'Death High Per Floor' : 'Joki Gendong Naik Gunung Roblox'}</span></p>
               <p class="mb-1"><i class="fas fa-mobile-alt text-blue-400 mr-2"></i>Device: <span class="font-medium">${order.device}</span></p>
-              <p class="mb-1"><i class="fab fa-whatsapp text-blue-400 mr-2"></i>WhatsApp: <span class="font-medium">${order.whatsapp}</span></p>
+              <p class="fab fa-whatsapp text-blue-400 mr-2"></i>WhatsApp: <span class="font-medium">${order.whatsapp}</span></p>
               ${orderDetailsHtml}
               <p class="text-sm text-gray-500 mt-2">Waktu Order: ${new Date(order.waktu).toLocaleString()}</p>
             `;
@@ -624,7 +1041,7 @@
       db.ref('banners').on('value', (snapshot) => {
         if (snapshot.exists()) {
           dynamicBannerSection.innerHTML = `
-            <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+            <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-accent-color-main flex items-center justify-center space-x-3">
               <i class="fas fa-bullhorn"></i>
               <span>Promo & Event Terbaru</span>
             </h3>
@@ -644,7 +1061,7 @@
             const bannerElement = document.createElement('div');
             bannerElement.className = 'dynamic-banner-item';
             bannerElement.innerHTML = `
-              <a href="${banner.link || '#'}" target="${banner.link ? '_blank' : '_self'}" class="block">
+              <a href="${banner.link || '#'}" target="${banner.link ? '_blank' : '_self'}" class="block h-full flex flex-col justify-end">
                 <img src="${banner.imageUrl}" alt="${banner.title}" class="dynamic-banner-image">
                 <div class="p-4">
                   <h4 class="text-xl font-semibold text-white mb-2">${banner.title}</h4>
@@ -663,8 +1080,47 @@
       });
     }
 
-    // Call fetchAndDisplayBanners on page load
-    document.addEventListener('DOMContentLoaded', fetchAndDisplayBanners);
+    // --- Real-time Clock Function ---
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const formattedTime = now.toLocaleDateString('id-ID', options);
+      if (currentTimeDisplay) {
+        currentTimeDisplay.innerHTML = `<i class="far fa-clock"></i> ${formattedTime}`; // Add clock icon
+      }
+    }
+
+    // --- Seasonal Theme Logic ---
+    function getSeason(date) {
+      const month = date.getMonth(); // 0-11
+      const day = date.getDate();
+
+      // Northern Hemisphere seasons (adjust if your target audience is Southern Hemisphere)
+      if (month >= 2 && month <= 4) { // March, April, May
+        return 'spring';
+      } else if (month >= 5 && month <= 7) { // June, July, August
+        return 'summer';
+      } else if (month >= 8 && month <= 10) { // September, October, November
+        return 'autumn';
+      } else { // December, January, February
+        return 'winter';
+      }
+    }
+
+    function applySeasonalTheme() {
+      const currentSeason = getSeason(new Date());
+      document.body.className = ''; // Clear existing theme classes
+      document.body.classList.add(`theme-${currentSeason}`);
+      console.log(`Current season: ${currentSeason}, applied theme: theme-${currentSeason}`);
+    }
+
+    // Call functions on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchAndDisplayBanners();
+      applySeasonalTheme(); // Apply theme initially
+      updateClock(); // Display time initially
+      setInterval(updateClock, 1000); // Update clock every second
+    });
 
 
     // Expose functions to the global scope
@@ -679,12 +1135,18 @@
 </head>
 <body class="flex flex-col min-h-screen">
   <!-- Header -->
-  <header class="bg-gradient-to-r from-[#1a1a2e] to-[#0f0f1a] p-4 md:p-6 text-center shadow-2xl border-b-2 border-[#e94560]">
-    <div class="flex justify-center items-center space-x-3 mb-2">
-      <i class="fas fa-gamepad text-4xl text-[#e94560]"></i>
-      <h1 class="text-3xl md:text-5xl font-bold text-white tracking-wide">Joki LifeAfter <span class="text-[#e94560]">PRO</span></h1>
+  <header class="p-4 md:p-6 text-center shadow-2xl border-b-2">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-2">
+      <div class="flex items-center space-x-3 mb-4 md:mb-0">
+        <i class="fas fa-gamepad text-4xl text-accent-color-main"></i>
+        <h1 class="text-3xl md:text-5xl font-bold tracking-wide">Joki LifeAfter <span class="text-accent-color-main">PRO</span></h1>
+      </div>
+      <!-- Jam dipindahkan ke sini, dengan styling baru -->
+      <div id="currentTimeDisplay" class="header-clock">
+        <!-- Real-time clock will be displayed here -->
+      </div>
     </div>
-    <p class="text-sm md:text-base text-gray-400">Mizuki Hiroshi Ch. <span class="text-[#e94560]">水木広氏</span> - Your Elite Gaming Partner</p>
+    <p class="text-sm md:text-base text-text-color">Mizuki Hiroshi Ch. <span class="text-accent-color-main">水木広氏</span> - Your Elite Gaming Partner</p>
   </header>
 
   <!-- Main Content -->
@@ -696,46 +1158,46 @@
     </section>
 
     <!-- Banner Promo (Existing, can be replaced by dynamic banners if preferred) -->
-    <section class="p-6 md:p-8 text-center bg-gradient-to-r from-[#e94560] to-[#ff6b6b] shadow-xl rounded-xl mb-12 transform hover:scale-105 transition-transform duration-300">
+    <section class="promo-banner p-6 md:p-8 text-center shadow-xl rounded-xl mb-12 transform hover:scale-105 transition-transform duration-300">
       <div class="flex justify-center items-center space-x-3 mb-3">
-        <i class="fas fa-fire text-3xl text-white animate-pulse"></i>
-        <h2 class="text-2xl md:text-4xl font-bold text-white">PROMO SPESIAL!</h2>
+        <i class="fas fa-fire text-3xl text-text-heading animate-pulse"></i>
+        <h2 class="text-2xl md:text-4xl font-bold">PROMO SPESIAL!</h2>
       </div>
-      <p class="text-lg md:text-2xl text-white mb-4">Death High Full Service hanya <span class="line-through text-gray-200">Rp 250.000</span> jadi <span class="font-bold text-yellow-300 text-3xl">Rp 150.000</span></p>
-      <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-primary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
+      <p class="text-lg md:text-2xl text-text-heading mb-4">Death High Full Service hanya <span class="line-through text-text-color">Rp 250.000</span> jadi <span class="font-bold text-3xl">Rp 150.000</span></p>
+      <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-primary px-8 py-3 rounded-full font-semibold text-lg shadow-lg">
         <i class="fab fa-whatsapp mr-2"></i>Hubungi Kami Sekarang!
       </button>
     </section>
 
     <!-- Info Layanan -->
     <section class="mb-12">
-      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-accent-color-main flex items-center justify-center space-x-3">
         <i class="fas fa-cogs"></i>
         <span>Layanan Joki Profesional</span>
       </h3>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div class="card p-8 rounded-xl hover:shadow-2xl">
+        <div class="card hover:shadow-2xl">
           <i class="fas fa-crown text-4xl text-yellow-400 mb-4"></i>
-          <h4 class="text-2xl font-semibold mb-3 text-white">Death High Full Service</h4>
-          <p class="text-gray-400 mb-4">Pengerjaan lengkap selama 1 bulan penuh untuk performa maksimal.</p>
-          <p class="text-3xl font-bold text-green-400">Rp 150.000 <span class="text-base font-normal text-gray-500">(Promo Perdana)</span></p>
-          <span class="text-sm text-gray-500 block mt-2 line-through">Normal: Rp 250.000</span>
+          <h4 class="text-2xl font-semibold mb-3">Death High Full Service</h4>
+          <p class="text-text-color mb-4">Pengerjaan lengkap selama 1 bulan penuh untuk performa maksimal.</p>
+          <p class="text-3xl font-bold text-green-400">Rp 150.000 <span class="text-base font-normal text-text-color">(Promo Perdana)</span></p>
+          <span class="text-sm text-text-color block mt-2 line-through">Normal: Rp 250.000</span>
         </div>
-        <div class="card p-8 rounded-xl hover:shadow-2xl">
+        <div class="card hover:shadow-2xl">
           <i class="fas fa-layer-group text-4xl text-blue-400 mb-4"></i>
-          <h4 class="text-2xl font-semibold mb-3 text-white">Death High Per Floor</h4>
-          <p class="text-gray-400 mb-4">Fleksibel, bayar sesuai lantai yang ingin diselesaikan. Cocok untuk kebutuhan spesifik.</p>
+          <h4 class="text-2xl font-semibold mb-3">Death High Per Floor</h4>
+          <p class="text-text-color mb-4">Fleksibel, bayar sesuai lantai yang ingin diselesaikan. Cocok untuk kebutuhan spesifik.</p>
           <p class="text-2xl font-bold text-green-400">Harga Negosiasi</p>
-          <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-success text-white px-6 py-2 rounded-full font-semibold mt-4">
+          <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-success px-6 py-2 rounded-full font-semibold mt-4">
             <i class="fab fa-whatsapp mr-2"></i>Konsultasi Harga
           </button>
         </div>
-        <div class="card p-8 rounded-xl hover:shadow-2xl">
+        <div class="card hover:shadow-2xl">
             <i class="fab fa-roblox text-4xl text-purple-400 mb-4"></i>
-            <h4 class="text-2xl font-semibold mb-3 text-white">Joki Gendong Naik Gunung Roblox</h4>
-            <p class="text-gray-400 mb-4">Bantu kamu mencapai puncak gunung di Roblox dengan cepat dan aman.</p>
-            <p class="text-3xl font-bold text-green-400">Rp 5.000 <span class="text-base font-normal text-gray-500">/ gunung</span></p>
-            <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-primary text-white px-6 py-2 rounded-full font-semibold mt-4">
+            <h4 class="text-2xl font-semibold mb-3">Joki Gendong Naik Gunung Roblox</h4>
+            <p class="text-text-color mb-4">Bantu kamu mencapai puncak gunung di Roblox dengan cepat dan aman.</p>
+            <p class="text-3xl font-bold text-green-400">Rp 5.000 <span class="text-base font-normal text-text-color">/ gunung</span></p>
+            <button onclick="window.open('https://wa.me/6289634568406', '_blank')" class="btn-primary px-6 py-2 rounded-full font-semibold mt-4">
                 <i class="fab fa-whatsapp mr-2"></i>Pesan Sekarang!
             </button>
         </div>
@@ -744,44 +1206,44 @@
 
     <!-- Login/Register Section -->
     <section id="loginRegisterSection" class="max-w-2xl mx-auto mb-12">
-      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-accent-color-main flex items-center justify-center space-x-3">
         <i class="fas fa-user-shield"></i>
         <span>Akses Jasa Joki</span>
       </h3>
-      <div class="card p-8 rounded-xl">
+      <div class="card">
         <div id="loginCard">
-          <h4 class="text-xl font-semibold mb-6 text-center text-white">Login ke Akun Anda</h4>
+          <h4 class="text-xl font-semibold mb-6 text-center">Login ke Akun Anda</h4>
           <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
             <div>
-              <label for="loginEmail" class="block text-sm font-medium mb-2 text-gray-300">Email</label>
-              <input type="email" id="loginEmail" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Masukkan email Anda">
+              <label for="loginEmail" class="block text-sm font-medium mb-2 text-text-color">Email</label>
+              <input type="email" id="loginEmail" class="input-field" required placeholder="Masukkan email Anda">
             </div>
             <div>
-              <label for="loginPassword" class="block text-sm font-medium mb-2 text-gray-300">Password</label>
-              <input type="password" id="loginPassword" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Masukkan password Anda">
+              <label for="loginPassword" class="block text-sm font-medium mb-2 text-text-color">Password</label>
+              <input type="password" id="loginPassword" class="input-field" required placeholder="Masukkan password Anda">
             </div>
-            <button type="submit" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+            <button type="submit" class="btn-primary w-full px-6 py-3 rounded-lg font-bold text-lg">
               <i class="fas fa-sign-in-alt mr-2"></i>Login
             </button>
           </form>
         </div>
         <div id="registerCard" class="hidden">
-          <h4 class="text-xl font-semibold mb-6 text-center text-white">Buat Akun Baru</h4>
+          <h4 class="text-xl font-semibold mb-6 text-center">Buat Akun Baru</h4>
           <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-5">
             <div>
-              <label for="registerEmail" class="block text-sm font-medium mb-2 text-gray-300">Email</label>
-              <input type="email" id="registerEmail" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Masukkan email Anda">
+              <label for="registerEmail" class="block text-sm font-medium mb-2 text-text-color">Email</label>
+              <input type="email" id="registerEmail" class="input-field" required placeholder="Masukkan email Anda">
             </div>
             <div>
-              <label for="registerPassword" class="block text-sm font-medium mb-2 text-gray-300">Password</label>
-              <input type="password" id="registerPassword" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Buat password (min. 6 karakter)">
+              <label for="registerPassword" class="block text-sm font-medium mb-2 text-text-color">Password</label>
+              <input type="password" id="registerPassword" class="input-field" required placeholder="Buat password (min. 6 karakter)">
             </div>
-            <button type="submit" class="btn-secondary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+            <button type="submit" class="btn-secondary w-full px-6 py-3 rounded-lg font-bold text-lg">
               <i class="fas fa-user-plus mr-2"></i>Registrasi
             </button>
           </form>
         </div>
-        <button id="toggleLoginRegister" class="mt-6 w-full text-center text-gray-400 hover:text-[#e94560] transition-colors duration-200 text-sm">
+        <button id="toggleLoginRegister" class="mt-6 w-full text-center text-text-color hover:text-accent-color-main transition-colors duration-200 text-sm">
           Belum punya akun? Registrasi
         </button>
       </div>
@@ -789,44 +1251,44 @@
 
     <!-- User Dashboard Section (Hidden until logged in) -->
     <section id="userDashboardSection" class="hidden max-w-4xl mx-auto mb-12">
-      <div class="card p-8 rounded-xl">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 pb-4 border-b border-gray-600">
-          <h3 class="text-2xl md:text-3xl font-bold text-[#e94560] flex items-center space-x-3 mb-4 md:mb-0">
+      <div class="card">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 pb-4 border-b border-border-color">
+          <h3 class="text-2xl md:text-3xl font-bold text-accent-color-main flex items-center space-x-3 mb-4 md:mb-0">
             <i class="fas fa-tachometer-alt"></i>
             <span>Dashboard Pengguna</span>
           </h3>
           <div class="flex items-center space-x-4">
-            <span class="text-gray-300 text-lg">Halo, <span id="userEmailDisplay" class="font-semibold text-red-300"></span>!</span>
-            <button id="logoutBtn" onclick="handleLogout()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-300">
+            <span class="text-text-color text-lg">Halo, <span id="userEmailDisplay" class="font-semibold text-accent-color-light"></span>!</span>
+            <button id="logoutBtn" onclick="handleLogout()" class="bg-gray-600 hover:bg-gray-700 text-text-heading px-4 py-2 rounded-lg text-sm transition-colors duration-300">
               <i class="fas fa-sign-out-alt mr-1"></i>Logout
             </button>
           </div>
         </div>
 
-        <h4 class="text-xl font-bold mb-5 text-red-300 flex items-center space-x-2">
+        <h4 class="text-xl font-bold mb-5 text-accent-color-light flex items-center space-x-2">
           <i class="fas fa-history"></i>
           <span>Riwayat Pesanan Anda</span>
         </h4>
         <div id="userOrdersList" class="space-y-4">
           <!-- User orders will be loaded here -->
-          <p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat pesanan...</p>
+          <p class="text-text-color text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat pesanan...</p>
         </div>
       </div>
     </section>
 
     <!-- Form Order (Hidden until logged in) -->
     <section id="orderSection" class="hidden max-w-2xl mx-auto mb-12">
-      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-accent-color-main flex items-center justify-center space-x-3">
         <i class="fas fa-file-alt"></i>
         <span>Formulir Pemesanan Joki</span>
       </h3>
-      <form id="orderForm" onsubmit="handleOrder(event)" class="card p-8 rounded-xl space-y-6">
+      <form id="orderForm" onsubmit="handleOrder(event)" class="card space-y-6">
         <div>
-          <label for="jenis" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-            <i class="fas fa-list text-[#e94560]"></i>
+          <label for="jenis" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+            <i class="fas fa-list text-accent-color-main"></i>
             <span>Jenis Joki</span>
           </label>
-          <select id="jenis" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required onchange="updateOrderDetails()">
+          <select id="jenis" class="input-field" required onchange="updateOrderDetails()">
             <option value="full">Death High Full Service</option>
             <option value="floor">Death High Per Floor</option>
             <option value="roblox_mountain">Joki Gendong Naik Gunung Roblox</option>
@@ -835,47 +1297,47 @@
 
         <!-- Nominal Harga untuk Full Service -->
         <div id="fullServicePrice" class="hidden">
-          <p class="text-lg font-bold text-white mb-2">Biaya Joki:</p>
+          <p class="text-lg font-bold text-text-heading mb-2">Biaya Joki:</p>
           <p id="currentFullServicePrice" class="text-3xl font-bold text-green-400"></p>
-          <p class="text-sm text-gray-500 mt-1">Harga akan disesuaikan berdasarkan riwayat order Anda.</p>
+          <p class="text-sm text-text-color mt-1">Harga akan disesuaikan berdasarkan riwayat order Anda.</p>
 
           <!-- New Payment Methods Section -->
-          <div class="mt-6 p-4 bg-[#1f1f3a] rounded-lg border border-[#4a4a6a]">
-            <h5 class="text-xl font-bold text-white mb-3 flex items-center space-x-2">
+          <div class="mt-6 p-4 bg-bg-input rounded-lg border border-border-color">
+            <h5 class="text-xl font-bold text-text-heading mb-3 flex items-center space-x-2">
               <i class="fas fa-wallet text-green-400"></i>
               <span>Metode Pembayaran</span>
             </h5>
-            <ul class="space-y-2 text-gray-300">
+            <ul class="space-y-2 text-text-color">
               <li class="flex items-center space-x-2">
-                <i class="fas fa-money-bill-wave text-green-400"></i>
+                <i class="fas fa-money-bill-wave text-green-400 list-item-icon"></i>
                 <span>DANA: <span class="font-semibold">089634568406</span></span>
               </li>
               <li class="flex items-center space-x-2">
-                <i class="fas fa-money-bill-wave text-green-400"></i>
+                <i class="fas fa-money-bill-wave text-green-400 list-item-icon"></i>
                 <span>Gopay: <span class="font-semibold">089634568406</span></span>
               </li>
               <li class="flex items-center space-x-2">
-                <i class="fas fa-money-bill-wave text-green-400"></i>
+                <i class="fas fa-money-bill-wave text-green-400 list-item-icon"></i>
                 <span>OVO: <span class="font-semibold">089634568406</span></span>
               </li>
               <li class="flex items-center space-x-2">
-                <i class="fas fa-university text-blue-400"></i>
+                <i class="fas fa-university text-blue-400 list-item-icon"></i>
                 <span>BRI: <span class="font-semibold">079801006323504</span></span>
               </li>
               <li class="flex items-center space-x-2">
-                <i class="fas fa-university text-blue-400"></i>
+                <i class="fas fa-university text-blue-400 list-item-icon"></i>
                 <span>BCA: <span class="font-semibold">4460995146</span></span>
               </li>
               <li class="flex items-center space-x-2">
-                <i class="fas fa-hand-holding-heart text-red-400"></i>
-                <span>Trakteer: <a href="https://trakteer.id/itshiro16/tip" target="_blank" class="text-red-400 hover:underline font-semibold">trakteer.id/itshiro16/tip</a></span>
+                <i class="fas fa-hand-holding-heart text-red-400 list-item-icon"></i>
+                <span>Trakteer: <a href="https://trakteer.id/itshiro16/tip" target="_blank" class="text-accent-color-main hover:underline font-semibold">trakteer.id/itshiro16/tip</a></span>
               </li>
               <li class="flex items-center space-x-2">
-                <i class="fas fa-hand-holding-usd text-yellow-400"></i>
+                <i class="fas fa-hand-holding-usd text-yellow-400 list-item-icon"></i>
                 <span>Saweria: <a href="https://saweria.co/mizukikun" target="_blank" class="text-yellow-400 hover:underline font-semibold">saweria.co/mizukikun</a></span>
               </li>
             </ul>
-            <p class="text-sm text-gray-500 mt-3">Mohon lakukan pembayaran sebelum mengunggah bukti pembayaran.</p>
+            <p class="text-sm text-text-color mt-3">Mohon lakukan pembayaran sebelum mengunggah bukti pembayaran.</p>
           </div>
           <!-- End New Payment Methods Section -->
 
@@ -883,106 +1345,106 @@
 
         <!-- Input Spesifik untuk Per Floor -->
         <div id="perFloorDetails" class="hidden space-y-6">
-          <p class="text-lg font-bold text-white mb-2">Detail Death High Per Floor:</p>
+          <p class="text-lg font-bold text-text-heading mb-2">Detail Death High Per Floor:</p>
           <div>
-            <label for="statProof" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-              <i class="fas fa-chart-bar text-[#e94560]"></i>
+            <label for="statProof" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+              <i class="fas fa-chart-bar text-accent-color-main"></i>
               <span>Screenshot Stat Akun</span>
             </label>
-            <input type="file" id="statProof" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" onchange="previewStatProof(event)">
+            <input type="file" id="statProof" accept="image/*" class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-color-main file:text-text-heading hover:file:bg-accent-color-light transition-all duration-200" onchange="previewStatProof(event)">
             <div id="statProofPreview" class="mt-4 flex justify-center"></div>
           </div>
           <div>
-            <label for="floorTarget" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-              <i class="fas fa-layer-group text-[#e94560]"></i>
+            <label for="floorTarget" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+              <i class="fas fa-layer-group text-accent-color-main"></i>
               <span>Floor yang akan dikerjakan (Cth: F100, F120)</span>
             </label>
-            <input type="text" id="floorTarget" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Masukkan target floor">
+            <input type="text" id="floorTarget" class="input-field" placeholder="Masukkan target floor">
           </div>
           <div>
-            <label for="floorCount" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-              <i class="fas fa-hashtag text-[#e94560]"></i>
+            <label for="floorCount" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+              <i class="fas fa-hashtag text-accent-color-main"></i>
               <span>Jumlah Floor</span>
             </label>
-            <input type="number" id="floorCount" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" min="1" placeholder="Masukkan jumlah floor">
+            <input type="number" id="floorCount" class="input-field" min="1" placeholder="Masukkan jumlah floor">
           </div>
-          <p class="text-sm text-gray-500 mt-1">Harga joki Death High Per Floor akan diinformasikan melalui WhatsApp setelah kami menganalisis detail order Anda.</p>
+          <p class="text-sm text-text-color mt-1">Harga joki Death High Per Floor akan diinformasikan melalui WhatsApp setelah kami menganalisis detail order Anda.</p>
         </div>
 
         <!-- Input Spesifik untuk Joki Gendong Naik Gunung Roblox -->
         <div id="robloxJokiDetails" class="hidden space-y-6">
-            <p class="text-lg font-bold text-white mb-2">Detail Joki Gendong Naik Gunung Roblox:</p>
+            <p class="text-lg font-bold text-text-heading mb-2">Detail Joki Gendong Naik Gunung Roblox:</p>
             <div>
-                <label for="robloxUsername" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-                    <i class="fab fa-roblox text-[#e94560]"></i>
+                <label for="robloxUsername" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+                    <i class="fab fa-roblox text-accent-color-main"></i>
                     <span>Username Roblox</span>
                 </label>
-                <input type="text" id="robloxUsername" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Contoh: HiroGamer123">
+                <input type="text" id="robloxUsername" class="input-field" placeholder="Contoh: HiroGamer123">
             </div>
             <div>
-                <label for="mountainName" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-                    <i class="fas fa-mountain text-[#e94560]"></i>
+                <label for="mountainName" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+                    <i class="fas fa-mountain text-accent-color-main"></i>
                     <span>Nama Gunung</span>
                 </label>
-                <input type="text" id="mountainName" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Contoh: Gunung Sakura">
+                <input type="text" id="mountainName" class="input-field" placeholder="Contoh: Gunung Sakura">
             </div>
             <div>
-                <label for="mountainQty" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-                    <i class="fas fa-hashtag text-[#e94560]"></i>
+                <label for="mountainQty" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+                    <i class="fas fa-hashtag text-accent-color-main"></i>
                     <span>Jumlah Gunung</span>
                 </label>
-                <input type="number" id="mountainQty" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" min="1" value="1" oninput="updateOrderDetails()">
+                <input type="number" id="mountainQty" class="input-field" min="1" value="1" oninput="updateOrderDetails()">
             </div>
-            <p class="text-lg font-bold text-white mb-2">Total Biaya:</p>
+            <p class="text-lg font-bold text-text-heading mb-2">Total Biaya:</p>
             <p id="robloxJokiPrice" class="text-3xl font-bold text-green-400">Rp 5.000</p>
-            <p class="text-sm text-gray-500 mt-1">Harga: Rp 5.000 / gunung.</p>
+            <p class="text-sm text-text-color mt-1">Harga: Rp 5.000 / gunung.</p>
 
             <!-- Payment Methods for Roblox Joki (can be same as LifeAfter or specific) -->
-            <div id="robloxJokiPaymentMethods" class="mt-6 p-4 bg-[#1f1f3a] rounded-lg border border-[#4a4a6a]">
-                <h5 class="text-xl font-bold text-white mb-3 flex items-center space-x-2">
+            <div id="robloxJokiPaymentMethods" class="mt-6 p-4 bg-bg-input rounded-lg border border-border-color">
+                <h5 class="text-xl font-bold text-text-heading mb-3 flex items-center space-x-2">
                   <i class="fas fa-wallet text-green-400"></i>
                   <span>Metode Pembayaran</span>
                 </h5>
-                <ul class="space-y-2 text-gray-300">
+                <ul class="space-y-2 text-text-color">
                   <li class="flex items-center space-x-2">
-                    <i class="fas fa-money-bill-wave text-green-400"></i>
+                    <i class="fas fa-money-bill-wave text-green-400 list-item-icon"></i>
                     <span>DANA: <span class="font-semibold">089634568406</span></span>
                   </li>
                   <li class="flex items-center space-x-2">
-                    <i class="fas fa-money-bill-wave text-green-400"></i>
+                    <i class="fas fa-money-bill-wave text-green-400 list-item-icon"></i>
                     <span>Gopay: <span class="font-semibold">089634568406</span></span>
                   </li>
                   <li class="flex items-center space-x-2">
-                    <i class="fas fa-money-bill-wave text-green-400"></i>
+                    <i class="fas fa-money-bill-wave text-green-400 list-item-icon"></i>
                     <span>OVO: <span class="font-semibold">089634568406</span></span>
                   </li>
                   <li class="flex items-center space-x-2">
-                    <i class="fas fa-university text-blue-400"></i>
+                    <i class="fas fa-university text-blue-400 list-item-icon"></i>
                     <span>BRI: <span class="font-semibold">079801006323504</span></span>
                   </li>
                   <li class="flex items-center space-x-2">
-                    <i class="fas fa-university text-blue-400"></i>
+                    <i class="fas fa-university text-blue-400 list-item-icon"></i>
                     <span>BCA: <span class="font-semibold">4460995146</span></span>
                   </li>
                   <li class="flex items-center space-x-2">
-                    <i class="fas fa-hand-holding-heart text-red-400"></i>
-                    <span>Trakteer: <a href="https://trakteer.id/itshiro16/tip" target="_blank" class="text-red-400 hover:underline font-semibold">trakteer.id/itshiro16/tip</a></span>
+                    <i class="fas fa-hand-holding-heart text-red-400 list-item-icon"></i>
+                    <span>Trakteer: <a href="https://trakteer.id/itshiro16/tip" target="_blank" class="text-accent-color-main hover:underline font-semibold">trakteer.id/itshiro16/tip</a></span>
                   </li>
                   <li class="flex items-center space-x-2">
-                    <i class="fas fa-hand-holding-usd text-yellow-400"></i>
+                    <i class="fas fa-hand-holding-usd text-yellow-400 list-item-icon"></i>
                     <span>Saweria: <a href="https://saweria.co/mizukikun" target="_blank" class="text-yellow-400 hover:underline font-semibold">saweria.co/mizukikun</a></span>
                   </li>
                 </ul>
-                <p class="text-sm text-gray-500 mt-3">Mohon lakukan pembayaran sebelum mengunggah bukti pembayaran.</p>
+                <p class="text-sm text-text-color mt-3">Mohon lakukan pembayaran sebelum mengunggah bukti pembayaran.</p>
               </div>
         </div>
 
         <div>
-          <label for="device" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-            <i class="fas fa-mobile-alt text-[#e94560]"></i>
+          <label for="device" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+            <i class="fas fa-mobile-alt text-accent-color-main"></i>
             <span>Platform Device</span>
           </label>
-          <select id="device" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required>
+          <select id="device" class="input-field" required>
             <option value="android">Android</option>
             <option value="ios">iOS</option>
             <option value="pc">PC / Emulator</option>
@@ -991,42 +1453,42 @@
         <!-- Transfer Code and Password are for LifeAfter, hidden for Roblox -->
         <div id="lifeAfterCredentials">
             <div>
-              <label for="code" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-                <i class="fas fa-key text-[#e94560]"></i>
+              <label for="code" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+                <i class="fas fa-key text-accent-color-main"></i>
                 <span>Transfer Code Akun</span>
               </label>
-              <input type="text" id="code" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Masukkan transfer code akun Anda">
+              <input type="text" id="code" class="input-field" placeholder="Masukkan transfer code akun Anda">
             </div>
             <div>
-              <label for="pass" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-                <i class="fas fa-lock text-[#e94560]"></i>
+              <label for="pass" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+                <i class="fas fa-lock text-accent-color-main"></i>
                 <span>Password Akun</span>
               </label>
-              <input type="password" id="pass" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" placeholder="Masukkan password akun Anda">
+              <input type="password" id="pass" class="input-field" placeholder="Masukkan password akun Anda">
             </div>
         </div>
         <div>
-          <label for="whatsapp" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-            <i class="fab fa-whatsapp text-[#e94560]"></i>
+          <label for="whatsapp" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+            <i class="fab fa-whatsapp text-accent-color-main"></i>
             <span>Nomor WhatsApp (Cth: 6281234567890)</span>
           </label>
-          <input type="tel" id="whatsapp" class="w-full p-3 rounded-lg focus:outline-none transition-all duration-200" required placeholder="Nomor WhatsApp aktif Anda (tanpa +)">
-          <p class="text-xs text-gray-500 mt-1">Kami akan menghubungi Anda melalui nomor ini untuk update joki.</p>
+          <input type="tel" id="whatsapp" class="input-field" required placeholder="Nomor WhatsApp aktif Anda (tanpa +)">
+          <p class="text-xs text-text-color mt-1">Kami akan menghubungi Anda melalui nomor ini untuk update joki.</p>
         </div>
         <!-- Tambahkan ID pada div ini -->
         <div id="proofOfPaymentDiv">
-          <label for="proof" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-gray-300">
-            <i class="fas fa-image text-[#e94560]"></i>
+          <label for="proof" class="block text-sm font-medium mb-2 flex items-center space-x-2 text-text-color">
+            <i class="fas fa-image text-accent-color-main"></i>
             <span>Bukti Pembayaran (Screenshot)</span>
           </label>
-          <input type="file" id="proof" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" onchange="previewProof(event)">
+          <input type="file" id="proof" accept="image/*" class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-color-main file:text-text-heading hover:file:bg-accent-color-light transition-all duration-200" onchange="previewProof(event)">
           <div id="proofPreview" class="mt-4 flex justify-center"></div>
         </div>
         <div class="flex items-center space-x-3 p-4 card rounded-lg">
-          <input type="checkbox" id="agree" class="w-5 h-5 rounded checkbox focus:ring-offset-2 focus:ring-offset-[#1a1a2e]">
-          <label for="agree" class="text-sm text-gray-300">Saya sudah membaca dan menyetujui <a href="#rules" class="text-[#e94560] underline hover:text-[#ff6b6b] transition-colors duration-200">rules</a> yang berlaku</label>
+          <input type="checkbox" id="agree" class="w-5 h-5 rounded checkbox focus:ring-offset-2">
+          <label for="agree" class="text-sm text-text-color">Saya sudah membaca dan menyetujui <a href="#rules" class="text-accent-color-main underline hover:text-accent-color-light transition-colors duration-200">rules</a> yang berlaku</label>
         </div>
-        <button type="submit" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+        <button type="submit" class="btn-primary w-full px-6 py-3 rounded-lg font-bold text-lg">
           <i class="fas fa-paper-plane mr-2"></i>Kirim Order
         </button>
       </form>
@@ -1034,61 +1496,93 @@
 
     <!-- Informasi & Rules -->
     <section id="rules" class="max-w-4xl mx-auto mt-12">
-      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-accent-color-main flex items-center justify-center space-x-3">
         <i class="fas fa-info-circle"></i>
         <span>Informasi & Aturan Jasa Joki</span>
       </h3>
-      <div class="card p-8 rounded-xl">
-        <h4 class="text-xl font-bold mb-4 text-white">Informasi Penting:</h4>
-        <ul class="space-y-4 text-gray-300 list-disc pl-5 mb-8">
+      <div class="card">
+        <h4 class="text-xl font-bold mb-4">Informasi Penting:</h4>
+        <ul class="space-y-4 text-text-color list-disc pl-5 mb-8">
           <li class="flex items-start space-x-3">
-            <i class="fas fa-check-circle text-green-400 mt-1"></i>
+            <i class="fas fa-check-circle text-green-400 mt-1 list-item-icon"></i>
             <div>
-              <b>Death High Full Service</b> – Pengerjaan 1 bulan penuh. Harga <span class="font-bold text-yellow-300">Rp 150.000</span> untuk order pertama kali. Harga normal <span class="font-bold text-yellow-300">Rp 250.000</span> untuk order selanjutnya.
+              <b>Death High Full Service</b> – Pengerjaan 1 bulan penuh. Harga <span class="font-bold text-accent-color-gold">Rp 150.000</span> untuk order pertama kali. Harga normal <span class="font-bold text-accent-color-gold">Rp 250.000</span> untuk order selanjutnya.
             </div>
           </li>
           <li class="flex items-start space-x-3">
-            <i class="fas fa-check-circle text-green-400 mt-1"></i>
+            <i class="fas fa-check-circle text-green-400 mt-1 list-item-icon"></i>
             <div>
-              <b>Death High Per Floor</b> – Harga fleksibel, konfirmasi via WhatsApp: <a href="https://wa.me/6289634568406" class="text-green-400 underline font-semibold hover:text-green-300 transition-colors duration-200">0896-3456-8406</a>
+              <b>Death High Per Floor</b> – Harga fleksibel, konfirmasi via WhatsApp: <a href="https://wa.me/6289634568406" class="text-green-400 underline font-semibold hover:text-accent-color-green-light transition-colors duration-200">0896-3456-8406</a>
             </div>
           </li>
           <li class="flex items-start space-x-3">
-            <i class="fas fa-check-circle text-green-400 mt-1"></i>
+            <i class="fas fa-check-circle text-green-400 mt-1 list-item-icon"></i>
             <div>
-              <b>Joki Gendong Naik Gunung Roblox</b> – Harga <span class="font-bold text-yellow-300">Rp 5.000</span> per gunung.
+              <b>Joki Gendong Naik Gunung Roblox</b> – Harga <span class="font-bold text-accent-color-gold">Rp 5.000</span> per gunung.
             </div>
           </li>
           <li class="flex items-start space-x-3">
-            <i class="fas fa-clock text-blue-400 mt-1"></i>
+            <i class="fas fa-clock text-blue-400 mt-1 list-item-icon"></i>
             <span>Estimasi pengerjaan sesuai antrian dan kesepakatan. Kami akan memberikan update secara berkala.</span>
           </li>
           <li class="flex items-start space-x-3">
-            <i class="fas fa-shield-alt text-purple-400 mt-1"></i>
+            <i class="fas fa-shield-alt text-purple-400 mt-1 list-item-icon"></i>
             <span>Data akun Anda dijamin aman & tidak akan disalahgunakan. Keamanan adalah prioritas kami.</span>
           </li>
         </ul>
 
-        <h4 class="text-xl font-bold mb-4 text-white">Aturan Jasa Joki:</h4>
-        <ol class="list-decimal pl-8 space-y-3 text-gray-300">
-          <li>Akun wajib memiliki Transfer Code & Password yang valid dan benar (untuk LifeAfter).</li>
-          <li>Untuk Roblox, pastikan username dan akses yang diberikan benar.</li>
-          <li>Dilarang login ke akun selama proses joki berlangsung untuk menghindari konflik dan error.</li>
-          <li>Pembayaran dilakukan <b>sebelum pengerjaan dimulai</b> (untuk Full Service dan Joki Roblox).</li>
-          <li>Harap upload bukti screenshot pembayaran yang jelas.</li>
-          <li>Progress update akan diberikan secara rutin (screenshot / video via WhatsApp) sesuai permintaan.</li>
-          <li>Durasi pengerjaan bisa diperpanjang jika ada gangguan server, maintenance game, atau kendala teknis lainnya.</li>
-          <li>Refund hanya berlaku jika pengerjaan belum dimulai dan ada kesepakatan.</li>
-          <li>Dengan melakukan order, Anda dianggap telah membaca dan menyetujui semua aturan yang berlaku.</li>
+        <h4 class="text-xl font-bold mb-4">Aturan Jasa Joki:</h4>
+        <ol class="list-decimal pl-8 space-y-3 text-text-color">
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">1.</span>
+            <span>Akun wajib memiliki Transfer Code & Password yang valid dan benar (untuk LifeAfter).</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">2.</span>
+            <span>Untuk Roblox, pastikan username dan akses yang diberikan benar.</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">3.</span>
+            <span>Dilarang login ke akun selama proses joki berlangsung untuk menghindari konflik dan error.</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">4.</span>
+            <span>Pembayaran dilakukan <b>sebelum pengerjaan dimulai</b> (untuk Full Service dan Joki Roblox).</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">5.</span>
+            <span>Harap upload bukti screenshot pembayaran yang jelas.</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">6.</span>
+            <span>Progress update akan diberikan secara rutin (screenshot / video via WhatsApp) sesuai permintaan.</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">7.</span>
+            <span>Durasi pengerjaan bisa diperpanjang jika ada gangguan server, maintenance game, atau kendala teknis lainnya.</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">8.</span>
+            <span>Refund hanya berlaku jika pengerjaan belum dimulai dan ada kesepakatan.</span>
+          </li>
+          <li class="flex items-start space-x-3">
+            <span class="list-item-icon">9.</span>
+            <span>Dengan melakukan order, Anda dianggap telah membaca dan menyetujui semua aturan yang berlaku.</span>
+          </li>
         </ol>
       </div>
     </section>
 
   </main>
 
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/6289634568406" target="_blank" class="floating-whatsapp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
   <!-- Footer -->
-  <footer class="text-center p-6 mt-12 text-gray-500 border-t-2 border-[#2e2e4a] bg-[#1a1a2e]">
-    <p>© 2025 Mizuki Hiroshi Ch. | Joki LifeAfter Pro | <a href="https://wa.me/6289634568406" class="text-green-400 underline hover:text-green-300 transition-colors duration-200">Kontak Kami</a></p>
+  <footer class="text-center p-6 mt-12 text-text-color border-t-2 border-border-color bg-bg-secondary">
+    <p>© 2025 Mizuki Hiroshi Ch. | Joki LifeAfter Pro | <a href="https://wa.me/6289634568406" class="text-green-400 underline hover:text-accent-color-green-light transition-colors duration-200">Kontak Kami</a></p>
   </footer>
 </body>
 </html>
