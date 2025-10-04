@@ -573,10 +573,8 @@
     const robloxJokiPaymentMethodsDiv = document.getElementById("robloxJokiPaymentMethods");
     const lifeAfterCredentialsDiv = document.getElementById("lifeAfterCredentials"); // New element for LifeAfter credentials
 
-    // Tambahkan referensi ke elemen input baru
-    const codeInput = document.getElementById("code");
-    const passInput = document.getElementById("pass");
-    const proofInput = document.getElementById("proof"); // Input bukti pembayaran
+    // UI Elements for Support & Complaints (NEW)
+    const complaintForm = document.getElementById("complaintForm");
 
 
     // --- Toggle Login/Register View ---
@@ -703,27 +701,27 @@
       fullServicePriceDiv.classList.add('hidden');
       perFloorDetailsDiv.classList.add('hidden');
       robloxJokiDetailsDiv.classList.add('hidden');
-      proofOfPaymentDiv.classList.add('hidden');
-      lifeAfterCredentialsDiv.classList.add('hidden');
+      proofOfPaymentDiv.classList.add('hidden'); // Sembunyikan secara default
+      lifeAfterCredentialsDiv.classList.add('hidden'); // Sembunyikan LifeAfter credentials secara default
 
       // Reset required attributes for all specific inputs
-      codeInput.removeAttribute('required');
-      passInput.removeAttribute('required');
       statProofInput.removeAttribute('required');
       floorTargetInput.removeAttribute('required');
       floorCountInput.removeAttribute('required');
       robloxUsernameInput.removeAttribute('required');
       mountainNameInput.removeAttribute('required');
       mountainQtyInput.removeAttribute('required');
-      proofInput.removeAttribute('required'); // Hapus required dari bukti pembayaran secara default
+      document.getElementById("proof").removeAttribute('required'); // Hapus required dari bukti pembayaran secara default
+      document.getElementById("code").removeAttribute('required'); // Hapus required dari transfer code
+      document.getElementById("pass").removeAttribute('required'); // Hapus required dari password
 
       if (jenis === 'full') {
         fullServicePriceDiv.classList.remove('hidden');
         proofOfPaymentDiv.classList.remove('hidden'); // Tampilkan bukti pembayaran
         lifeAfterCredentialsDiv.classList.remove('hidden'); // Tampilkan LifeAfter credentials
-        proofInput.setAttribute('required', 'required'); // Set required untuk bukti pembayaran
-        codeInput.setAttribute('required', 'required'); // Set required untuk transfer code
-        passInput.setAttribute('required', 'required'); // Set required untuk password
+        document.getElementById("proof").setAttribute('required', 'required'); // Set required untuk bukti pembayaran
+        document.getElementById("code").setAttribute('required', 'required'); // Set required untuk transfer code
+        document.getElementById("pass").setAttribute('required', 'required'); // Set required untuk password
 
         let price = 250000; // Default price for subsequent orders
 
@@ -750,13 +748,13 @@
         statProofInput.setAttribute('required', 'required');
         floorTargetInput.setAttribute('required', 'required');
         floorCountInput.setAttribute('required', 'required');
-        codeInput.setAttribute('required', 'required'); // Set required untuk transfer code
-        passInput.setAttribute('required', 'required'); // Set required untuk password
+        document.getElementById("code").setAttribute('required', 'required'); // Set required untuk transfer code
+        document.getElementById("pass").setAttribute('required', 'required'); // Set required untuk password
         // Bukti pembayaran tetap tersembunyi dan tidak required
       } else if (jenis === 'roblox_mountain') {
         robloxJokiDetailsDiv.classList.remove('hidden');
         proofOfPaymentDiv.classList.remove('hidden'); // Tampilkan bukti pembayaran
-        proofInput.setAttribute('required', 'required'); // Set required untuk bukti pembayaran
+        document.getElementById("proof").setAttribute('required', 'required'); // Set required untuk bukti pembayaran
 
         robloxUsernameInput.setAttribute('required', 'required');
         mountainNameInput.setAttribute('required', 'required');
@@ -797,8 +795,8 @@
       const agree = document.getElementById("agree").checked;
 
       // LifeAfter specific credentials
-      const transferCode = codeInput.value; // Ambil dari input
-      const password = passInput.value;     // Ambil dari input
+      const code = document.getElementById("code").value;
+      const pass = document.getElementById("pass").value;
 
       if (!jenis || !device || !whatsapp) {
         alert("Semua kolom wajib diisi.");
@@ -827,11 +825,9 @@
       try {
         // Handle proof of payment for 'full' service and 'roblox_mountain'
         if (jenis === 'full' || jenis === 'roblox_mountain') {
-          const proofFile = proofInput.files[0]; // Ambil dari input
+          const proofFile = document.getElementById("proof").files[0];
           if (!proofFile) {
             alert("Harap upload screenshot bukti pembayaran.");
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
           const storageRef = storage.ref().child(`proofs/${user.uid}_${Date.now()}_${proofFile.name}`);
@@ -857,10 +853,8 @@
 
         if (jenis === 'full') {
           // Validate LifeAfter credentials
-          if (!transferCode || !password) {
+          if (!code || !pass) {
             alert("Transfer Code Akun dan Password Akun wajib diisi untuk Death High Full Service.");
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
 
@@ -878,25 +872,21 @@
           }
           orderPrice = hasFullServiceOrder ? 250000 : 150000;
           orderData.price = orderPrice;
-          orderData.transferCode = transferCode; // LifeAfter specific
-          orderData.password = password; // LifeAfter specific
+          orderData.transferCode = code; // LifeAfter specific
+          orderData.password = pass; // LifeAfter specific
         } else if (jenis === 'floor') {
           // Validate LifeAfter credentials
-          if (!transferCode || !password) {
+          if (!code || !pass) {
             alert("Transfer Code Akun dan Password Akun wajib diisi untuk Death High Per Floor.");
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
 
-          const statProofFile = statProofInput.files[0]; // Ambil dari input
+          const statProofFile = document.getElementById("statProof").files[0];
           const floorTarget = floorTargetInput.value;
           const floorCount = floorCountInput.value;
 
           if (!statProofFile || !floorTarget || !floorCount) {
             alert("Harap lengkapi semua detail untuk Death High Per Floor (Screenshot Stat Akun, Target Floor, Jumlah Floor).");
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
 
@@ -908,35 +898,30 @@
           statProofURL = await statUploadTask.snapshot.ref.getDownloadURL();
 
           orderData.statProofURL = statProofURL;
-          orderData.floorTarget = parseInt(floorTarget); // Pastikan ini number
-          orderData.floorCount = parseInt(floorCount);   // Pastikan ini number
+          orderData.floorTarget = floorTarget;
+          orderData.floorCount = floorCount;
           orderData.priceInfo = "Harga akan diinformasikan via WhatsApp"; // No fixed price
-          orderData.transferCode = transferCode; // LifeAfter specific
-          orderData.password = password; // LifeAfter specific
+          orderData.transferCode = code; // LifeAfter specific
+          orderData.password = pass; // LifeAfter specific
         } else if (jenis === 'roblox_mountain') {
           const robloxUsername = robloxUsernameInput.value;
           const mountainName = mountainNameInput.value;
-          const mountainQty = parseInt(mountainQtyInput.value) || 0; // Pastikan ini number, default 0 jika kosong
+          const mountainQty = parseInt(mountainQtyInput.value) || 1;
+          const robloxPricePerMountain = 5000;
 
-          if (!robloxUsername || !mountainName || mountainQty <= 0) { // Validasi mountainQty > 0
-            alert("Harap lengkapi semua detail untuk Joki Gendong Naik Gunung Roblox (Username Roblox, Nama Gunung, Jumlah Gunung > 0).");
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
+          if (!robloxUsername || !mountainName || !mountainQty) {
+            alert("Harap lengkapi semua detail untuk Joki Gendong Naik Gunung Roblox (Username Roblox, Nama Gunung, Jumlah Gunung).");
             return;
           }
-          orderPrice = 5000 * mountainQty; // Harga per gunung
+          orderPrice = robloxPricePerMountain * mountainQty;
 
           orderData.robloxUsername = robloxUsername;
           orderData.mountainName = mountainName;
           orderData.mountainQty = mountainQty;
           orderData.price = orderPrice;
-          // For Roblox, 'transferCode' and 'password' are not directly used as account credentials
+          // For Roblox, 'code' and 'pass' are not directly used as account credentials
           // They are not added to orderData for this service type
         }
-
-        // --- DEBUGGING: Log data sebelum dikirim ---
-        console.log("Data yang akan dikirim ke Firebase:", orderData);
-        // --- END DEBUGGING ---
 
         const newOrderRef = db.ref('orders').push();
         await newOrderRef.set(orderData);
@@ -1136,6 +1121,47 @@
       console.log(`Current season: ${currentSeason}, applied theme: theme-${currentSeason}`);
     }
 
+    // --- Handle Complaint Submission (NEW) ---
+    async function handleComplaintSubmit(e) {
+      e.preventDefault();
+
+      const customerName = complaintForm.customerName.value;
+      const customerEmail = complaintForm.customerEmail.value;
+      const complaintTopic = complaintForm.complaintTopic.value;
+      const complaintMessage = complaintForm.complaintMessage.value;
+
+      if (!customerName || !complaintTopic || !complaintMessage) {
+        alert("Nama, Topik, dan Pesan komplain wajib diisi.");
+        return;
+      }
+
+      const submitButton = complaintForm.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim Pesan...';
+
+      try {
+        const newComplaintRef = db.ref('complaints').push();
+        await newComplaintRef.set({
+          customerName: customerName,
+          customerEmail: customerEmail || 'Tidak disediakan',
+          topic: complaintTopic,
+          message: complaintMessage,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          status: 'open' // Default status
+        });
+
+        alert("Komplain/pertanyaan Anda berhasil dikirim! Kami akan segera merespons.");
+        complaintForm.reset();
+      } catch (error) {
+        console.error("Gagal mengirim komplain:", error);
+        alert("Gagal mengirim komplain: " + error.message);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Pesan';
+      }
+    }
+
+
     // Call functions on page load
     document.addEventListener('DOMContentLoaded', () => {
       fetchAndDisplayBanners();
@@ -1153,6 +1179,7 @@
     window.previewProof = previewProof;
     window.previewStatProof = previewStatProof; // Expose new preview function
     window.updateOrderDetails = updateOrderDetails; // Expose new update function
+    window.handleComplaintSubmit = handleComplaintSubmit; // Expose new complaint function
   </script>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -1592,6 +1619,38 @@
             <span>Dengan melakukan order, Anda dianggap telah membaca dan menyetujui semua aturan yang berlaku.</span>
           </li>
         </ol>
+      </div>
+    </section>
+
+    <!-- Support & Complaints Section (NEW) -->
+    <section id="supportComplaintSection" class="max-w-2xl mx-auto mt-12 mb-12">
+      <h3 class="text-2xl md:text-4xl font-bold mb-8 text-center text-accent-color-main flex items-center justify-center space-x-3">
+        <i class="fas fa-headset"></i>
+        <span>Pusat Bantuan & Komplain</span>
+      </h3>
+      <div class="card">
+        <h4 class="text-xl font-semibold mb-6 text-center">Kirim Komplain atau Pertanyaan Anda</h4>
+        <form id="complaintForm" onsubmit="handleComplaintSubmit(event)" class="space-y-5">
+          <div>
+            <label for="customerName" class="block text-sm font-medium mb-2 text-text-color">Nama Anda</label>
+            <input type="text" id="customerName" class="input-field" required placeholder="Masukkan nama lengkap Anda">
+          </div>
+          <div>
+            <label for="customerEmail" class="block text-sm font-medium mb-2 text-text-color">Email Anda (Opsional)</label>
+            <input type="email" id="customerEmail" class="input-field" placeholder="Masukkan email Anda">
+          </div>
+          <div>
+            <label for="complaintTopic" class="block text-sm font-medium mb-2 text-text-color">Topik Komplain/Pertanyaan</label>
+            <input type="text" id="complaintTopic" class="input-field" required placeholder="Contoh: Masalah Order, Pertanyaan Layanan">
+          </div>
+          <div>
+            <label for="complaintMessage" class="block text-sm font-medium mb-2 text-text-color">Pesan Anda</label>
+            <textarea id="complaintMessage" rows="5" class="input-field" required placeholder="Jelaskan masalah atau pertanyaan Anda secara detail..."></textarea>
+          </div>
+          <button type="submit" class="btn-primary w-full px-6 py-3 rounded-lg font-bold text-lg">
+            <i class="fas fa-paper-plane mr-2"></i>Kirim Pesan
+          </button>
+        </form>
       </div>
     </section>
 
