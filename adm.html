@@ -332,6 +332,9 @@
     // const brightnessValueSpan = document.getElementById("brightnessValue");
     // const themeSelect = document.getElementById("themeSelect");
 
+    // --- NEW: Audio Element for Notifications ---
+    const newOrderSound = document.getElementById('newOrderSound');
+    // --- END NEW ---
 
     let editingBannerId = null; // To store the ID of the banner being edited
     let currentFilterStatus = 'all'; // Default filter status for orders
@@ -352,7 +355,29 @@
           fetchBanners();
           fetchComplaints();
           fetchDashboardAnalytics();
-          // No settings to apply on login
+
+          // --- NEW: Listen for new orders and play sound ---
+          const ordersRef = db.ref('orders');
+          ordersRef.on('child_added', (snapshot) => {
+              const newOrder = { id: snapshot.key, ...snapshot.val() };
+              const oneMinuteAgo = Date.now() - (60 * 1000); // Check if order is very recent
+
+              // Play sound only if the order is new and not just being loaded initially
+              // This check helps prevent the sound from playing for all existing orders on page load/login
+              if (newOrder.waktu && newOrder.waktu > oneMinuteAgo) {
+                  console.log('Order baru terdeteksi:', newOrder.id);
+                  if (newOrderSound) {
+                      newOrderSound.play().catch(error => {
+                          console.warn("Gagal memutar suara notifikasi (mungkin diblokir oleh browser):", error);
+                          // Browser policies often prevent autoplay without user interaction.
+                          // You might need to inform the user to click somewhere to enable sound.
+                          // Or, consider a visual notification (e.g., a toast) if sound fails.
+                      });
+                  }
+              }
+          });
+          // --- END NEW ---
+
         } else {
           alert("Akses ditolak. Email Anda tidak terdaftar sebagai admin yang diizinkan.");
           await auth.signOut();
@@ -365,6 +390,9 @@
         bannerList.innerHTML = "";
         historyList.innerHTML = "";
         complaintList.innerHTML = "";
+        // --- NEW: Detach the listener when logged out ---
+        db.ref('orders').off('child_added');
+        // --- END NEW ---
       }
     });
 
@@ -1516,6 +1544,10 @@
   </script>
 </head>
 <body>
+  <!-- Elemen Audio untuk Notifikasi Order Baru -->
+  <!-- Ganti URL sound dengan suara notifikasi pilihan Anda. Pastikan URL dapat diakses. -->
+  <audio id="newOrderSound" src="https://www.soundjay.com/buttons/button-3.mp3" preload="auto"></audio>
+
   <!-- Login Section (remains outside the main dashboard layout) -->
   <section id="loginSection" class="max-w-md mx-auto mt-10 w-full flex-grow">
     <h2 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
