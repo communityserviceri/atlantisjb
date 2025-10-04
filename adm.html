@@ -12,6 +12,9 @@
       font-family: 'Montserrat', sans-serif;
       background-color: #1a1a2e; /* Darker background */
       color: #e0e0e0; /* Lighter text */
+      display: flex; /* Use flexbox for body */
+      flex-direction: column; /* Stack children vertically */
+      min-height: 100vh; /* Full viewport height */
     }
     h1, h2, h3, h4 {
       font-family: 'Orbitron', sans-serif; /* Sci-fi/gaming font for headings */
@@ -56,12 +59,12 @@
       transform: translateY(-2px); /* Slight hover for cards */
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
     }
-    input[type="text"], input[type="password"], input[type="email"], select, textarea {
+    input[type="text"], input[type="password"], input[type="email"], select, textarea, input[type="search"], input[type="number"], input[type="url"] {
       background-color: #1f1f3a;
       border: 1px solid #4a4a6a;
       color: #e0e0e0;
     }
-    input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
+    input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, select:focus, textarea:focus, input[type="search"]:focus, input[type="number"]:focus, input[type="url"]:focus {
       border-color: #e94560;
       box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.5);
     }
@@ -159,11 +162,106 @@
     .copy-icon:hover {
         color: #e0e0e0; /* Lighter on hover */
     }
+
+    /* Sidebar styles */
+    .sidebar {
+      width: 250px;
+      background-color: #1f1f3a;
+      border-right: 1px solid #4a4a6a;
+      padding-top: 1.5rem; /* Adjusted padding-top */
+      position: sticky; /* Make sidebar sticky */
+      top: 0; /* Stick to the top */
+      height: 100vh; /* Full viewport height */
+      overflow-y: auto;
+      z-index: 1000;
+      flex-shrink: 0; /* Prevent sidebar from shrinking */
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      color: #e0e0e0;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .sidebar-item:hover, .sidebar-item.active {
+      background-color: #2e2e4a;
+      color: #e94560;
+      border-left: 4px solid #e94560;
+    }
+    .sidebar-item i {
+      margin-right: 1rem;
+      font-size: 1.2rem;
+    }
+    .dashboard-main-content {
+      flex-grow: 1; /* Allow main content to grow */
+      display: flex;
+      flex-direction: column;
+    }
+    .content-area {
+      padding: 1.5rem;
+      flex-grow: 1;
+    }
+
+    /* Header styles within dashboard */
+    .dashboard-header {
+      background-color: #1a1a2e; /* Darker background */
+      padding: 1rem 1.5rem;
+      border-bottom: 2px solid #e94560;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0; /* Prevent header from shrinking */
+    }
+    .dashboard-header .admin-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid #4a4a6a;
+        padding-top: 0; /* Remove top padding on mobile */
+      }
+      .dashboard-main-content {
+        margin-left: 0;
+      }
+      .sidebar-item {
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        border-left: none !important;
+      }
+      .sidebar-item.active {
+        border-bottom: 4px solid #e94560;
+      }
+      .sidebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+      .dashboard-header .admin-info {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
   </style>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module">
     // --- Firebase Setup ---
     const firebaseConfig = {
@@ -191,52 +289,82 @@
     const loginSection = document.getElementById("loginSection");
     const dashboardSection = document.getElementById("dashboardSection");
     const adminEmailDisplay = document.getElementById("adminEmailDisplay");
-    const ordersList = document.getElementById("ordersList");
     const loginForm = document.getElementById("loginForm");
-    const bannerManagementSection = document.getElementById("bannerManagementSection");
+
+    // Main Content Sections
+    const mainDashboardContent = document.getElementById("mainDashboardContent");
+    const ordersManagementSection = document.getElementById("ordersManagementSection");
+    const orderHistorySection = document.getElementById("orderHistorySection");
+    const contentPromoSection = document.getElementById("contentPromoSection");
+    const supportComplaintSection = document.getElementById("supportComplaintSection");
+    // const settingsSection = document.getElementById("settingsSection"); // Removed
+
+    // Order Management Specific
+    const ordersList = document.getElementById("ordersList");
+    const orderStatusFilter = document.getElementById("orderStatusFilter");
+    const orderSearchInput = document.getElementById("orderSearchInput");
+
+    // Order History Specific
+    const historyList = document.getElementById("historyList");
+
+    // Banner Management Specific (now inside contentPromoSection)
     const bannerForm = document.getElementById("bannerForm");
     const bannerList = document.getElementById("bannerList");
     const bannerImagePreview = document.getElementById("bannerImagePreview");
     const bannerSubmitButton = document.getElementById("bannerSubmitButton");
     const bannerCancelEditButton = document.getElementById("bannerCancelEditButton");
-    const orderStatusFilter = document.getElementById("orderStatusFilter");
 
-    // New UI Elements for History
-    const viewHistoryBtn = document.getElementById("viewHistoryBtn");
-    const ordersSection = document.getElementById("ordersSection");
-    const historySection = document.getElementById("historySection");
-    const historyList = document.getElementById("historyList");
-    const backToOrdersBtn = document.getElementById("backToOrdersBtn");
+    // Dashboard Analytics Specific
+    const totalOrdersCard = document.getElementById("totalOrdersCard");
+    const totalRevenueCard = document.getElementById("totalRevenueCard");
+    const activeJokisCard = document.getElementById("activeJokisCard");
+    const ordersPerGameChartCtx = document.getElementById('ordersPerGameChart')?.getContext('2d');
+    const monthlyRevenueChartCtx = document.getElementById('monthlyRevenueChart')?.getContext('2d');
+    let ordersPerGameChart;
+    let monthlyRevenueChart;
+
+    // Support & Complaints Specific
+    const complaintList = document.getElementById("complaintList");
+
+    // Settings Specific (Removed elements)
+    // const settingsForm = document.getElementById("settingsForm");
+    // const brightnessRange = document.getElementById("brightnessRange");
+    // const brightnessValueSpan = document.getElementById("brightnessValue");
+    // const themeSelect = document.getElementById("themeSelect");
+
 
     let editingBannerId = null; // To store the ID of the banner being edited
     let currentFilterStatus = 'all'; // Default filter status for orders
+    let currentSearchTerm = ''; // Default search term for orders
     let isViewingHistory = false; // State to track if currently viewing history
 
     // --- Auth State Listener ---
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        // Check if the logged-in user's email is in the ADMIN_EMAILS whitelist
         if (ADMIN_EMAILS.includes(user.email)) {
-          // If email is whitelisted, grant access to dashboard
           loginSection.classList.add("hidden");
           dashboardSection.classList.remove("hidden");
           adminEmailDisplay.textContent = user.email;
-          fetchOrders(currentFilterStatus); // Fetch orders with current filter
-          fetchBanners(); // Fetch banners when admin logs in
           cleanOldOrders(); // Call cleanOldOrders on login
+          showSection('mainDashboardContent'); // Show main dashboard by default
+          // Initial fetches for sections that might be shown first
+          fetchOrders(currentFilterStatus, currentSearchTerm);
+          fetchBanners();
+          fetchComplaints();
+          fetchDashboardAnalytics();
+          // No settings to apply on login
         } else {
-          // If email is not whitelisted, deny access and log out
           alert("Akses ditolak. Email Anda tidak terdaftar sebagai admin yang diizinkan.");
           await auth.signOut();
         }
       } else {
-        // User is logged out
         loginSection.classList.remove("hidden");
         dashboardSection.classList.add("hidden");
         adminEmailDisplay.textContent = "";
         ordersList.innerHTML = "";
-        bannerList.innerHTML = ""; // Clear banners on logout
-        historyList.innerHTML = ""; // Clear history on logout
+        bannerList.innerHTML = "";
+        historyList.innerHTML = "";
+        complaintList.innerHTML = "";
       }
     });
 
@@ -251,7 +379,6 @@
         return;
       }
 
-      // Check if the entered email is in the ADMIN_EMAILS whitelist
       if (!ADMIN_EMAILS.includes(email)) {
         alert("Akses ditolak. Email Anda tidak terdaftar sebagai admin yang diizinkan.");
         return;
@@ -259,7 +386,6 @@
 
       try {
         await auth.signInWithEmailAndPassword(email, password);
-        // auth.onAuthStateChanged will handle the rest of the access check
       } catch (error) {
         console.error("Login gagal:", error);
         alert("Login gagal: " + error.message);
@@ -275,6 +401,53 @@
         console.error("Logout gagal:", error);
         alert("Logout gagal: " + error.message);
       }
+    }
+
+    // --- Section Visibility Manager ---
+    function showSection(sectionId) {
+      const sections = [
+        mainDashboardContent, ordersManagementSection, orderHistorySection,
+        contentPromoSection, supportComplaintSection
+        // settingsSection Removed
+      ];
+
+      sections.forEach(section => {
+        if (section) { // Check if element exists
+          section.classList.add('hidden');
+        }
+      });
+
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.classList.remove('hidden');
+      }
+
+      // Update active state in sidebar
+      document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      const activeItem = document.querySelector(`.sidebar-item[data-section="${sectionId}"]`);
+      if (activeItem) {
+        activeItem.classList.add('active');
+      }
+
+      // Specific actions for sections
+      if (sectionId === 'ordersManagementSection') {
+        isViewingHistory = false;
+        fetchOrders(currentFilterStatus, currentSearchTerm);
+      } else if (sectionId === 'orderHistorySection') {
+        isViewingHistory = true;
+        fetchOrderHistory();
+      } else if (sectionId === 'contentPromoSection') {
+        fetchBanners();
+      } else if (sectionId === 'mainDashboardContent') {
+        fetchDashboardAnalytics();
+      } else if (sectionId === 'supportComplaintSection') {
+        fetchComplaints();
+      }
+      // else if (sectionId === 'settingsSection') { Removed
+      //   fetchSettings();
+      // }
     }
 
     // --- Function to clean old orders and move them to history ---
@@ -293,28 +466,23 @@
                     const orderId = childSnapshot.key;
                     const orderData = childSnapshot.val();
 
-                    // Add to history object
                     historyEntries[orderId] = {
                         ...orderData,
-                        archivedAt: firebase.database.ServerValue.TIMESTAMP // Time archived
+                        archivedAt: firebase.database.ServerValue.TIMESTAMP
                     };
 
-                    // Mark for deletion from 'orders'
                     updates[`/orders/${orderId}`] = null;
                 });
 
                 try {
-                    // Save to history
                     await orderHistoryRef.update(historyEntries);
                     console.log("Pesanan lama berhasil diarsipkan ke riwayat.");
 
-                    // Delete from 'orders'
                     await db.ref().update(updates);
                     console.log("Pesanan lama berhasil dihapus dari daftar aktif.");
 
-                    // Refresh order list if not viewing history
-                    if (!isViewingHistory) {
-                        fetchOrders(currentFilterStatus);
+                    if (!isViewingHistory && ordersManagementSection && !ordersManagementSection.classList.contains('hidden')) {
+                        fetchOrders(currentFilterStatus, currentSearchTerm);
                     }
                 } catch (error) {
                     console.error("Gagal mengarsipkan atau menghapus pesanan lama:", error);
@@ -337,24 +505,39 @@
     }
 
     // --- Fetch All Orders ---
-    function fetchOrders(filterStatus = 'all') {
+    function fetchOrders(filterStatus = 'all', searchTerm = '') {
       ordersList.innerHTML = '<p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat pesanan...</p>';
       let ordersRef = db.ref('orders');
-
-      if (filterStatus !== 'all') {
-        ordersRef = ordersRef.orderByChild('status').equalTo(filterStatus);
-      }
 
       ordersRef.on('value', (snapshot) => {
         if (snapshot.exists()) {
           ordersList.innerHTML = '';
-          const orders = [];
+          let orders = [];
           snapshot.forEach((childSnapshot) => {
             orders.push({ id: childSnapshot.key, ...childSnapshot.val() });
           });
 
-          // Sort orders by timestamp, newest first
+          if (filterStatus !== 'all') {
+            orders = orders.filter(order => order.status === filterStatus);
+          }
+
+          if (searchTerm) {
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+            orders = orders.filter(order =>
+              (order.nama && order.nama.toLowerCase().includes(lowerCaseSearchTerm)) ||
+              (order.email && order.email.toLowerCase().includes(lowerCaseSearchTerm)) ||
+              (order.whatsapp && order.whatsapp.includes(lowerCaseSearchTerm)) ||
+              (order.id && order.id.toLowerCase().includes(lowerCaseSearchTerm)) ||
+              (order.jenis && order.jenis.toLowerCase().includes(lowerCaseSearchTerm))
+            );
+          }
+
           orders.sort((a, b) => b.waktu - a.waktu);
+
+          if (orders.length === 0) {
+            ordersList.innerHTML = '<p class="text-gray-400 text-center py-4">Tidak ada pesanan joki yang cocok dengan filter/pencarian ini.</p>';
+            return;
+          }
 
           orders.forEach((order) => {
             const orderElement = document.createElement('div');
@@ -368,7 +551,6 @@
               default: statusClass = 'text-gray-400';
             }
 
-            // Determine progress tracker classes
             let pendingClass = '';
             let inProgressClass = '';
             let completedClass = '';
@@ -377,22 +559,21 @@
             if (order.status === 'pending') {
                 pendingClass = 'pending';
             } else if (order.status === 'in progress') {
-                pendingClass = 'completed'; // Considered completed for previous step
+                pendingClass = 'completed';
                 inProgressClass = 'active';
             } else if (order.status === 'completed') {
                 pendingClass = 'completed';
                 inProgressClass = 'completed';
                 completedClass = 'completed';
             } else if (order.status === 'cancelled') {
-                pendingClass = 'completed'; // Show previous steps as completed before cancellation
+                pendingClass = 'completed';
                 inProgressClass = 'completed';
                 cancelledClass = 'cancelled';
             }
 
-            // Dynamic content for order details based on 'jenis'
             let orderSpecificDetails = '';
             let imageButtons = '';
-            let lifeAfterCredentialsDisplay = ''; // New variable for LifeAfter credentials
+            let lifeAfterCredentialsDisplay = '';
 
             if (order.jenis === 'full') {
                 orderSpecificDetails = `
@@ -410,6 +591,15 @@
                     <p><i class="fas fa-layer-group mr-2 text-blue-400"></i>Target Floor: <span class="font-medium">${order.floorTarget || 'N/A'}</span></p>
                     <p><i class="fas fa-hashtag mr-2 text-blue-400"></i>Jumlah Floor: <span class="font-medium">${order.floorCount || 'N/A'}</span></p>
                     <p><i class="fas fa-dollar-sign mr-2 text-blue-400"></i>Harga: <span class="font-medium text-yellow-400">${order.priceInfo || 'Akan diinformasikan via WhatsApp'}</span></p>
+                    <div class="mt-3">
+                        <h6 class="font-semibold text-gray-300 mb-2">Input Harga per Floor:</h6>
+                        <div id="floorPriceInputs-${order.id}" class="space-y-2">
+                            <!-- Dynamic floor price inputs will be rendered here -->
+                        </div>
+                        <button onclick="renderFloorPriceInputs('${order.id}', ${order.floorCount || 0})" class="btn-secondary px-3 py-1 rounded-lg text-sm mt-2"><i class="fas fa-plus-circle mr-1"></i>Atur Harga Floor</button>
+                        <button onclick="saveFloorPrices('${order.id}')" class="btn-primary px-3 py-1 rounded-lg text-sm mt-2 ml-2"><i class="fas fa-save mr-1"></i>Simpan Harga</button>
+                        <button onclick="generateWhatsAppOffer('${order.id}')" class="btn-primary px-3 py-1 rounded-lg text-sm mt-2 ml-2"><i class="fab fa-whatsapp mr-1"></i>Buat Penawaran WA</button>
+                    </div>
                 `;
                 if (order.statProofURL) {
                     imageButtons += `<a href="${order.statProofURL}" target="_blank" class="btn-secondary inline-block text-white px-4 py-2 rounded-lg text-sm mt-2 mr-2"><i class="fas fa-chart-bar mr-1"></i>Lihat Screenshot Stat Akun</a>`;
@@ -428,7 +618,6 @@
                 if (order.proofURL) {
                     imageButtons += `<a href="${order.proofURL}" target="_blank" class="btn-secondary inline-block text-white px-4 py-2 rounded-lg text-sm mt-2 mr-2"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>`;
                 }
-                // No LifeAfter credentials for Roblox orders
                 lifeAfterCredentialsDisplay = '';
             }
 
@@ -481,6 +670,11 @@
               </div>
             `;
             ordersList.appendChild(orderElement);
+            // Automatically render floor price inputs if it's a floor order and the section is visible
+            // This ensures inputs are ready even if not explicitly clicked
+            if (order.jenis === 'floor' && !ordersManagementSection.classList.contains('hidden')) {
+                renderFloorPriceInputs(order.id, order.floorCount || 0);
+            }
           });
         } else {
           ordersList.innerHTML = '<p class="text-gray-400 text-center py-4">Belum ada pesanan joki dengan status ini.</p>';
@@ -495,7 +689,15 @@
     if (orderStatusFilter) {
         orderStatusFilter.addEventListener('change', (e) => {
             currentFilterStatus = e.target.value;
-            fetchOrders(currentFilterStatus);
+            fetchOrders(currentFilterStatus, currentSearchTerm);
+        });
+    }
+
+    // Event listener for search input
+    if (orderSearchInput) {
+        orderSearchInput.addEventListener('input', (e) => {
+            currentSearchTerm = e.target.value;
+            fetchOrders(currentFilterStatus, currentSearchTerm);
         });
     }
 
@@ -508,6 +710,183 @@
         console.error("Gagal update status:", error);
         alert("Gagal mengubah status pesanan: " + error.message);
       }
+    }
+
+    // --- Render Dynamic Floor Price Inputs ---
+    async function renderFloorPriceInputs(orderId, floorCount) {
+        const container = document.getElementById(`floorPriceInputs-${orderId}`);
+        if (!container) return;
+
+        container.innerHTML = ''; // Clear previous inputs
+
+        const orderSnapshot = await db.ref(`orders/${orderId}`).once('value');
+        const orderData = orderSnapshot.val();
+        const floorTarget = parseInt(orderData.floorTarget || 0); // Get floorTarget
+
+        if (floorTarget === 0 || floorCount === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-sm">Informasi Floor Target atau Jumlah Floor tidak valid.</p>';
+            return;
+        }
+
+        const snapshot = await db.ref(`orders/${orderId}/floorPrices`).once('value');
+        const existingPrices = snapshot.val() || {};
+
+        for (let i = 0; i < floorCount; i++) {
+            const currentFloorNumber = floorTarget + i;
+            const inputDiv = document.createElement('div');
+            inputDiv.className = 'flex items-center space-x-2';
+            inputDiv.innerHTML = `
+                <label for="floor-${orderId}-${currentFloorNumber}" class="text-gray-400 text-sm">Floor ${currentFloorNumber}:</label>
+                <input type="number" id="floor-${orderId}-${currentFloorNumber}"
+                       class="w-full p-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none text-sm"
+                       placeholder="Harga Floor ${currentFloorNumber}" value="${existingPrices[`floor${currentFloorNumber}`] || ''}">
+            `;
+            container.appendChild(inputDiv);
+        }
+    }
+
+    // --- Save Floor Prices to Firebase ---
+    async function saveFloorPrices(orderId) {
+        const container = document.getElementById(`floorPriceInputs-${orderId}`);
+        if (!container) {
+            alert("Error: Container input harga floor tidak ditemukan.");
+            return;
+        }
+
+        const orderSnapshot = await db.ref(`orders/${orderId}`).once('value');
+        const orderData = orderSnapshot.val();
+        const floorTarget = parseInt(orderData.floorTarget || 0);
+        const actualFloorCount = parseInt(orderData.floorCount || 0);
+
+        if (floorTarget === 0 || actualFloorCount === 0) {
+            alert("Informasi Floor Target atau Jumlah Floor tidak valid untuk order ini. Tidak dapat menyimpan harga.");
+            return;
+        }
+
+        const floorPrices = {};
+        let allPricesValid = true;
+
+        for (let i = 0; i < actualFloorCount; i++) {
+            const currentFloorNumber = floorTarget + i;
+            const input = document.getElementById(`floor-${orderId}-${currentFloorNumber}`);
+            if (!input) {
+                allPricesValid = false;
+                console.error(`Input for floor ${currentFloorNumber} not found for order ${orderId}`);
+                continue;
+            }
+            const price = parseFloat(input.value);
+
+            if (isNaN(price) || price <= 0) {
+                allPricesValid = false;
+                input.classList.add('border-red-500'); // Highlight invalid input
+            } else {
+                input.classList.remove('border-red-500');
+                floorPrices[`floor${currentFloorNumber}`] = price;
+            }
+        }
+
+        if (!allPricesValid) {
+            alert("Pastikan semua harga floor diisi dengan angka yang valid (lebih dari 0). Input yang bermasalah ditandai merah.");
+            return;
+        }
+
+        // Double check if all expected floors have a price
+        if (Object.keys(floorPrices).length !== actualFloorCount) {
+            alert(`Beberapa harga floor belum diisi atau tidak valid. Harap lengkapi semua ${actualFloorCount} harga floor.`);
+            return;
+        }
+
+        try {
+            await db.ref(`orders/${orderId}/floorPrices`).set(floorPrices);
+            const totalHarga = Object.values(floorPrices).reduce((sum, price) => sum + price, 0);
+            await db.ref(`orders/${orderId}`).update({
+                priceInfo: `Harga total: Rp ${totalHarga.toLocaleString('id-ID')}`,
+                price: totalHarga
+            });
+            alert("Harga per floor berhasil disimpan dan total harga diperbarui!");
+            fetchOrders(currentFilterStatus, currentSearchTerm); // Refresh order list to show updated priceInfo
+        } catch (error) {
+            console.error("Gagal menyimpan harga floor:", error);
+            alert("Gagal menyimpan harga per floor: " + error.message);
+        }
+    }
+
+    // --- Generate WhatsApp Offer Message ---
+    async function generateWhatsAppOffer(orderId) {
+        try {
+            const snapshot = await db.ref('orders/' + orderId).once('value');
+            let order = snapshot.val();
+
+            if (!order) {
+                alert("Order tidak ditemukan.");
+                return;
+            }
+
+            order.id = orderId; // Ensure order ID is part of the object
+
+            if (!order.whatsapp) {
+                alert("Nomor WhatsApp customer tidak tersedia untuk order ini.");
+                return;
+            }
+
+            const floorPricesSnapshot = await db.ref(`orders/${orderId}/floorPrices`).once('value');
+            const floorPrices = floorPricesSnapshot.val();
+
+            if (!floorPrices || Object.keys(floorPrices).length === 0) {
+                alert("Harga per floor belum diatur atau disimpan. Silakan atur dan simpan harga terlebih dahulu.");
+                return;
+            }
+
+            const floorTarget = parseInt(order.floorTarget || 0);
+            const actualFloorCount = parseInt(order.floorCount || 0);
+
+            if (floorTarget === 0 || actualFloorCount === 0) {
+                alert("Informasi Floor Target atau Jumlah Floor tidak valid untuk order ini. Tidak dapat membuat penawaran WA.");
+                return;
+            }
+
+            // --- Membangun pesan dengan karakter newline (\n) ---
+            let message = `Halo *${order.nama || 'Pelanggan Yth.'}*,\n\n`;
+            message += `Terima kasih telah memesan layanan joki Death High Per Floor dengan Order ID: *${order.id}*.\n\n`;
+            message += `Berikut adalah rincian penawaran harga per floor untuk Anda:\n\n`;
+
+            let totalHargaCalculated = 0;
+
+            for (let i = 0; i < actualFloorCount; i++) {
+                const currentFloorNumber = floorTarget + i;
+                const price = floorPrices[`floor${currentFloorNumber}`];
+                if (typeof price === 'number' && price > 0) {
+                    message += `* Floor ${currentFloorNumber}: Rp ${price.toLocaleString('id-ID')}\n`;
+                    totalHargaCalculated += price;
+                } else {
+                    message += `* Floor ${currentFloorNumber}: Harga belum diatur atau tidak valid\n`;
+                }
+            }
+
+            const finalTotalHarga = totalHargaCalculated > 0 ? totalHargaCalculated : (order.price || 0);
+
+            message += `\nTotal harga keseluruhan untuk ${actualFloorCount} floor (dari Floor ${floorTarget} hingga Floor ${floorTarget + actualFloorCount - 1}) adalah: *Rp ${finalTotalHarga.toLocaleString('id-ID')}*.\n\n`;
+            message += `Silakan lakukan pembayaran ke salah satu metode berikut:\n\n`;
+            message += `*Metode Pembayaran:*\n`;
+            message += `*DANA:* 089634568406\n`;
+            message += `*Gopay:* 089634568406\n`;
+            message += `*OVO:* 089634568406\n`;
+            message += `*BRI:* 079801006323504 *a.n. Bima Adhitya Susilo Putra*\n`;
+            message += `*BCA:* 4460995146 *a.n. Bima Adhitya Susilo Putra*\n`;
+            message += `*Trakteer:* trakteer.id/itshiro16/tip\n`;
+            message += `*Saweria:* saweria.co/mizukikun\n\n`;
+            message += `Mohon lakukan pembayaran sebelum mengunggah bukti pembayaran.\n\n`;
+            message += `Setelah pembayaran, mohon konfirmasi dengan mengirimkan bukti transfer kepada kami. Terima kasih atas kepercayaan Anda!\n\n`;
+            message += `Salam hormat,\nJoki LifeAfter Pro`;
+
+            // --- Encoding seluruh pesan sekali saja ---
+            const whatsappUrl = `https://wa.me/${order.whatsapp}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+
+        } catch (error) {
+            console.error("Gagal membuat pesan WhatsApp:", error);
+            alert("Terjadi kesalahan saat membuat pesan penawaran WhatsApp: " + error.message);
+        }
     }
 
     // --- Fetch Order History ---
@@ -523,8 +902,12 @@
                     historyOrders.push({ id: childSnapshot.key, ...childSnapshot.val() });
                 });
 
-                // Sort history by archivedAt, newest first
                 historyOrders.sort((a, b) => b.archivedAt - a.archivedAt);
+
+                if (historyOrders.length === 0) {
+                    historyList.innerHTML = '<p class="text-gray-400 text-center py-4">Belum ada riwayat pesanan.</p>';
+                    return;
+                }
 
                 historyOrders.forEach((order) => {
                     const orderElement = document.createElement('div');
@@ -538,10 +921,9 @@
                         default: statusClass = 'text-gray-400';
                     }
 
-                    // Dynamic content for order details based on 'jenis'
                     let orderSpecificDetails = '';
                     let imageButtons = '';
-                    let lifeAfterCredentialsDisplay = ''; // New variable for LifeAfter credentials
+                    let lifeAfterCredentialsDisplay = '';
 
                     if (order.jenis === 'full') {
                         orderSpecificDetails = `
@@ -577,7 +959,6 @@
                         if (order.proofURL) {
                             imageButtons += `<a href="${order.proofURL}" target="_blank" class="btn-secondary inline-block text-white px-4 py-2 rounded-lg text-sm mt-2 mr-2"><i class="fas fa-image mr-1"></i>Lihat Bukti Pembayaran</a>`;
                         }
-                        // No LifeAfter credentials for Roblox orders
                         lifeAfterCredentialsDisplay = '';
                     }
 
@@ -614,30 +995,45 @@
         });
     }
 
-    // --- Event Listeners for History Navigation ---
-    if (viewHistoryBtn) {
-        viewHistoryBtn.addEventListener('click', () => {
-            isViewingHistory = true;
-            ordersSection.classList.add('hidden');
-            bannerManagementSection.classList.add('hidden'); // Hide banner management too
-            historySection.classList.remove('hidden');
-            fetchOrderHistory();
-        });
+    // --- Restore Order from History ---
+    async function restoreOrder(orderId) {
+        if (!confirm("Apakah Anda yakin ingin memulihkan pesanan ini ke daftar aktif?")) {
+            return;
+        }
+        try {
+            const snapshot = await db.ref('orderHistory/' + orderId).once('value');
+            const orderData = snapshot.val();
+            if (orderData) {
+                delete orderData.archivedAt;
+                await db.ref('orders/' + orderId).set(orderData);
+                await db.ref('orderHistory/' + orderId).remove();
+                alert("Pesanan berhasil dipulihkan!");
+                fetchOrderHistory();
+                if (!ordersManagementSection.classList.contains('hidden')) {
+                    fetchOrders(currentFilterStatus, currentSearchTerm);
+                }
+            }
+        } catch (error) {
+            console.error("Gagal memulihkan pesanan:", error);
+            alert("Gagal memulihkan pesanan: " + error.message);
+        }
     }
 
-    if (backToOrdersBtn) {
-        backToOrdersBtn.addEventListener('click', () => {
-            isViewingHistory = false;
-            historySection.classList.add('hidden');
-            ordersSection.classList.remove('hidden');
-            bannerManagementSection.classList.remove('hidden'); // Show banner management again
-            fetchOrders(currentFilterStatus);
-        });
+    // --- Delete History Entry Permanently ---
+    async function deleteHistoryEntry(orderId) {
+        if (!confirm("Apakah Anda yakin ingin menghapus pesanan ini secara permanen dari riwayat? Tindakan ini tidak dapat dibatalkan.")) {
+            return;
+        }
+        try {
+            await db.ref('orderHistory/' + orderId).remove();
+            alert("Pesanan berhasil dihapus permanen dari riwayat!");
+        } catch (error) {
+            console.error("Gagal menghapus riwayat pesanan:", error);
+            alert("Gagal menghapus riwayat pesanan: " + error.message);
+        }
     }
 
     // --- Banner Management Functions ---
-
-    // Preview banner image on select
     function previewBannerImage(event) {
       const file = event.target.files[0];
       if (file) {
@@ -651,20 +1047,18 @@
       }
     }
 
-    // Handle banner upload/submission (create or update)
     async function handleBannerSubmit(e) {
       e.preventDefault();
       const title = bannerForm.bannerTitle.value;
       const description = bannerForm.bannerDescription.value;
       const link = bannerForm.bannerLink.value;
-      const imageFile = bannerForm.bannerImage.files[0]; // This will be null if no new file is selected during edit
+      const imageFile = bannerForm.bannerImage.files[0];
 
       if (!title) {
         alert("Judul banner wajib diisi.");
         return;
       }
 
-      // If creating a new banner, image file is required
       if (!editingBannerId && !imageFile) {
         alert("Gambar banner wajib diunggah untuk banner baru.");
         return;
@@ -674,9 +1068,8 @@
       bannerSubmitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
 
       try {
-        let downloadURL = bannerImagePreview.querySelector('img') ? bannerImagePreview.querySelector('img').src : null; // Current image URL if editing and no new file
+        let downloadURL = bannerImagePreview.querySelector('img') ? bannerImagePreview.querySelector('img').src : null;
 
-        // If a new image file is selected, upload it
         if (imageFile) {
           const storageRef = storage.ref().child(`banners/${Date.now()}_${imageFile.name}`);
           const uploadTask = storageRef.put(imageFile);
@@ -698,7 +1091,6 @@
           });
           downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
 
-          // If editing and a new image is uploaded, delete the old one if it exists
           if (editingBannerId) {
             const oldBanner = await db.ref('banners/' + editingBannerId).once('value');
             const oldImageUrl = oldBanner.val().imageUrl;
@@ -713,7 +1105,6 @@
             }
           }
         } else if (!editingBannerId && !downloadURL) {
-            // This case should be caught by the initial !imageFile check for new banners
             alert("Gambar banner wajib diunggah untuk banner baru.");
             return;
         }
@@ -724,7 +1115,7 @@
           description: description || '',
           link: link || '',
           imageUrl: downloadURL,
-          timestamp: firebase.database.ServerValue.TIMESTAMP // Update timestamp on any change
+          timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
         if (editingBannerId) {
@@ -737,10 +1128,10 @@
 
         bannerForm.reset();
         bannerImagePreview.innerHTML = "";
-        editingBannerId = null; // Reset editing state
+        editingBannerId = null;
         bannerSubmitButton.innerHTML = '<i class="fas fa-upload mr-2"></i>Unggah Banner';
         bannerCancelEditButton.classList.add('hidden');
-        fetchBanners(); // Refresh banner list
+        fetchBanners();
       } catch (error) {
         console.error('Gagal memproses banner:', error);
         alert("Gagal memproses banner: " + error.message);
@@ -749,7 +1140,6 @@
       }
     }
 
-    // Fetch and display all banners
     function fetchBanners() {
       bannerList.innerHTML = '<p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat banner...</p>';
       db.ref('banners').on('value', (snapshot) => {
@@ -760,7 +1150,12 @@
             banners.push({ id: childSnapshot.key, ...childSnapshot.val() });
           });
 
-          banners.sort((a, b) => b.timestamp - a.timestamp); // Newest first
+          banners.sort((a, b) => b.timestamp - a.timestamp);
+
+          if (banners.length === 0) {
+            bannerList.innerHTML = '<p class="text-gray-400 text-center py-4">Belum ada banner yang diunggah.</p>';
+            return;
+          }
 
           banners.forEach((banner) => {
             const bannerElement = document.createElement('div');
@@ -789,7 +1184,6 @@
       });
     }
 
-    // Function to edit banner
     async function editBanner(bannerId) {
       try {
         const snapshot = await db.ref('banners/' + bannerId).once('value');
@@ -803,7 +1197,10 @@
           bannerImagePreview.innerHTML = `<img src="${banner.imageUrl}" alt="Preview Banner" class="max-w-full h-48 object-contain rounded-lg mt-2 border border-gray-600 shadow-md">`;
           bannerSubmitButton.innerHTML = '<i class="fas fa-save mr-2"></i>Update Banner';
           bannerCancelEditButton.classList.remove('hidden');
-          window.scrollTo({ top: bannerManagementSection.offsetTop, behavior: 'smooth' }); // Scroll to form
+          if (contentPromoSection && contentPromoSection.classList.contains('hidden')) {
+            showSection('contentPromoSection');
+          }
+          window.scrollTo({ top: bannerForm.offsetTop, behavior: 'smooth' });
         }
       } catch (error) {
         console.error("Error fetching banner for edit:", error);
@@ -811,7 +1208,6 @@
       }
     }
 
-    // Function to cancel edit mode
     function cancelEdit() {
       editingBannerId = null;
       bannerForm.reset();
@@ -820,29 +1216,282 @@
       bannerCancelEditButton.classList.add('hidden');
     }
 
-    // Function to delete banner
     async function deleteBanner(bannerId, imageUrl) {
       if (!confirm("Apakah Anda yakin ingin menghapus banner ini?")) {
         return;
       }
 
       try {
-        // Delete image from Firebase Storage
         if (imageUrl) {
           const imageRef = storage.refFromURL(imageUrl);
           await imageRef.delete();
         }
 
-        // Delete data from Realtime Database
         await db.ref('banners/' + bannerId).remove();
 
         alert("Banner berhasil dihapus!");
-        // No need to call fetchBanners() explicitly, as on('value') listener will handle it
       } catch (error) {
         console.error("Gagal menghapus banner:", error);
         alert("Gagal menghapus banner: " + error.message);
       }
     }
+
+    // --- Dashboard Analytics Functions ---
+    async function fetchDashboardAnalytics() {
+        const ordersRef = db.ref('orders');
+        const jokisRef = db.ref('jokis'); // Reference to jokis data
+
+        const now = Date.now();
+        const startOfDay = new Date().setHours(0, 0, 0, 0);
+        const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
+
+        let totalOrdersMonth = 0;
+        let totalRevenueMonth = 0;
+        const ordersPerGame = {};
+        const monthlyRevenue = {};
+
+        // Fetch orders data
+        ordersRef.on('value', (snapshot) => {
+            totalOrdersMonth = 0;
+            totalRevenueMonth = 0;
+            for (const key in ordersPerGame) delete ordersPerGame[key];
+            for (const key in monthlyRevenue) delete monthlyRevenue[key];
+
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const order = childSnapshot.val();
+                    const orderTime = order.waktu;
+                    const orderPrice = parseFloat(order.price || 0); // Ensure price is a number
+
+                    if (orderTime >= startOfMonth) {
+                        totalOrdersMonth++;
+                        if (order.status === 'completed') {
+                            totalRevenueMonth += orderPrice;
+                        }
+                    }
+
+                    const gameType = order.jenis === 'full' ? 'Death High Full Service' : order.jenis === 'floor' ? 'Death High Per Floor' : 'Joki Gendong Naik Gunung Roblox';
+                    ordersPerGame[gameType] = (ordersPerGame[gameType] || 0) + 1;
+
+                    const orderDate = new Date(orderTime);
+                    const yearMonth = `${orderDate.getFullYear()}-${(orderDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                    if (order.status === 'completed') {
+                        monthlyRevenue[yearMonth] = (monthlyRevenue[yearMonth] || 0) + orderPrice;
+                    }
+                });
+            }
+
+            if (totalOrdersCard) totalOrdersCard.querySelector('span').textContent = totalOrdersMonth;
+            if (totalRevenueCard) totalRevenueCard.querySelector('span').textContent = `Rp ${totalRevenueMonth.toLocaleString('id-ID')}`;
+
+            updateOrdersPerGameChart(ordersPerGame);
+            updateMonthlyRevenueChart(monthlyRevenue);
+        });
+
+        // Fetch jokis data for active jokis count
+        jokisRef.on('value', (snapshot) => {
+            let activeJokisCount = 0;
+            if (snapshot.exists()) {
+                snapshot.forEach(() => {
+                    activeJokisCount++; // Assuming all listed jokis are active for now
+                });
+            }
+            if (activeJokisCard) activeJokisCard.querySelector('span').textContent = activeJokisCount;
+        });
+    }
+
+    function updateOrdersPerGameChart(data) {
+        if (!ordersPerGameChartCtx) return;
+
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+
+        if (ordersPerGameChart) {
+            ordersPerGameChart.destroy();
+        }
+
+        ordersPerGameChart = new Chart(ordersPerGameChartCtx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: [
+                        '#e94560', '#3f72af', '#4CAF50', '#ffc107', '#00bcd4', '#9c27b0'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#e0e0e0'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Jumlah Order per Jenis Joki',
+                        color: '#e0e0e0'
+                    }
+                }
+            }
+        });
+    }
+
+    function updateMonthlyRevenueChart(data) {
+        if (!monthlyRevenueChartCtx) return;
+
+        const sortedMonths = Object.keys(data).sort();
+        const revenues = sortedMonths.map(month => data[month]);
+
+        if (monthlyRevenueChart) {
+            monthlyRevenueChart.destroy();
+        }
+
+        monthlyRevenueChart = new Chart(monthlyRevenueChartCtx, {
+            type: 'bar',
+            data: {
+                labels: sortedMonths,
+                datasets: [{
+                    label: 'Pendapatan Bulanan (Rp)',
+                    data: revenues,
+                    backgroundColor: '#e94560',
+                    borderColor: '#e94560',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                        labels: {
+                            color: '#e0e0e0'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Pendapatan Bulanan',
+                        color: '#e0e0e0'
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#e0e0e0'
+                        },
+                        grid: {
+                            color: '#4a4a6a'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#e0e0e0',
+                            callback: function(value) {
+                                return 'Rp ' + value.toLocaleString('id-ID');
+                            }
+                        },
+                        grid: {
+                            color: '#4a4a6a'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // --- Support & Complaints Functions ---
+    async function fetchComplaints() {
+        complaintList.innerHTML = '<p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat komplain...</p>';
+        db.ref('complaints').on('value', (snapshot) => {
+            if (snapshot.exists()) {
+                complaintList.innerHTML = '';
+                const complaints = [];
+                snapshot.forEach((childSnapshot) => {
+                    complaints.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                });
+
+                complaints.sort((a, b) => b.timestamp - a.timestamp);
+
+                if (complaints.length === 0) {
+                    complaintList.innerHTML = '<p class="text-gray-400 text-center py-4">Belum ada komplain.</p>';
+                    return;
+                }
+
+                complaints.forEach((complaint) => {
+                    const complaintElement = document.createElement('div');
+                    complaintElement.className = 'card p-4 rounded-xl mb-4';
+                    let statusClass = '';
+                    switch (complaint.status) {
+                        case 'open': statusClass = 'status-pending'; break;
+                        case 'in progress': statusClass = 'status-in-progress'; break;
+                        case 'resolved': statusClass = 'status-completed'; break;
+                        case 'closed': statusClass = 'status-cancelled'; break; // Using cancelled for closed
+                        default: statusClass = 'text-gray-400';
+                    }
+                    complaintElement.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <h5 class="text-lg font-bold text-white">Komplain dari: ${complaint.customerName || 'N/A'}</h5>
+                            <span class="text-sm font-semibold ${statusClass}">${complaint.status ? complaint.status.toUpperCase() : 'N/A'}</span>
+                        </div>
+                        <p class="text-sm text-gray-400"><i class="fas fa-tag mr-2"></i>Topik: ${complaint.topic || 'N/A'}</p>
+                        <p class="text-sm text-gray-400"><i class="fas fa-comment-dots mr-2"></i>Pesan: ${complaint.message || 'N/A'}</p>
+                        <p class="text-xs text-gray-500 mt-1">Diajukan: ${new Date(complaint.timestamp).toLocaleString()}</p>
+                        <div class="mt-4 flex items-center space-x-3">
+                            <label for="complaintStatus-${complaint.id}" class="text-gray-300">Ubah Status:</label>
+                            <select id="complaintStatus-${complaint.id}" class="p-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" onchange="updateComplaintStatus('${complaint.id}', this.value)">
+                                <option value="open" ${complaint.status === 'open' ? 'selected' : ''}>Open</option>
+                                <option value="in progress" ${complaint.status === 'in progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="resolved" ${complaint.status === 'resolved' ? 'selected' : ''}>Resolved</option>
+                                <option value="closed" ${complaint.status === 'closed' ? 'selected' : ''}>Closed</option>
+                            </select>
+                            <button onclick="deleteComplaint('${complaint.id}')" class="btn-danger px-3 py-1 rounded-lg text-sm"><i class="fas fa-trash-alt mr-1"></i>Hapus</button>
+                        </div>
+                    `;
+                    complaintList.appendChild(complaintElement);
+                });
+            } else {
+                complaintList.innerHTML = '<p class="text-gray-400 text-center py-4">Belum ada komplain.</p>';
+            }
+        }, (error) => {
+            console.error("Error fetching complaints:", error);
+            complaintList.innerHTML = '<p class="text-red-500 text-center py-4">Gagal memuat komplain. Silakan coba lagi.</p>';
+        });
+    }
+
+    async function updateComplaintStatus(complaintId, newStatus) {
+        try {
+            await db.ref('complaints/' + complaintId).update({ status: newStatus });
+            alert(`Status komplain ${complaintId} berhasil diubah menjadi ${newStatus.toUpperCase()}.`);
+        } catch (error) {
+            console.error("Gagal update status komplain:", error);
+            alert("Gagal mengubah status komplain: " + error.message);
+        }
+    }
+
+    async function deleteComplaint(complaintId) {
+        if (!confirm("Apakah Anda yakin ingin menghapus komplain ini?")) {
+            return;
+        }
+        try {
+            await db.ref('complaints/' + complaintId).remove();
+            alert("Komplain berhasil dihapus!");
+        } catch (error) {
+            console.error("Gagal menghapus komplain:", error);
+            alert("Gagal menghapus komplain: " + error.message);
+        }
+    }
+
+    // --- Settings Functions (Removed) ---
+    // No longer needed as settings section is removed.
+    // Keeping a default body style for consistency if needed.
+    document.body.style.filter = `brightness(100%)`; // Default brightness
+    document.body.classList.add('theme-dark'); // Default theme
+
 
     // Expose functions to global scope
     window.handleLogin = handleLogin;
@@ -853,70 +1502,135 @@
     window.editBanner = editBanner;
     window.deleteBanner = deleteBanner;
     window.cancelEdit = cancelEdit;
-    window.restoreOrder = restoreOrder; // Expose restoreOrder
-    window.deleteHistoryEntry = deleteHistoryEntry; // Expose deleteHistoryEntry
-    window.copyToClipboard = copyToClipboard; // Expose copyToClipboard
+    window.restoreOrder = restoreOrder;
+    window.deleteHistoryEntry = deleteHistoryEntry;
+    window.copyToClipboard = copyToClipboard;
+    window.showSection = showSection;
+    window.updateComplaintStatus = updateComplaintStatus;
+    window.deleteComplaint = deleteComplaint;
+    window.renderFloorPriceInputs = renderFloorPriceInputs; // New
+    window.saveFloorPrices = saveFloorPrices;             // New
+    window.generateWhatsAppOffer = generateWhatsAppOffer;   // New
+    // window.handleSettingsSubmit = handleSettingsSubmit; // Removed
+    // window.applySettings = applySettings; // Removed
   </script>
 </head>
-<body class="flex flex-col min-h-screen">
-  <!-- Header -->
-  <header class="bg-gradient-to-r from-[#1a1a2e] to-[#0f0f1a] p-4 md:p-6 text-center shadow-2xl border-b-2 border-[#e94560]">
-    <div class="flex justify-center items-center space-x-3 mb-2">
-      <i class="fas fa-user-shield text-4xl text-[#e94560]"></i>
-      <h1 class="text-3xl md:text-5xl font-bold text-white tracking-wide">Admin <span class="text-[#e94560]">Dashboard</span></h1>
+<body>
+  <!-- Login Section (remains outside the main dashboard layout) -->
+  <section id="loginSection" class="max-w-md mx-auto mt-10 w-full flex-grow">
+    <h2 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
+      <i class="fas fa-lock"></i>
+      <span>Login Admin</span>
+    </h2>
+    <div class="card p-8 rounded-xl">
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+        <div>
+          <label for="adminEmail" class="block text-sm font-medium mb-2 text-gray-300">Email Admin</label>
+          <input type="email" id="adminEmail" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="admin@atlantis.com">
+        </div>
+        <div>
+          <label for="adminPassword" class="block text-sm font-medium mb-2 text-gray-300">Password</label>
+          <input type="password" id="adminPassword" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Masukkan password admin">
+        </div>
+        <button type="submit" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+          <i class="fas fa-sign-in-alt mr-2"></i>Login
+        </button>
+      </form>
     </div>
-    <p class="text-sm md:text-base text-gray-400">Joki LifeAfter Pro - Mizuki Hiroshi Ch.</p>
-  </header>
+  </section>
 
-  <!-- Main Content -->
-  <main class="flex-grow container mx-auto p-6 md:p-8">
-
-    <!-- Login Section -->
-    <section id="loginSection" class="max-w-md mx-auto mt-10">
-      <h2 class="text-2xl md:text-4xl font-bold mb-8 text-center text-[#e94560] flex items-center justify-center space-x-3">
-        <i class="fas fa-lock"></i>
-        <span>Login Admin</span>
-      </h2>
-      <div class="card p-8 rounded-xl">
-        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
-          <div>
-            <label for="adminEmail" class="block text-sm font-medium mb-2 text-gray-300">Email Admin</label>
-            <input type="email" id="adminEmail" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="admin@atlantis.com">
-          </div>
-          <div>
-            <label for="adminPassword" class="block text-sm font-medium mb-2 text-gray-300">Password</label>
-            <input type="password" id="adminPassword" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Masukkan password admin">
-          </div>
-          <button type="submit" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
-            <i class="fas fa-sign-in-alt mr-2"></i>Login
-          </button>
-        </form>
+  <!-- Admin Dashboard Section (Hidden until logged in) -->
+  <section id="dashboardSection" class="hidden flex flex-grow">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="text-center mb-6 px-4">
+        <div class="flex justify-center items-center space-x-2 mb-4">
+          <i class="fas fa-user-shield text-3xl text-[#e94560]"></i>
+          <h2 class="text-2xl font-bold text-white">Admin <span class="text-[#e94560]">Panel</span></h2>
+        </div>
+        <p class="text-lg font-semibold text-white">Halo, <span id="adminEmailDisplay" class="text-[#e94560]"></span>!</p>
+        <button onclick="handleLogout()" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-lg text-sm mt-2 transition-colors duration-300">
+          <i class="fas fa-sign-out-alt mr-1"></i>Logout
+        </button>
       </div>
-    </section>
+      <nav class="sidebar-nav">
+        <a class="sidebar-item active" data-section="mainDashboardContent" onclick="showSection('mainDashboardContent')">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a class="sidebar-item" data-section="ordersManagementSection" onclick="showSection('ordersManagementSection')">
+          <i class="fas fa-clipboard-list"></i> Orders
+        </a>
+        <a class="sidebar-item" data-section="orderHistorySection" onclick="showSection('orderHistorySection')">
+          <i class="fas fa-history"></i> Order History
+        </a>
+        <a class="sidebar-item" data-section="contentPromoSection" onclick="showSection('contentPromoSection')">
+          <i class="fas fa-bullhorn"></i> Content & Promo
+        </a>
+        <a class="sidebar-item" data-section="supportComplaintSection" onclick="showSection('supportComplaintSection')">
+          <i class="fas fa-headset"></i> Support & Complaints
+        </a>
+        <!-- Settings link removed -->
+      </nav>
+    </aside>
 
-    <!-- Admin Dashboard Section (Hidden until logged in) -->
-    <section id="dashboardSection" class="hidden max-w-6xl mx-auto mt-10">
-      <div class="card p-8 rounded-xl mb-8">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 pb-4 border-b border-gray-600">
-          <h2 class="text-2xl md:text-3xl font-bold text-[#e94560] flex items-center space-x-3 mb-4 md:mb-0">
+    <!-- Main Content Area (including its own header) -->
+    <div class="dashboard-main-content">
+      <!-- Header for the main content area -->
+      <header class="dashboard-header">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-white">Joki LifeAfter Pro</h1>
+          <p class="text-sm md:text-base text-gray-400">Mizuki Hiroshi Ch.</p>
+        </div>
+        <!-- You can add more elements here if needed, e.g., notifications -->
+      </header>
+
+      <main class="content-area">
+
+        <!-- Main Dashboard Content -->
+        <section id="mainDashboardContent" class="max-w-6xl mx-auto">
+          <h2 class="text-3xl font-bold mb-8 text-[#e94560] flex items-center space-x-3">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard Overview</span>
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div id="totalOrdersCard" class="card p-6 rounded-xl text-center">
+              <i class="fas fa-box-open text-4xl text-blue-400 mb-3"></i>
+              <h3 class="text-xl font-semibold text-white">Total Orders (Bulan Ini)</h3>
+              <span class="text-4xl font-bold text-[#e94560]">0</span>
+            </div>
+            <div id="totalRevenueCard" class="card p-6 rounded-xl text-center">
+              <i class="fas fa-dollar-sign text-4xl text-green-400 mb-3"></i>
+              <h3 class="text-xl font-semibold text-white">Pendapatan (Bulan Ini)</h3>
+              <span class="text-4xl font-bold text-[#4CAF50]">Rp 0</span>
+            </div>
+            <div id="activeJokisCard" class="card p-6 rounded-xl text-center">
+              <i class="fas fa-users-cog text-4xl text-yellow-400 mb-3"></i>
+              <h3 class="text-xl font-semibold text-white">Joki Aktif</h3>
+              <span class="text-4xl font-bold text-[#ffc107]">0</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="card p-6 rounded-xl">
+              <canvas id="ordersPerGameChart"></canvas>
+            </div>
+            <div class="card p-6 rounded-xl">
+              <canvas id="monthlyRevenueChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Orders Management Section -->
+        <section id="ordersManagementSection" class="max-w-6xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-8 text-[#e94560] flex items-center space-x-3">
             <i class="fas fa-clipboard-list"></i>
             <span>Daftar Pesanan Joki</span>
           </h2>
-          <div class="flex items-center space-x-4">
-            <span class="text-gray-300 text-lg">Halo, <span id="adminEmailDisplay" class="font-semibold text-red-300"></span>!</span>
-            <button id="viewHistoryBtn" class="btn-secondary px-4 py-2 rounded-lg text-sm">
-                <i class="fas fa-history mr-1"></i>Lihat Riwayat
-            </button>
-            <button id="logoutBtn" onclick="handleLogout()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-300">
-              <i class="fas fa-sign-out-alt mr-1"></i>Logout
-            </button>
-          </div>
-        </div>
 
-        <!-- Orders Section -->
-        <div id="ordersSection">
-            <!-- Order Status Filter -->
-            <div class="mb-6 flex items-center space-x-3">
+          <div class="card p-6 rounded-xl mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+              <div class="flex items-center space-x-3 w-full md:w-auto">
                 <label for="orderStatusFilter" class="text-gray-300 font-medium">Filter Status:</label>
                 <select id="orderStatusFilter" class="p-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none">
                     <option value="all">Semua Status</option>
@@ -925,90 +1639,132 @@
                     <option value="completed">Completed</option>
                     <option value="cancelled">Cancelled</option>
                 </select>
+              </div>
+              <div class="w-full md:w-1/3">
+                <input type="search" id="orderSearchInput" placeholder="Cari Order ID, Nama, Email, WhatsApp..." class="w-full p-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none">
+              </div>
             </div>
 
             <div id="ordersList" class="space-y-6">
               <!-- Orders will be loaded here -->
               <p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat pesanan...</p>
             </div>
-        </div>
-      </div>
+          </div>
+        </section>
 
-      <!-- Order History Section (Hidden by default) -->
-      <section id="historySection" class="hidden max-w-6xl mx-auto mt-10">
-        <div class="card p-8 rounded-xl mb-8">
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-600">
-                <h2 class="text-2xl md:text-3xl font-bold text-[#00bcd4] flex items-center space-x-3">
-                    <i class="fas fa-history"></i>
-                    <span>Riwayat Pesanan</span>
-                </h2>
-                <button id="backToOrdersBtn" class="btn-primary px-4 py-2 rounded-lg text-sm">
-                    <i class="fas fa-arrow-left mr-1"></i>Kembali ke Pesanan Aktif
-                </button>
-            </div>
+        <!-- Order History Section -->
+        <section id="orderHistorySection" class="max-w-6xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-8 text-[#00bcd4] flex items-center space-x-3">
+            <i class="fas fa-history"></i>
+            <span>Riwayat Pesanan</span>
+          </h2>
+          <div class="card p-8 rounded-xl">
             <div id="historyList" class="space-y-6">
                 <!-- History orders will be loaded here -->
                 <p class="text-gray-400 text-center py-4">
                   <i class="fas fa-spinner fa-spin mr-2"></i>Memuat riwayat pesanan...
                 </p>
             </div>
-        </div>
-      </section>
-
-      <!-- Banner Management Section -->
-      <section id="bannerManagementSection" class="mt-12">
-        <h3 class="text-2xl md:text-3xl font-bold mb-6 text-center text-[#e94560] flex items-center space-x-3">
-          <i class="fas fa-bullhorn"></i>
-          <span>Manajemen Banner Promosi</span>
-        </h3>
-
-        <div class="card p-8 rounded-xl mb-8">
-          <h4 class="text-xl font-bold mb-4 text-white" id="bannerFormTitle">Unggah Banner Baru</h4>
-          <form id="bannerForm" onsubmit="handleBannerSubmit(event)" class="space-y-5">
-            <div>
-              <label for="bannerTitle" class="block text-sm font-medium mb-2 text-gray-300">Judul Banner</label>
-              <input type="text" id="bannerTitle" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Contoh: Promo Akhir Tahun!">
-            </div>
-            <div>
-              <label for="bannerDescription" class="block text-sm font-medium mb-2 text-gray-300">Deskripsi (Opsional)</label>
-              <textarea id="bannerDescription" rows="3" class="w-full p-3 rounded-lg focus:outline-none" placeholder="Deskripsi singkat tentang promosi atau event"></textarea>
-            </div>
-            <div>
-              <label for="bannerLink" class="block text-sm font-medium mb-2 text-gray-300">URL Tautan (Opsional)</label>
-              <input type="url" id="bannerLink" class="w-full p-3 rounded-lg focus:outline-none" placeholder="Contoh: https://wa.me/6281234567890">
-            </div>
-            <div>
-              <label for="bannerImage" class="block text-sm font-medium mb-2 text-gray-300">Gambar Banner (Kosongkan jika tidak ingin mengubah)</label>
-              <input type="file" id="bannerImage" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" onchange="previewBannerImage(event)">
-              <div id="bannerImagePreview" class="mt-4 flex justify-center"></div>
-            </div>
-            <div class="flex space-x-4">
-                <button type="submit" id="bannerSubmitButton" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
-                    <i class="fas fa-upload mr-2"></i>Unggah Banner
-                </button>
-                <button type="button" id="bannerCancelEditButton" onclick="cancelEdit()" class="btn-secondary w-full text-white px-6 py-3 rounded-lg font-bold text-lg hidden">
-                    <i class="fas fa-times mr-2"></i>Batal Edit
-                </button>
-            </div>
-          </form>
-        </div>
-
-        <div class="card p-8 rounded-xl">
-          <h4 class="text-xl font-bold mb-4 text-white">Daftar Banner Aktif</h4>
-          <div id="bannerList" class="space-y-4">
-            <!-- Banners will be loaded here -->
-            <p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat banner...</p>
           </div>
-        </div>
-      </section>
+        </section>
 
-    </section>
+        <!-- Content & Promo Section -->
+        <section id="contentPromoSection" class="max-w-6xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-8 text-[#e94560] flex items-center space-x-3">
+            <i class="fas fa-bullhorn"></i>
+            <span>Content & Promo Management</span>
+          </h2>
 
-  </main>
+          <div class="card p-8 rounded-xl mb-8">
+            <h4 class="text-xl font-bold mb-4 text-white" id="bannerFormTitle">Unggah/Edit Banner Promosi</h4>
+            <form id="bannerForm" onsubmit="handleBannerSubmit(event)" class="space-y-5">
+              <div>
+                <label for="bannerTitle" class="block text-sm font-medium mb-2 text-gray-300">Judul Banner</label>
+                <input type="text" id="bannerTitle" class="w-full p-3 rounded-lg focus:outline-none" required placeholder="Contoh: Promo Akhir Tahun!">
+              </div>
+              <div>
+                <label for="bannerDescription" class="block text-sm font-medium mb-2 text-gray-300">Deskripsi (Opsional)</label>
+                <textarea id="bannerDescription" rows="3" class="w-full p-3 rounded-lg focus:outline-none" placeholder="Deskripsi singkat tentang promosi atau event"></textarea>
+              </div>
+              <div>
+                <label for="bannerLink" class="block text-sm font-medium mb-2 text-gray-300">URL Tautan (Opsional)</label>
+                <input type="url" id="bannerLink" class="w-full p-3 rounded-lg focus:outline-none" placeholder="Contoh: https://wa.me/6281234567890">
+              </div>
+              <div>
+                <label for="bannerImage" class="block text-sm font-medium mb-2 text-gray-300">Gambar Banner (Kosongkan jika tidak ingin mengubah)</label>
+                <input type="file" id="bannerImage" accept="image/*" class="w-full p-3 rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e94560] file:text-white hover:file:bg-[#ff6b6b] transition-all duration-200" onchange="previewBannerImage(event)">
+                <div id="bannerImagePreview" class="mt-4 flex justify-center"></div>
+              </div>
+              <div class="flex space-x-4">
+                  <button type="submit" id="bannerSubmitButton" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+                      <i class="fas fa-upload mr-2"></i>Unggah Banner
+                  </button>
+                  <button type="button" id="bannerCancelEditButton" onclick="cancelEdit()" class="btn-secondary w-full text-white px-6 py-3 rounded-lg font-bold text-lg hidden">
+                      <i class="fas fa-times mr-2"></i>Batal Edit
+                  </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card p-8 rounded-xl">
+            <h4 class="text-xl font-bold mb-4 text-white">Daftar Banner Aktif</h4>
+            <div id="bannerList" class="space-y-4">
+              <!-- Banners will be loaded here -->
+              <p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat banner...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Support & Complaints Section -->
+        <section id="supportComplaintSection" class="max-w-6xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-8 text-[#e94560] flex items-center space-x-3">
+            <i class="fas fa-headset"></i>
+            <span>Support & Complaints</span>
+          </h2>
+          <div class="card p-8 rounded-xl mb-8">
+            <h4 class="text-xl font-bold mb-4 text-white">Daftar Komplain</h4>
+            <div id="complaintList" class="space-y-4">
+              <!-- Complaints will be loaded here -->
+              <p class="text-gray-400 text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat komplain...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings Section (Removed) -->
+        <!-- <section id="settingsSection" class="max-w-6xl mx-auto hidden">
+          <h2 class="text-3xl font-bold mb-8 text-[#e94560] flex items-center space-x-3">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </h2>
+          <div class="card p-8 rounded-xl">
+            <h4 class="text-xl font-bold mb-4 text-white">Pengaturan Tampilan Dashboard</h4>
+            <form id="settingsForm" onsubmit="handleSettingsSubmit(event)" class="space-y-5">
+              <div>
+                <label for="brightnessRange" class="block text-sm font-medium mb-2 text-gray-300">Kecerahan Dashboard</label>
+                <input type="range" id="brightnessRange" min="50" max="150" value="100" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer" oninput="applySettings(this.value, themeSelect.value)">
+                <span class="text-sm text-gray-400 mt-1 block">Nilai: <span id="brightnessValue">100%</span></span>
+              </div>
+              <div>
+                <label for="themeSelect" class="block text-sm font-medium mb-2 text-gray-300">Pilih Tema</label>
+                <select id="themeSelect" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" onchange="applySettings(brightnessRange.value, this.value)">
+                  <option value="dark">Dark Theme</option>
+                  <option value="light">Light Theme</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-primary w-full text-white px-6 py-3 rounded-lg font-bold text-lg">
+                  <i class="fas fa-save mr-2"></i>Simpan Pengaturan
+              </button>
+            </form>
+          </div>
+        </section> -->
+
+      </main>
+    </div>
+  </section>
 
   <!-- Footer -->
-  <footer class="text-center p-6 mt-12 text-gray-500 border-t-2 border-[#2e2e4a] bg-[#1a1a2e]">
-    <p>© 2025 Mizuki Hiroshi Ch. | Admin Dashboard | <a href="https://wa.me/6289634568406" class="text-green-400 underline hover:text-green-300 transition-colors duration-200">Kontak Support</a></p>
+  <footer class="text-center p-6 mt-auto text-gray-500 border-t-2 border-[#2e2e4a] bg-[#1a1a2e]">
+    <p>© 2025 Mizuki Hiroshi Ch. | Admin Dashboard | <a href="https://wa.me/6289634567890" class="text-green-400 underline hover:text-green-300 transition-colors duration-200">Kontak Support</a></p>
   </footer>
 </body>
 </html>
