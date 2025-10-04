@@ -573,6 +573,11 @@
     const robloxJokiPaymentMethodsDiv = document.getElementById("robloxJokiPaymentMethods");
     const lifeAfterCredentialsDiv = document.getElementById("lifeAfterCredentials"); // New element for LifeAfter credentials
 
+    // Tambahkan referensi ke elemen input baru
+    const codeInput = document.getElementById("code");
+    const passInput = document.getElementById("pass");
+    const proofInput = document.getElementById("proof"); // Input bukti pembayaran
+
 
     // --- Toggle Login/Register View ---
     let isLoginView = true;
@@ -698,27 +703,27 @@
       fullServicePriceDiv.classList.add('hidden');
       perFloorDetailsDiv.classList.add('hidden');
       robloxJokiDetailsDiv.classList.add('hidden');
-      proofOfPaymentDiv.classList.add('hidden'); // Sembunyikan secara default
-      lifeAfterCredentialsDiv.classList.add('hidden'); // Sembunyikan LifeAfter credentials secara default
+      proofOfPaymentDiv.classList.add('hidden');
+      lifeAfterCredentialsDiv.classList.add('hidden');
 
       // Reset required attributes for all specific inputs
+      codeInput.removeAttribute('required');
+      passInput.removeAttribute('required');
       statProofInput.removeAttribute('required');
       floorTargetInput.removeAttribute('required');
       floorCountInput.removeAttribute('required');
       robloxUsernameInput.removeAttribute('required');
       mountainNameInput.removeAttribute('required');
       mountainQtyInput.removeAttribute('required');
-      document.getElementById("proof").removeAttribute('required'); // Hapus required dari bukti pembayaran secara default
-      document.getElementById("code").removeAttribute('required'); // Hapus required dari transfer code
-      document.getElementById("pass").removeAttribute('required'); // Hapus required dari password
+      proofInput.removeAttribute('required'); // Hapus required dari bukti pembayaran secara default
 
       if (jenis === 'full') {
         fullServicePriceDiv.classList.remove('hidden');
         proofOfPaymentDiv.classList.remove('hidden'); // Tampilkan bukti pembayaran
         lifeAfterCredentialsDiv.classList.remove('hidden'); // Tampilkan LifeAfter credentials
-        document.getElementById("proof").setAttribute('required', 'required'); // Set required untuk bukti pembayaran
-        document.getElementById("code").setAttribute('required', 'required'); // Set required untuk transfer code
-        document.getElementById("pass").setAttribute('required', 'required'); // Set required untuk password
+        proofInput.setAttribute('required', 'required'); // Set required untuk bukti pembayaran
+        codeInput.setAttribute('required', 'required'); // Set required untuk transfer code
+        passInput.setAttribute('required', 'required'); // Set required untuk password
 
         let price = 250000; // Default price for subsequent orders
 
@@ -745,13 +750,13 @@
         statProofInput.setAttribute('required', 'required');
         floorTargetInput.setAttribute('required', 'required');
         floorCountInput.setAttribute('required', 'required');
-        document.getElementById("code").setAttribute('required', 'required'); // Set required untuk transfer code
-        document.getElementById("pass").setAttribute('required', 'required'); // Set required untuk password
+        codeInput.setAttribute('required', 'required'); // Set required untuk transfer code
+        passInput.setAttribute('required', 'required'); // Set required untuk password
         // Bukti pembayaran tetap tersembunyi dan tidak required
       } else if (jenis === 'roblox_mountain') {
         robloxJokiDetailsDiv.classList.remove('hidden');
         proofOfPaymentDiv.classList.remove('hidden'); // Tampilkan bukti pembayaran
-        document.getElementById("proof").setAttribute('required', 'required'); // Set required untuk bukti pembayaran
+        proofInput.setAttribute('required', 'required'); // Set required untuk bukti pembayaran
 
         robloxUsernameInput.setAttribute('required', 'required');
         mountainNameInput.setAttribute('required', 'required');
@@ -792,8 +797,8 @@
       const agree = document.getElementById("agree").checked;
 
       // LifeAfter specific credentials
-      const code = document.getElementById("code").value;
-      const pass = document.getElementById("pass").value;
+      const transferCode = codeInput.value; // Ambil dari input
+      const password = passInput.value;     // Ambil dari input
 
       if (!jenis || !device || !whatsapp) {
         alert("Semua kolom wajib diisi.");
@@ -822,9 +827,11 @@
       try {
         // Handle proof of payment for 'full' service and 'roblox_mountain'
         if (jenis === 'full' || jenis === 'roblox_mountain') {
-          const proofFile = document.getElementById("proof").files[0];
+          const proofFile = proofInput.files[0]; // Ambil dari input
           if (!proofFile) {
             alert("Harap upload screenshot bukti pembayaran.");
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
           const storageRef = storage.ref().child(`proofs/${user.uid}_${Date.now()}_${proofFile.name}`);
@@ -850,8 +857,10 @@
 
         if (jenis === 'full') {
           // Validate LifeAfter credentials
-          if (!code || !pass) {
+          if (!transferCode || !password) {
             alert("Transfer Code Akun dan Password Akun wajib diisi untuk Death High Full Service.");
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
 
@@ -869,21 +878,25 @@
           }
           orderPrice = hasFullServiceOrder ? 250000 : 150000;
           orderData.price = orderPrice;
-          orderData.transferCode = code; // LifeAfter specific
-          orderData.password = pass; // LifeAfter specific
+          orderData.transferCode = transferCode; // LifeAfter specific
+          orderData.password = password; // LifeAfter specific
         } else if (jenis === 'floor') {
           // Validate LifeAfter credentials
-          if (!code || !pass) {
+          if (!transferCode || !password) {
             alert("Transfer Code Akun dan Password Akun wajib diisi untuk Death High Per Floor.");
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
 
-          const statProofFile = document.getElementById("statProof").files[0];
+          const statProofFile = statProofInput.files[0]; // Ambil dari input
           const floorTarget = floorTargetInput.value;
           const floorCount = floorCountInput.value;
 
           if (!statProofFile || !floorTarget || !floorCount) {
             alert("Harap lengkapi semua detail untuk Death High Per Floor (Screenshot Stat Akun, Target Floor, Jumlah Floor).");
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
 
@@ -895,30 +908,35 @@
           statProofURL = await statUploadTask.snapshot.ref.getDownloadURL();
 
           orderData.statProofURL = statProofURL;
-          orderData.floorTarget = floorTarget;
-          orderData.floorCount = floorCount;
+          orderData.floorTarget = parseInt(floorTarget); // Pastikan ini number
+          orderData.floorCount = parseInt(floorCount);   // Pastikan ini number
           orderData.priceInfo = "Harga akan diinformasikan via WhatsApp"; // No fixed price
-          orderData.transferCode = code; // LifeAfter specific
-          orderData.password = pass; // LifeAfter specific
+          orderData.transferCode = transferCode; // LifeAfter specific
+          orderData.password = password; // LifeAfter specific
         } else if (jenis === 'roblox_mountain') {
           const robloxUsername = robloxUsernameInput.value;
           const mountainName = mountainNameInput.value;
-          const mountainQty = parseInt(mountainQtyInput.value) || 1;
-          const robloxPricePerMountain = 5000;
+          const mountainQty = parseInt(mountainQtyInput.value) || 0; // Pastikan ini number, default 0 jika kosong
 
-          if (!robloxUsername || !mountainName || !mountainQty) {
-            alert("Harap lengkapi semua detail untuk Joki Gendong Naik Gunung Roblox (Username Roblox, Nama Gunung, Jumlah Gunung).");
+          if (!robloxUsername || !mountainName || mountainQty <= 0) { // Validasi mountainQty > 0
+            alert("Harap lengkapi semua detail untuk Joki Gendong Naik Gunung Roblox (Username Roblox, Nama Gunung, Jumlah Gunung > 0).");
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Kirim Order';
             return;
           }
-          orderPrice = robloxPricePerMountain * mountainQty;
+          orderPrice = 5000 * mountainQty; // Harga per gunung
 
           orderData.robloxUsername = robloxUsername;
           orderData.mountainName = mountainName;
           orderData.mountainQty = mountainQty;
           orderData.price = orderPrice;
-          // For Roblox, 'code' and 'pass' are not directly used as account credentials
+          // For Roblox, 'transferCode' and 'password' are not directly used as account credentials
           // They are not added to orderData for this service type
         }
+
+        // --- DEBUGGING: Log data sebelum dikirim ---
+        console.log("Data yang akan dikirim ke Firebase:", orderData);
+        // --- END DEBUGGING ---
 
         const newOrderRef = db.ref('orders').push();
         await newOrderRef.set(orderData);
